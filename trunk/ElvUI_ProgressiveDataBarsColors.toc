@@ -1,0 +1,39 @@
+## Interface: 70300
+## Title: |cff1784d1ElvUI|r Progressively Colored DataBars
+## Notes: Text and color options for ElvUI DataBars
+## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
+## Notes-deDE: @localization(locale="deDE", key="Notes", namespace="ToC")@
+## Notes-koKR: @localization(locale="koKR", key="Notes", namespace="ToC")@
+## Notes-esMX: @localization(locale="esMX", key="Notes", namespace="ToC")@
+## Notes-esES: @localization(locale="esES", key="Notes", namespace="ToC")@
+## Notes-ptBR: @localization(locale="ptBR", key="Notes", namespace="ToC")@
+## Notes-zhCN: @localization(locale="zhCN", key="Notes", namespace="ToC")@
+## Notes-zhTW: @localization(locale="zhTW", key="Notes", namespace="ToC")@
+## Notes-itIT: @localization(locale="itIT", key="Notes", namespace="ToC")@
+## Notes-frFR: @localization(locale="frFR", key="Notes", namespace="ToC")@
+## Version: @project-version@
+## Author: Myrroddin AKA Sygon
+## X-License: MIT License
+## X-Copyright: Copyright (c) 2017 Paul Vandersypen
+
+## RequiredDeps: ElvUI
+## OptionalDeps: ElvUI_SLE
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\ptBR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ruRU.lua
+Locales\zhTW.lua
+Locales\zhCN.lua
+Locales\frFR.lua
+Locales\esES.lua
+Locales\esMX.lua
+
+Core.lua
+Experience.lua
+Reputation.lua
+Artifact.lua
+Honor.lua
+Options.lua
