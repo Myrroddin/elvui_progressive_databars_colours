@@ -73,22 +73,6 @@ function PCB:GetOptions()
                             c.r, c.g, c.b, c.a = r, g, b, a
                             EDB:UpdateExperience()
                         end
-                    },
-                    restedColor = {
-                        order = 40,
-                        name = L["Rested Color"],
-                        desc = L["Select your preferred rested XP color."],
-                        type = "color",
-                        hasAlpha = true,
-                        get = function()
-                            local c = E.db.PCB.experienceBar.restedColor
-                            return c.r, c.g, c.b, c.a
-                        end,
-                        set = function(info, r, g, b, a)
-                            local c = E.db.PCB.experienceBar.restedColor
-                            c.r, c.g, c.b, c.a = r, g, b, a
-                            EDB:UpdateExperience()
-                        end
                     }
                 }
             },
@@ -225,22 +209,6 @@ function PCB:GetOptions()
                         end,
                         set = function(info, r, g, b)
                             local c = E.db.PCB.artifactBar.artColor
-                            c.r, c.g, c.b = r, g, b
-                            EDB:UpdateArtifact()
-                        end
-                    },
-                    bagColor = {
-                        order = 30,
-                        name = L["Unspent AP Color"],
-                        desc = L["Change the color of the bar for your artifact power tokens in your bags."],
-                        type = "color",
-                        hasAlpha = false,
-                        get = function()
-                            local c = E.db.PCB.artifactBar.bagColor
-                            return c.r, c.g, c.b
-                        end,
-                        set = function(info, r, g, b)
-                            local c = E.db.PCB.artifactBar.bagColor
                             c.r, c.g, c.b = r, g, b
                             EDB:UpdateArtifact()
                         end

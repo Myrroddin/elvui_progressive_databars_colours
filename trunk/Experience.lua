@@ -6,7 +6,6 @@ local PCB = E:GetModule("PCB") -- this AddOn
 local function UpdateExperience(self, event)
     local bar = self.expBar
     local xpColor = E.db.PCB.experienceBar.xpColor
-    local restedColor = E.db.PCB.experienceBar.restedColor
     local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 
     if isMaxLevel then
@@ -22,7 +21,6 @@ local function UpdateExperience(self, event)
     end
 
     bar.statusBar:SetStatusBarColor(xpColor.r, xpColor.g, xpColor.b, xpColor.a)
-    bar.rested:SetStatusBarColor(restedColor.r, restedColor.g, restedColor.b, restedColor.a)
 
     if E.db.PCB.experienceBar.progress and not isMaxLevel and event == "PLAYER_XP_UPDATE" then
         local avg = UnitXP("player")/UnitXPMax("player")
@@ -86,7 +84,5 @@ end
 function PCB:RestoreXPColours()
     local bar = EDB.expBar
     bar.statusBar:SetStatusBarColor(0, 0.4, 1, 0.8) -- ElvUI default colour
-    bar.rested:SetStatusBarColor(1, 0, 1, 0.2)
     bar.statusBar:SetAlpha(0.8)
-    bar.rested:SetAlpha(0.2)
 end

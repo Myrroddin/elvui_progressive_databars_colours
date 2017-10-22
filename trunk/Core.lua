@@ -14,8 +14,7 @@ P["PCB"] = {
     experienceBar = {
         capped = true,
         progress = true,
-        xpColor = {r = 0, g = 0.4, b = 1, a = 0.8},
-        restedColor = {r = 1, g = 0, b = 1, a = 0.2}
+        xpColor = {r = 0, g = 0.4, b = 1, a = 0.8}
     },
     reputationBar = {
         capped = true,
@@ -29,8 +28,7 @@ P["PCB"] = {
     },
     artifactBar = {
         progress = true,
-        artColor = {r = .901, g = .8, b = .601},
-        bagColor = {r = 0, g = 0.43, b = 0.95}
+        artColor = {r = .901, g = .8, b = .601}
     }
 }
 
