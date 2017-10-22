@@ -5,20 +5,22 @@ local PCB = E:GetModule("PCB") -- this AddOn
 local function UpdateArtifact(self)
     local bar = self.artifactBar
     local aColor = E.db.PCB.artifactBar.artColor
-    local bColor = E.db.PCB.artifactBar.bagColor
+
+    local current = select(5, C_ArtifactUI.GetEquippedArtifactInfo())
+
+    -- exit out for characters with no artififact weapon equipped
+    if not current then return end
+
+    local numTraits = select(6, C_ArtifactUI.GetEquippedArtifactInfo())
+    local tier = select(13, C_ArtifactUI.GetEquippedArtifactInfo())
+    local nextCost = C_ArtifactUI.GetCostForPointAtRank(numTraits, tier)
+
+    local avg = current / nextCost
+    avg = PCB:Round(avg, 2)
 
     bar.statusBar:SetStatusBarColor(aColor.r, aColor.g, aColor.b)
-    bar.bagValue:SetStatusBarColor(bColor.r, bColor.g, bColor.b)
 
     if E.db.PCB.artifactBar.progress then
-        local current = select(5, C_ArtifactUI.GetEquippedArtifactInfo())
-        local numTraits = select(6, C_ArtifactUI.GetEquippedArtifactInfo())
-        local tier = select(13, C_ArtifactUI.GetEquippedArtifactInfo())
-        local nextCost = C_ArtifactUI.GetCostForPointAtRank(numTraits, tier)
-
-        local avg = current / nextCost
-        avg = PCB:Round(avg, 2)
-
         bar.statusBar:SetAlpha(avg)
     else
         bar.statusBar:SetAlpha(1)
