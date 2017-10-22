@@ -3,7 +3,7 @@ local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local SLE = LibStub("AceAddon-3.0"):GetAddon("ElvUI_SLE", true) -- Shadow & Light
 local PCB = E:GetModule("PCB") -- this AddOn
 
-local function UpdateExperience(self, event)
+local function UpdateExperience(self)
     local bar = self.expBar
     local xpColor = E.db.PCB.experienceBar.xpColor
     local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
@@ -22,11 +22,11 @@ local function UpdateExperience(self, event)
 
     bar.statusBar:SetStatusBarColor(xpColor.r, xpColor.g, xpColor.b, xpColor.a)
 
-    if E.db.PCB.experienceBar.progress and not isMaxLevel and event == "PLAYER_XP_UPDATE" then
+    if E.db.PCB.experienceBar.progress and not isMaxLevel then
         local avg = UnitXP("player")/UnitXPMax("player")
         avg = PCB:Round(avg, 2)
         bar.statusBar:SetAlpha(avg)
-    elseif not E.db.PCB.experienceBar.progress then
+    elseif not E.db.PCB.experienceBar.progress or isMaxLevel then
         bar.statusBar:SetAlpha(0.8)
     end
 end
