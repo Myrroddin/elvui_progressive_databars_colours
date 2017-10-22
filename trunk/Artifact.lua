@@ -7,14 +7,16 @@ local function UpdateArtifact(self)
     local aColor = E.db.PCB.artifactBar.artColor
     local bColor = E.db.PCB.artifactBar.bagColor
 
-    bar.statusBar:SetStatusBarColor(aColor.r, artColor.g, artColor.b)
+    bar.statusBar:SetStatusBarColor(aColor.r, aColor.g, aColor.b)
     bar.bagValue:SetStatusBarColor(bColor.r, bColor.g, bColor.b)
 
     if E.db.PCB.artifactBar.progress then
-        local _, _, _, _, totalAP, pointsSpent, _, _, _, _, _, _, artifactTier = C_ArtifactUI_GetEquippedArtifactInfo()
-        local _, ap, apForNextPoint = MainMenuBar_GetNumArtifactTraitsPurchasableFromXP(pointsSpent, totalXP, artifactTier)
+        local current = select(5, C_ArtifactUI.GetEquippedArtifactInfo())
+        local numTraits = select(6, C_ArtifactUI.GetEquippedArtifactInfo())
+        local tier = select(13, C_ArtifactUI.GetEquippedArtifactInfo())
+        local nextCost = C_ArtifactUI.GetCostForPointAtRank(numTraits, tier)
 
-        local avg = ap / apForNextPoint
+        local avg = current / nextCost
         avg = PCB:Round(avg, 2)
 
         bar.statusBar:SetAlpha(avg)
