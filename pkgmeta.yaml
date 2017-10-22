@@ -1,0 +1,4 @@
+package-as: ElvUI_ProgressiveDataBarsColors
+
+tools-used:
+    - findglobals
