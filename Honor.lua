@@ -1,10 +1,9 @@
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local PCB = E:GetModule("PCB") -- this AddOn
+local bar = EDB.honorBar -- less typing
 
 local function UpdateHonor()
-    local bar = EDB.honorBar
-
     local color = E.db.PCB.honorBar.color
     bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
 
@@ -18,13 +17,13 @@ local function UpdateHonor()
 end
 
 function PCB:HookHonorBar()
-    if E.db.PCB.enabled then
-        if not PCB:IsHooked(E:GetModule("DataBars"), "UpdateHonor") then
-            PCB:SecureHook(E:GetModule("DataBars"), "UpdateHonor", UpdateHonor)
+    if E.db.PCB.enabled and bar then
+        if not PCB:IsHooked(EDB, "UpdateHonor") then
+            PCB:SecureHook(EDB, "UpdateHonor", UpdateHonor)
         end
-    else
-        if PCB:IsHooked(E:GetModule("DataBars"), "UpdateHonor") then
-            PCB:Unhook(E:GetModule("DataBars"), "UpdateHonor")
+    elseif not E.db.PCB.enabled or not EDB.honorBar then
+        if PCB:IsHooked(EDB, "UpdateHonor") then
+            PCB:Unhook(EDB, "UpdateHonor")
         end
         PCB:RestoreHonorBar()
     end
@@ -32,7 +31,8 @@ function PCB:HookHonorBar()
 end
 
 function PCB:RestoreHonorBar()
-    local bar = EDB.honorBar
-    bar.statusBar:SetStatusBarColor(240/255, 114/255, 65/255)
-    bar.statusBar:SetAlpha(1)
+    if bar then
+        bar.statusBar:SetStatusBarColor(240/255, 114/255, 65/255)
+        bar.statusBar:SetAlpha(1)
+    end
 end

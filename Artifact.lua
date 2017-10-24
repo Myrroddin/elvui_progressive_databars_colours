@@ -1,9 +1,9 @@
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local PCB = E:GetModule("PCB") -- this AddOn
+local bar = EDB.artifactBar -- less typing
 
-local function UpdateArtifact(self)
-    local bar = self.artifactBar
+local function UpdateArtifact()
     local aColor = E.db.PCB.artifactBar.artColor
 
     local current = select(5, C_ArtifactUI.GetEquippedArtifactInfo())
@@ -28,13 +28,13 @@ local function UpdateArtifact(self)
 end
 
 function PCB:HookArtifactBar()
-    if E.db.PCB.enabled then
-        if not PCB:IsHooked(E:GetModule("DataBars"), "UpdateArtifact", UpdateArtifact) then
-            PCB:SecureHook(E:GetModule("DataBars"), "UpdateArtifact", UpdateArtifact)
+    if E.db.PCB.enabled and bar then
+        if not PCB:IsHooked(EDB, "UpdateArtifact", UpdateArtifact) then
+            PCB:SecureHook(EDB, "UpdateArtifact", UpdateArtifact)
         end
-    else
-        if PCB:IsHooked(E:GetModule("DataBars"), "UpdateArtifact") then
-            PCB:UnHook(E:GetModule("DataBars"), "UpdateArtifact")
+    elseif not E.db.PCB.enabled or not bar then
+        if PCB:IsHooked(EDB, "UpdateArtifact") then
+            PCB:UnHook(EDB, "UpdateArtifact")
         end
         PCB:RestoreArtifactBar()
     end
@@ -42,7 +42,8 @@ function PCB:HookArtifactBar()
 end
 
 function PCB:RestoreArtifactBar()
-    EDB.statusBar:SetStatusBarColor(.901, .8, .601)
-    EDB.bagValue:SetStatusBarColor(0, 0.43, 0.95)
-    EDB.statusBar:SetAlpha(1)
+    if bar then
+        bar:SetStatusBarColor(.901, .8, .601)
+        bar:SetAlpha(1)
+    end
 end
