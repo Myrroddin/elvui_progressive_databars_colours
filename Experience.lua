@@ -5,9 +5,9 @@ if SLE then
     local SDB = SLE:GetModule("DataBars") -- Shadow & Light's DataBars
 end
 local PCB = E:GetModule("PCB") -- this AddOn
-local bar = EDB.expBar -- less typing
 
-local function UpdateExperience()
+local function UpdateExperience(self)
+    local bar = self.expBar
     local xpColor = E.db.PCB.experienceBar.xpColor
     local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 
@@ -48,7 +48,7 @@ end
 
 -- hook the XP bar text and colour
 function PCB:HookXPText()
-    if E.db.PCB.enabled and bar then
+    if E.db.PCB.enabled and EDB.expBar then
         if not PCB:IsHooked(EDB, "UpdateExperience") then
             PCB:SecureHook(EDB, "UpdateExperience", UpdateExperience)
             if SLE then
@@ -57,7 +57,7 @@ function PCB:HookXPText()
                 end
             end
         end
-    elseif not E.db.PCB.enabled or not bar then
+    elseif not E.db.PCB.enabled or not EDB.expBar then
         if PCB:IsHooked(EDB, "UpdateExperience") then
             PCB:Unhook(EDB, "UpdateExperience")
             if SLE then
@@ -73,11 +73,11 @@ end
 
 -- hook the GameTooltip of the XP bar
 function PCB:HookXPTooltip()
-    if E.db.PCB.enabled and bar then
+    if E.db.PCB.enabled and EDB.expBar then
         if not PCB:IsHooked(_G["ElvUI_ExperienceBar"], "OnEnter") then
             PCB:SecureHookScript(_G["ElvUI_ExperienceBar"], "OnEnter", ExperienceBar_OnEnter)
         end
-    elseif not E.db.PCB.enabled or not bar then
+    elseif not E.db.PCB.enabled or not EDB.expBar then
         if PCB:IsHooked(_G["ElvUI_ExperienceBar"], "OnEnter") then
             PCB:Unhook(_G["ElvUI_ExperienceBar"], "OnEnter")
         end
@@ -85,6 +85,7 @@ function PCB:HookXPTooltip()
 end
 
 function PCB:RestoreXPColours()
+    local bar = EDB.expBar
     if bar then
         bar.statusBar:SetStatusBarColor(0, 0.4, 1, 0.8) -- ElvUI default colour
         bar.statusBar:SetAlpha(0.8)

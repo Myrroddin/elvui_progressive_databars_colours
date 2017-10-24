@@ -5,7 +5,6 @@ if SLE then
     local SDB = SLE:GetModule("DataBars") -- Shadow & Light's DataBars
 end
 local PCB = E:GetModule("PCB") -- this AddOn
-local bar = EDB.repBar -- less typing
 
 -- local variables ------------------------------------------------------------
 -- Blizzard's FACTION_BAR_COLORS only has 8 entries but we'll fix that
@@ -75,7 +74,8 @@ local function ReputationBar_OnEnter()
     end
 end
 
-local function UpdateReputation()
+local function UpdateReputation(self)
+    local bar = self.repBar
     local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
     local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID)
     local isCapped, isParagon = CheckRep(standingID, factionID, friendID, nextFriendThreshold)
@@ -129,11 +129,11 @@ end
 
 -- hooking fuctions -----------------------------------------------------------
 function PCB:HookRepTooltip()
-    if E.db.PCB.enabled and bar then
+    if E.db.PCB.enabled and EDB.repBar then
         if not PCB:IsHooked(_G["ElvUI_ReputationBar"], "OnEnter") then
             PCB:SecureHookScript(_G["ElvUI_ReputationBar"], "OnEnter", ReputationBar_OnEnter)
         end
-    elseif not E.db.PCB.enabled or not bar then
+    elseif not E.db.PCB.enabled or not EDB.repBar then
         if PCB:IsHooked(_G["ElvUI_ReputationBar"], "OnEnter") then
             PCB:Unhook(_G["ElvUI_ReputationBar"], "OnEnter")
         end
@@ -141,7 +141,7 @@ function PCB:HookRepTooltip()
 end
 
 function PCB:HookRepText()
-    if E.db.PCB.enabled and bar then
+    if E.db.PCB.enabled and EDB.repBar then
         if not PCB:IsHooked(EDB, "UpdateReputation") then
             PCB:SecureHook(EDB, "UpdateReputation", UpdateReputation)
             if SLE then
@@ -150,7 +150,7 @@ function PCB:HookRepText()
                 end
             end
         end
-    elseif not E.db.PCB.enabled or not bar then
+    elseif not E.db.PCB.enabled or not EDB.repBar then
         if PCB:IsHooked(EDB, "UpdateReputation") then
             PCB:Unhook(EDB, "UpdateReputation")
             if SLE then
@@ -165,6 +165,7 @@ function PCB:HookRepText()
 end
 
 function PCB:RestoreRepColors()
+    local bar = EDB.repBar
     if bar then
         local _, standingID = GetWatchedFactionInfo()
         local color = FACTION_BAR_COLORS[standingID] or BACKUP
