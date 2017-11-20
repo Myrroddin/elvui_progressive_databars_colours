@@ -97,9 +97,11 @@ local function UpdateReputation(self)
             elseif isParagon then
                 local replacement = L[E.db.PCB.reputationBar.textFormat == "P" and "P" or "Paragon"]
                 replacement = "[" .. replacement .. "]"
-                local barText = bar.text:GetText()
-                barText = gsub(barText, "%[(.+)%]", replacement)
-                bar.text:SetText(barText)
+                local barText = bar.text:GetText() or ""
+                if strlen(barText) >=1 and barText ~= "" then
+                    barText = gsub(barText, "%[(.+)%]", replacement)
+                    bar.text:SetText(barText)
+                end
             end
         end
 
