@@ -26,9 +26,9 @@ P["PCB"] = {
         progress = true,
         color = {r = 240/255, g = 114/255, b = 65/255}
     },
-    artifactBar = {
+    azeriteBar = {
         progress = true,
-        artColor = {r = .901, g = .8, b = .601}
+        color = {r = 0.901, g = 0.8, b = 0.601}
     }
 }
 
@@ -39,6 +39,7 @@ end
 -- register plugin so options are properly inserted when config is loaded
 function PCB:Initialize()
     LEP:RegisterPlugin(addonName, PCB.InsertOptions)
+    P["PCB"].artifactBar = nil
     PCB:EnableDisable()
 end
 
@@ -59,7 +60,7 @@ function PCB:EnableDisable()
     PCB:HookRepText()
     PCB:HookRepTooltip()
     PCB:HookHonorBar()
-    PCB:HookArtifactBar()
+    PCB:HookAzeriteBar()
 
     if not E.db.PCB.enabled then
         PCB:UnhookAll() -- make sure no hooks are left behind
@@ -67,7 +68,7 @@ function PCB:EnableDisable()
 end
 
 function PCB:Round(num, idp)
-    if num <= 0 then
+    if num <= 0.1 then
         return 0.1
     end
     local mult = 10^(idp or 0)
