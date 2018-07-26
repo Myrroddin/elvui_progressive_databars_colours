@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 80000
 ## Title: |cff1784d1ElvUI|r Progressively Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -14,7 +14,7 @@
 ## Version: @project-version@
 ## Author: Myrroddin AKA Sygon
 ## X-License: MIT License
-## X-Copyright: Copyright (c) 2017 Paul Vandersypen
+## X-Copyright: Copyright (c) 2017 - 2018 Paul Vandersypen
 
 ## RequiredDeps: ElvUI
 ## OptionalDeps: ElvUI_SLE
@@ -34,6 +34,6 @@ Locales\esMX.lua
 Core.lua
 Experience.lua
 Reputation.lua
-Artifact.lua
 Honor.lua
+Azerite.lua
 Options.lua

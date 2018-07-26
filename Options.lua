@@ -179,38 +179,38 @@ function PCB:GetOptions()
                     }
                 }
             },
-            artifactBar = {
+            azeriteBar = {
                 order = 50,
-                name = L["Artifact Bar"],
+                name = L["Azerite Bar"],
                 type = "group",
-                args  = {
+                args = {
                     progress = {
                         order = 10,
                         name = L["Blend Progress"],
-                        desc = L["Progressively blend the bar as you spend artifact power."],
+                        desc = L["Progressively blend the bar as you gain Azerite Power"],
                         type = "toggle",
                         get = function()
-                            return E.db.PCB.artifactBar.progress
+                            return E.db.PCB.azeriteBar.progress
                         end,
                         set = function(info, value)
-                            E.db.PCB.artifactBar.progress = value
-                            EDB:UpdateArtifact()
+                            E.db.PCB.azeriteBar.progress = value
+                            EDB:UpdateAzerite()
                         end
                     },
-                    artColor = {
+                    color = {
                         order = 20,
-                        name = L["Spent AP Color"],
-                        desc = L["Change the color of the spent artifact power bar."],
+                        name = L["Azerite Color"],
+                        desc = L["Change the Azerite bar color"],
                         type = "color",
                         hasAlpha = false,
                         get = function()
-                            local c = E.db.PCB.artifactBar.artColor
+                            local c = E.db.PCB.azeriteBar.color
                             return c.r, c.g, c.b
                         end,
                         set = function(info, r, g, b)
-                            local c = E.db.PCB.artifactBar.artColor
+                            local c = E.db.PCB.azeriteBar.color
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateArtifact()
+                            EDB:UpdateAzerite()
                         end
                     }
                 }
