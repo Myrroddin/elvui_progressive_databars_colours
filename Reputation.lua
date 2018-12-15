@@ -1,14 +1,10 @@
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
-local SLE = LibStub("AceAddon-3.0"):GetAddon("ElvUI_SLE", true) -- Shadow & Light
-if SLE then
-    local SDB = SLE:GetModule("DataBars") -- Shadow & Light's DataBars
-end
-local PCB = E:GetModule("PCB") -- this AddOn
+local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 -- local variables ------------------------------------------------------------
 -- Blizzard's FACTION_BAR_COLORS only has 8 entries but we'll fix that
-local PCB_REP_BAR_COLORS = {
+local EPDBC_REP_BAR_COLORS = {
     [1] = {r = 1, g = 0, b = 0, a = 1},             -- hated
     [2] = {r = 1, g = 0.55, b = 0, a = 1},          -- hostile
     [3] = {r = 1, g = 1, b = 0, a = 1},             -- unfriendly
@@ -46,7 +42,7 @@ local function ReputationBar_OnEnter()
     local isCapped, isParagon = CheckRep(standingID, factionID, friendID, nextFriendThreshold)
 
 
-    if name and E.db.PCB.reputationBar.capped then
+    if name and E.db.EPDBC.reputationBar.capped then
         if isCapped and not isParagon then
             GameTooltip:ClearLines()
 
@@ -60,7 +56,7 @@ local function ReputationBar_OnEnter()
             GameTooltip:AddDoubleLine(REPUTATION .. ":", L["Capped"])
             GameTooltip:Show()
         elseif isParagon then
-            local replacement = L[E.db.PCB.reputationBar.textFormat == "P" and "P" or "Paragon"]
+            local replacement = L[E.db.EPDBC.reputationBar.textFormat == "P" and "P" or "Paragon"]
 
             for line = 1, GameTooltip:NumLines() do
                 local lineTextRight = _G["GameTooltipTextRight" .. line]
@@ -75,10 +71,10 @@ local function ReputationBar_OnEnter()
 end
 
 local function UpdateReputation(self)
-    local bar = self.repBar
     local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
     local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID)
     local isCapped, isParagon = CheckRep(standingID, factionID, friendID, nextFriendThreshold)
+    local bar = self.repBar
 
     if isCapped and not isParagon then
         -- don't want a blank bar at non-Paragon Exalted
@@ -87,7 +83,7 @@ local function UpdateReputation(self)
     end
 
     if name then -- only do stuff if name has value
-        if E.db.PCB.reputationBar.capped then
+        if E.db.EPDBC.reputationBar.capped then
             if isCapped and not isParagon then
                 if friendID then
                     bar.text:SetText(friendName .. ": " .. L["Capped"])
@@ -95,7 +91,7 @@ local function UpdateReputation(self)
                     bar.text:SetText(name .. ": " .. L["Capped"])
                 end
             elseif isParagon then
-                local replacement = L[E.db.PCB.reputationBar.textFormat == "P" and "P" or "Paragon"]
+                local replacement = L[E.db.EPDBC.reputationBar.textFormat == "P" and "P" or "Paragon"]
                 replacement = "[" .. replacement .. "]"
                 local barText = bar.text:GetText()
                 barText = gsub(barText, "%[(.+)%]", replacement)
@@ -104,12 +100,12 @@ local function UpdateReputation(self)
         end
 
         -- color the rep bar
-        if E.db.PCB.reputationBar.color == "ascii" then
+        if E.db.EPDBC.reputationBar.color == "ascii" then
             if isParagon then
                 standingID = standingID + 1
             end
 
-            local color = PCB_REP_BAR_COLORS[standingID] or BACKUP
+            local color = EPDBC_REP_BAR_COLORS[standingID] or BACKUP
             bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
         else
             local color = FACTION_BAR_COLORS[standingID] or BACKUP
@@ -118,8 +114,8 @@ local function UpdateReputation(self)
 
         -- blend the bar
         local avg = value / maximum
-        avg = PCB:Round(avg, 2)
-        if E.db.PCB.reputationBar.progress then
+        avg = EPDBC:Round(avg, 2)
+        if E.db.EPDBC.reputationBar.progress then
             bar.statusBar:SetAlpha(avg)
         else
             bar.statusBar:SetAlpha(1)
@@ -128,43 +124,35 @@ local function UpdateReputation(self)
 end
 
 -- hooking fuctions -----------------------------------------------------------
-function PCB:HookRepTooltip()
-    if E.db.PCB.enabled and EDB.repBar then
-        if not PCB:IsHooked(_G["ElvUI_ReputationBar"], "OnEnter") then
-            PCB:SecureHookScript(_G["ElvUI_ReputationBar"], "OnEnter", ReputationBar_OnEnter)
+function EPDBC:HookRepTooltip()
+    local bar = EDB.repBar
+    if E.db.EPDBC.enabled and bar then
+        if not EPDBC:IsHooked(ElvUI_ReputationBar, "OnEnter") then
+            EPDBC:SecureHookScript(ElvUI_ReputationBar, "OnEnter", ReputationBar_OnEnter)
         end
-    elseif not E.db.PCB.enabled or not EDB.repBar then
-        if PCB:IsHooked(_G["ElvUI_ReputationBar"], "OnEnter") then
-            PCB:Unhook(_G["ElvUI_ReputationBar"], "OnEnter")
+    elseif not E.db.EPDBC.enabled or not bar then
+        if EPDBC:IsHooked(ElvUI_ReputationBar, "OnEnter") then
+            EPDBC:Unhook(ElvUI_ReputationBar, "OnEnter")
         end
     end
 end
 
-function PCB:HookRepText()
-    if E.db.PCB.enabled and EDB.repBar then
-        if not PCB:IsHooked(EDB, "UpdateReputation") then
-            PCB:SecureHook(EDB, "UpdateReputation", UpdateReputation)
-            if SLE then
-                if not PCB:IsHooked(SDB, "UpdateReputation") then
-                    PCB:SecureHook(SDB, "UpdateReputation", UpdateReputation)
-                end
-            end
+function EPDBC:HookRepText()
+    local bar = EDB.repBar
+    if E.db.EPDBC.enabled and bar then
+        if not EPDBC:IsHooked(EDB, "UpdateReputation") then
+            EPDBC:SecureHook(EDB, "UpdateReputation", UpdateReputation)
         end
-    elseif not E.db.PCB.enabled or not EDB.repBar then
-        if PCB:IsHooked(EDB, "UpdateReputation") then
-            PCB:Unhook(EDB, "UpdateReputation")
-            if SLE then
-                if PCB:IsHooked(SDB, "UpdateReputation") then
-                    PCB:Unhook(SDB, "UpdateReputation")
-                end
-            end
+    elseif not E.db.EPDBC.enabled or not bar then
+        if EPDBC:IsHooked(EDB, "UpdateReputation") then
+            EPDBC:Unhook(EDB, "UpdateReputation")
         end
-        PCB:RestoreRepColors()
+        EPDBC:RestoreRepColors()
     end
     EDB:UpdateReputation()
 end
 
-function PCB:RestoreRepColors()
+function EPDBC:RestoreRepColors()
     local bar = EDB.repBar
     if bar then
         local _, standingID = GetWatchedFactionInfo()

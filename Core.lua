@@ -2,19 +2,20 @@
 local E, L, V, P, G = unpack(ElvUI)
 
 -- create the plugin for ElvUI
-local PCB = E:NewModule("PCB", "AceEvent-3.0", "AceHook-3.0")
+local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0")
 -- we can use this to automatically insert our GUI tables when ElvUI_Config is loaded
 local LEP = LibStub("LibElvUIPlugin-1.0")
 -- the vaarg statement
 local addonName, addon = ...
 
 -- default options
-P["PCB"] = {
+P["EPDBC"] = {
     enabled = true,
     experienceBar = {
         capped = true,
         progress = true,
-        xpColor = {r = 0, g = 0.4, b = 1, a = 0.8}
+        xpColor = {r = 0, g = 0.4, b = 1, a = 0.8},
+        restColor = {r = 1, g = 0, b = 1, a = 0.2}
     },
     reputationBar = {
         capped = true,
@@ -24,50 +25,49 @@ P["PCB"] = {
     },
     honorBar = {
         progress = true,
-        color = {r = 240/255, g = 114/255, b = 65/255}
+        color = {r = 0.941, g = 0.447, b = 0.254, a = 0.8}
     },
     azeriteBar = {
         progress = true,
-        color = {r = 0.901, g = 0.8, b = 0.601}
+        color = {r = 0.901, g = 0.8, b = 0.601, a = 0.8}
     }
 }
 
 local function InitializeCallback()
-    PCB:Initialize()
+    EPDBC:Initialize()
 end
 
 -- register plugin so options are properly inserted when config is loaded
-function PCB:Initialize()
-    LEP:RegisterPlugin(addonName, PCB.InsertOptions)
-    P["PCB"].artifactBar = nil
-    PCB:EnableDisable()
+function EPDBC:Initialize()
+    LEP:RegisterPlugin(addonName, EPDBC.InsertOptions)
+    EPDBC:EnableDisable()
 end
 
 -- insert our GUI options into ElvUI's config screen
-function PCB:InsertOptions()
-    if not E.Options.args.PCB then
-        E.Options.args.PCB = PCB:GetOptions()
+function EPDBC:InsertOptions()
+    if not E.Options.args.EPDBC then
+        E.Options.args.EPDBC = EPDBC:GetOptions()
     end
 end
 
--- register the module with ElvUI. ElvUI will now call PCB:Initialize() when ElvUI is ready to load our plugin
-E:RegisterModule(PCB:GetName(), InitializeCallback)
+-- register the module with ElvUI. ElvUI will now call EPDBC:Initialize() when ElvUI is ready to load our plugin
+E:RegisterModule(EPDBC:GetName(), InitializeCallback)
 
-function PCB:EnableDisable()
+function EPDBC:EnableDisable()
     -- these functions have both enable/disable checks
-    PCB:HookXPText()
-    PCB:HookXPTooltip()
-    PCB:HookRepText()
-    PCB:HookRepTooltip()
-    PCB:HookHonorBar()
-    PCB:HookAzeriteBar()
+    EPDBC:HookXPText()
+    EPDBC:HookXPTooltip()
+    EPDBC:HookRepText()
+    EPDBC:HookRepTooltip()
+    EPDBC:HookHonorBar()
+    EPDBC:HookAzeriteBar()
 
-    if not E.db.PCB.enabled then
-        PCB:UnhookAll() -- make sure no hooks are left behind
+    if not E.db.EPDBC.enabled then
+        EPDBC:UnhookAll() -- make sure no hooks are left behind
     end
 end
 
-function PCB:Round(num, idp)
+function EPDBC:Round(num, idp)
     if num <= 0.1 then
         return 0.1
     end
