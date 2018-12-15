@@ -1,5 +1,5 @@
-## Interface: 80000
-## Title: |cff1784d1ElvUI|r Progressively Colored DataBars
+## Interface: 80100
+## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
 ## Notes-deDE: @localization(locale="deDE", key="Notes", namespace="ToC")@
@@ -17,7 +17,6 @@
 ## X-Copyright: Copyright (c) 2017 - 2018 Paul Vandersypen
 
 ## RequiredDeps: ElvUI
-## OptionalDeps: ElvUI_SLE
 
 Locales\enUS.lua
 Locales\deDE.lua

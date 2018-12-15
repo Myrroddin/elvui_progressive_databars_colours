@@ -1,43 +1,44 @@
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
-local SLE = LibStub("AceAddon-3.0"):GetAddon("ElvUI_SLE", true) -- Shadow & Light
-if SLE then
-    local SDB = SLE:GetModule("DataBars") -- Shadow & Light's DataBars
-end
-local PCB = E:GetModule("PCB") -- this AddOn
+local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateExperience(self)
     local bar = self.expBar
-    local xpColor = E.db.PCB.experienceBar.xpColor
+    local status = bar.statusBar
+    local rested = bar.rested
+    local xpColor = E.db.EPDBC.experienceBar.xpColor
+    local restColor = E.db.EPDBC.experienceBar.restColor
     local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 
     if isMaxLevel then
-        bar.statusBar:SetMinMaxValues(0, 1)
-        bar.rested:SetMinMaxValues(0, 0)
-        bar.statusBar:SetValue(1)
-        bar.rested:SetValue(0)
-        bar.statusBar:SetAlpha(1)
+        status:SetMinMaxValues(0, 1)
+        rested:SetMinMaxValues(0, 0)
+        status:SetValue(1)
+        rested:SetValue(0)
+        status:SetAlpha(1)
+        rested:SetAlpha(0)
 
-        if E.db.PCB.experienceBar.capped then
+        if E.db.EPDBC.experienceBar.capped then
             bar.text:SetText(L["Capped"])
         end
     end
 
-    bar.statusBar:SetStatusBarColor(xpColor.r, xpColor.g, xpColor.b, xpColor.a)
+    status:SetStatusBarColor(xpColor.r, xpColor.g, xpColor.b, xpColor.a)
+    rested:SetStatusBarColor(restColor.r, restColor.g, restColor.b, restColor.a)
 
-    if E.db.PCB.experienceBar.progress and not isMaxLevel then
+    if E.db.EPDBC.experienceBar.progress and not isMaxLevel then
         local avg = UnitXP("player")/UnitXPMax("player")
-        avg = PCB:Round(avg, 2)
-        bar.statusBar:SetAlpha(avg)
-    elseif not E.db.PCB.experienceBar.progress or isMaxLevel then
-        bar.statusBar:SetAlpha(0.8)
+        avg = EPDBC:Round(avg, 2)
+        status:SetAlpha(avg)
+    elseif not E.db.EPDBC.experienceBar.progress then
+        status:SetAlpha(0.8)
     end
 end
 
 local function ExperienceBar_OnEnter()
     local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
 
-    if isMaxLevel and E.db.PCB.experienceBar.capped then
+    if isMaxLevel and E.db.EPDBC.experienceBar.capped then
         GameTooltip:ClearLines()
         GameTooltip:AddLine(L["Experience"])
 	    GameTooltip:AddLine(" ")
@@ -47,49 +48,44 @@ local function ExperienceBar_OnEnter()
 end
 
 -- hook the XP bar text and colour
-function PCB:HookXPText()
-    if E.db.PCB.enabled and EDB.expBar then
-        if not PCB:IsHooked(EDB, "UpdateExperience") then
-            PCB:SecureHook(EDB, "UpdateExperience", UpdateExperience)
-            if SLE then
-                if not PCB:IsHooked(SDB, "UpdateExperience") then
-                    PCB:SecureHook(SDB, "UpdateExperience", UpdateExperience)
-                end
-            end
+function EPDBC:HookXPText()
+    local bar = EDB.expBar
+    if E.db.EPDBC.enabled and bar then
+        if not EPDBC:IsHooked(EDB, "UpdateExperience") then
+            EPDBC:SecureHook(EDB, "UpdateExperience", UpdateExperience)
         end
-    elseif not E.db.PCB.enabled or not EDB.expBar then
-        if PCB:IsHooked(EDB, "UpdateExperience") then
-            PCB:Unhook(EDB, "UpdateExperience")
-            if SLE then
-                if PCB:IsHooked(SDB, "UpdateExperience") then
-                    PCB:Unhook(SDB, "UpdateExperience")
-                end
-            end
+    elseif not E.db.EPDBC.enabled or not bar then
+        if EPDBC:IsHooked(EDB, "UpdateExperience") then
+            EPDBC:Unhook(EDB, "UpdateExperience")
         end
-        PCB:RestoreXPColours()
+        EPDBC:RestoreXPColours()
     end
     EDB:UpdateExperience()
 end
 
 -- hook the GameTooltip of the XP bar
-function PCB:HookXPTooltip()
-    if E.db.PCB.enabled and EDB.expBar then
-        if not PCB:IsHooked(_G["ElvUI_ExperienceBar"], "OnEnter") then
-            PCB:SecureHookScript(_G["ElvUI_ExperienceBar"], "OnEnter", ExperienceBar_OnEnter)
+function EPDBC:HookXPTooltip()
+    local bar = EDB.expBar
+    if E.db.EPDBC.enabled and bar then
+        if not EPDBC:IsHooked(ElvUI_ExperienceBar, "OnEnter") then
+            EPDBC:SecureHookScript(ElvUI_ExperienceBar, "OnEnter", ExperienceBar_OnEnter)
         end
-    elseif not E.db.PCB.enabled or not EDB.expBar then
-        if PCB:IsHooked(_G["ElvUI_ExperienceBar"], "OnEnter") then
-            PCB:Unhook(_G["ElvUI_ExperienceBar"], "OnEnter")
+    elseif not E.db.EPDBC.enabled or not bar then
+        if EPDBC:IsHooked(ElvUI_ExperienceBar, "OnEnter") then
+            EPDBC:Unhook(ElvUI_ExperienceBar, "OnEnter")
         end
     end
 end
 
-function PCB:RestoreXPColours()
+function EPDBC:RestoreXPColours()
     local bar = EDB.expBar
     if bar then
         bar.statusBar:SetStatusBarColor(0, 0.4, 1, 0.8) -- ElvUI default colour
-        bar.statusBar:SetAlpha(0.8)
         bar.statusBar:SetMinMaxValues(0, 0)
         bar.statusBar:SetValue(0)
+
+        bar.rested:SetStatusBarColor(1, 0, 1, 0.2)
+        bar.rested:SetMinMaxValues(0, 0)
+        bar.rested:SetValue(0)
     end
 end
