@@ -5,15 +5,15 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 -- local variables ------------------------------------------------------------
 -- Blizzard's FACTION_BAR_COLORS only has 8 entries but we'll fix that
 local EPDBC_REP_BAR_COLORS = {
-    [1] = {r = 1, g = 0, b = 0, a = 1},             -- hated
-    [2] = {r = 1, g = 0.55, b = 0, a = 1},          -- hostile
-    [3] = {r = 1, g = 1, b = 0, a = 1},             -- unfriendly
-    [4] = {r = 1, g = 1, b = 1, a = 1},             -- neutral
-    [5] = {r = 0, g = 1, b = 0, a = 1},             -- friendly
-    [6] = {r = 0.25,  g = 0.4,  b = 0.9, a = 1},    -- honored
-    [7] = {r = 0.6, g = 0.2, b = 0.8, a = 1},       -- revered
-    [8] = {r = 0.9, g = 0.8,  b = 0.5, a = 1},      -- exalted
-    [9] = {r = 0.75,  g = 0.75, b = 0.75, a = 1},   -- paragon
+    [1] = {r = 1, g = 0, b = 0},             -- hated
+    [2] = {r = 1, g = 0.55, b = 0},          -- hostile
+    [3] = {r = 1, g = 1, b = 0},             -- unfriendly
+    [4] = {r = 1, g = 1, b = 1},             -- neutral
+    [5] = {r = 0, g = 1, b = 0},             -- friendly
+    [6] = {r = 0.25,  g = 0.4,  b = 0.9},    -- honored
+    [7] = {r = 0.6, g = 0.2, b = 0.8},       -- revered
+    [8] = {r = 0.9, g = 0.8,  b = 0.5},      -- exalted
+    [9] = {r = 0.75,  g = 0.75, b = 0.75},   -- paragon
 }
 local BACKUP = FACTION_BAR_COLORS[1]
 
@@ -60,8 +60,8 @@ local function ReputationBar_OnEnter()
 
             for line = 1, GameTooltip:NumLines() do
                 local lineTextRight = _G["GameTooltipTextRight" .. line]
-                local lineTextRightText = lineTextRight:GetText()
-                if lineTextRightText then
+                local lineTextRightText = lineTextRight:GetText():trim()
+                if lineTextRightText and lineTextRight:len() >= 1 then
                     lineTextRight:SetText(gsub(lineTextRightText, FACTION_STANDING_LABEL8, replacement))
                 end
             end
@@ -93,24 +93,29 @@ local function UpdateReputation(self)
             elseif isParagon then
                 local replacement = L[E.db.EPDBC.reputationBar.textFormat == "P" and "P" or "Paragon"]
                 replacement = "[" .. replacement .. "]"
-                local barText = bar.text:GetText()
-                barText = gsub(barText, "%[(.+)%]", replacement)
-                bar.text:SetText(barText)
+                local barText = bar.text:GetText():trim()
+                if barText and barText:len() >= 1 then
+                    barText = gsub(barText, "%[(.+)%]", replacement)
+                    bar.text:SetText(barText)
+                end
             end
         end
 
         -- color the rep bar
-        if E.db.EPDBC.reputationBar.color == "ascii" then
-            if isParagon then
-                standingID = standingID + 1
-            end
-
-            local color = EPDBC_REP_BAR_COLORS[standingID] or BACKUP
-            bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
-        else
-            local color = FACTION_BAR_COLORS[standingID] or BACKUP
-            bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
+        local choice = E.db.EPDBC.reputationBar.color
+        local color
+        if isParagon then
+            standingID = standingID + 1
         end
+
+        if choice == "ascii" then
+            color = EPDBC_REP_BAR_COLORS[standingID] or BACKUP
+        elseif choice == "custom" then
+            color = E.db.EPDBC.reputationBar.userColors[reaction] or BACKUP
+        else
+            color = FACTION_BAR_COLORS[reaction] or BACKUP
+        end
+        bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
 
         -- blend the bar
         local avg = value / maximum
