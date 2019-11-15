@@ -147,13 +147,155 @@ function EPDBC:GetOptions()
                         type = "select",
                         values = {
                             ["ascii"] = "ASCII",
-                            ["blizzard"] = "Blizzard"
+                            ["blizzard"] = "Blizzard",
+                            ["custom"] = L["Custom"]
                         },
                         get = function()
                             return E.db.EPDBC.reputationBar.color
                         end,
                         set = function(info, value)
                             E.db.EPDBC.reputationBar.color = value
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    description = {
+                        order = 50,
+                        name = "---------- " .. L["Custom Colors"] .. " ---------",
+                        type = "description",
+                        fontSize = "large"
+                    },
+                    hated = {
+                        order = 60,
+                        name = FACTION_STANDING_LABEL1,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[1]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[1]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    hostile = {
+                        order = 70,
+                        name = FACTION_STANDING_LABEL2,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[2]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[2]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    unfriendly = {
+                        order = 80,
+                        name = FACTION_STANDING_LABEL3,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[3]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[3]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    neutral = {
+                        order = 90,
+                        name = FACTION_STANDING_LABEL4,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[4]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[4]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    friendly = {
+                        order = 100,
+                        name = FACTION_STANDING_LABEL5,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[5]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[5]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    honored = {
+                        order = 110,
+                        name = FACTION_STANDING_LABEL6,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[6]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[6]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    revered = {
+                        order = 120,
+                        name = FACTION_STANDING_LABEL7,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[7]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[7]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    exalted = {
+                        order = 130,
+                        name = FACTION_STANDING_LABEL8,
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[8]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[8]
+                            c.r, c.g, c.b = r, g, b
+                            EDB:UpdateReputation()
+                        end
+                    },
+                    paragon = {
+                        order = 140,
+                        name = L["Paragon"],
+                        type = "color",
+                        hasAlpha = false,
+                        get = function()
+                            local c = E.db.EPDBC.reputationBar.userColors[9]
+                            return c.r, c.g, c.b
+                        end,
+                        set = function(info, r, g, b)
+                            local c = E.db.EPDBC.reputationBar.userColors[9]
+                            c.r, c.g, c.b = r, g, b
                             EDB:UpdateReputation()
                         end
                     }

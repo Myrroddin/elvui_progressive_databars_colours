@@ -21,7 +21,18 @@ P["EPDBC"] = {
         capped = true,
         progress = true,
         color = "ascii",
-        textFormat = "Paragon"
+        textFormat = "Paragon",
+        userColors = {
+            [1] = {r = 1, g = 0, b = 0},             -- hated
+            [2] = {r = 1, g = 0.55, b = 0},          -- hostile
+            [3] = {r = 1, g = 1, b = 0},             -- unfriendly
+            [4] = {r = 1, g = 1, b = 1},             -- neutral
+            [5] = {r = 0, g = 1, b = 0},             -- friendly
+            [6] = {r = 0.25,  g = 0.4,  b = 0.9},    -- honored
+            [7] = {r = 0.6, g = 0.2, b = 0.8},       -- revered
+            [8] = {r = 0.9, g = 0.8,  b = 0.5},      -- exalted
+            [9] = {r = 0.75,  g = 0.75, b = 0.75}    -- paragon
+        }
     },
     honorBar = {
         progress = true,
