@@ -60,8 +60,8 @@ local function ReputationBar_OnEnter()
 
             for line = 1, GameTooltip:NumLines() do
                 local lineTextRight = _G["GameTooltipTextRight" .. line]
-                local lineTextRightText = lineTextRight:GetText():trim()
-                if lineTextRightText and lineTextRight:len() >= 1 then
+                local lineTextRightText = lineTextRight:GetText()
+                if lineTextRightText and lineTextRightText:len() >= 1 then
                     lineTextRight:SetText(gsub(lineTextRightText, FACTION_STANDING_LABEL8, replacement))
                 end
             end
@@ -93,7 +93,7 @@ local function UpdateReputation(self)
             elseif isParagon then
                 local replacement = L[E.db.EPDBC.reputationBar.textFormat == "P" and "P" or "Paragon"]
                 replacement = "[" .. replacement .. "]"
-                local barText = bar.text:GetText():trim()
+                local barText = bar.text:GetText()
                 if barText and barText:len() >= 1 then
                     barText = gsub(barText, "%[(.+)%]", replacement)
                     bar.text:SetText(barText)
