@@ -3,6 +3,7 @@ local E, L, V, P, G = unpack(ElvUI)
 -- get the DataBars module
 local EDB = E:GetModule("DataBars")
 local EPDBC = E:GetModule("EPDBC")
+local module_name, private_table = ...
 
 -- translate the module's name. normally I wouldn't do this, but it does have an awkward name
 local uiName = L["Progressively Colored DataBars"]
@@ -375,5 +376,8 @@ function EPDBC:GetOptions()
             }
         }
     }
+    -- support for LibAboutPanel-2.0
+	options.args.aboutTab = self:AboutOptionsTable(module_name)
+	options.args.aboutTab.order = -1 -- -1 means "put it last"
     return options
 end

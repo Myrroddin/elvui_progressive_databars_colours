@@ -5,15 +5,15 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 -- local variables ------------------------------------------------------------
 -- Blizzard's FACTION_BAR_COLORS only has 8 entries but we'll fix that
 local EPDBC_REP_BAR_COLORS = {
-    [1] = {r = 1, g = 0, b = 0},             -- hated
-    [2] = {r = 1, g = 0.55, b = 0},          -- hostile
-    [3] = {r = 1, g = 1, b = 0},             -- unfriendly
-    [4] = {r = 1, g = 1, b = 1},             -- neutral
-    [5] = {r = 0, g = 1, b = 0},             -- friendly
-    [6] = {r = 0.25,  g = 0.4,  b = 0.9},    -- honored
-    [7] = {r = 0.6, g = 0.2, b = 0.8},       -- revered
-    [8] = {r = 0.9, g = 0.8,  b = 0.5},      -- exalted
-    [9] = {r = 0.75,  g = 0.75, b = 0.75},   -- paragon
+    [1] = {r = 1.00, g = 0.00, b = 0.00},       -- hated
+    [2] = {r = 0.62, g = 0.62, b = 0.62},       -- hostile
+    [3] = {r = 0.00, g = 0.80, b = 1.00},       -- unfriendly
+    [4] = {r = 1.00, g = 1.00, b = 1.00},       -- neutral
+    [5] = {r = 0.00, g = 1.00, b = 0.00},       -- friendly
+    [6] = {r = 0.25, g = 0.40, b = 0.90},       -- honored
+    [7] = {r = 0.60, g = 0.20, b = 0.80},       -- revered
+    [8] = {r = 1.00, g = 0.50, b = 0.00},       -- exalted
+    [9] = {r = 0.90, g = 0.80, b = 0.50},       -- paragon
 }
 local BACKUP = FACTION_BAR_COLORS[1]
 
