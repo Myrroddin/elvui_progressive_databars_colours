@@ -71,7 +71,9 @@ function EPDBC:EnableDisable()
     EPDBC:HookRepText()
     EPDBC:HookRepTooltip()
     EPDBC:HookHonorBar()
+    --@version-retail@
     EPDBC:HookAzeriteBar()
+    --@end-version-retail@
 
     if not E.db.EPDBC.enabled then
         EPDBC:UnhookAll() -- make sure no hooks are left behind

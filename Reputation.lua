@@ -74,12 +74,12 @@ local function UpdateReputation(self)
     local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
     local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID)
     local isCapped, isParagon = CheckRep(standingID, factionID, friendID, nextFriendThreshold)
-    local bar = self.repBar
+    local bar = EDB.StatusBars.Reputation
 
     if isCapped and not isParagon then
         -- don't want a blank bar at non-Paragon Exalted
-        bar.statusBar:SetMinMaxValues(0, 1)
-        bar.statusBar:SetValue(1)
+        bar:SetMinMaxValues(0, 1)
+        bar:SetValue(1)
     end
 
     if name then -- only do stuff if name has value
@@ -115,55 +115,55 @@ local function UpdateReputation(self)
         else
             color = FACTION_BAR_COLORS[reaction] or BACKUP
         end
-        bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
+        bar:SetStatusBarColor(color.r, color.g, color.b)
 
         -- blend the bar
         local avg = value / maximum
         avg = EPDBC:Round(avg, 2)
         if E.db.EPDBC.reputationBar.progress then
-            bar.statusBar:SetAlpha(avg)
+            bar:SetAlpha(avg)
         else
-            bar.statusBar:SetAlpha(1)
+            bar:SetAlpha(1)
         end
     end
 end
 
 -- hooking fuctions -----------------------------------------------------------
 function EPDBC:HookRepTooltip()
-    local bar = EDB.repBar
+    local bar = EDB.StatusBars.Reputation
     if E.db.EPDBC.enabled and bar then
-        if not EPDBC:IsHooked(ElvUI_ReputationBar, "OnEnter") then
-            EPDBC:SecureHookScript(ElvUI_ReputationBar, "OnEnter", ReputationBar_OnEnter)
+        if not EPDBC:IsHooked(EDB, "ReputationBar_OnEnter") then
+            EPDBC:SecureHookScript(EDB, "ReputationBar_OnEnter", ReputationBar_OnEnter)
         end
     elseif not E.db.EPDBC.enabled or not bar then
-        if EPDBC:IsHooked(ElvUI_ReputationBar, "OnEnter") then
-            EPDBC:Unhook(ElvUI_ReputationBar, "OnEnter")
+        if EPDBC:IsHooked(EDB, "ReputationBar_OnEnter") then
+            EPDBC:Unhook(EDB, "ReputationBar_OnEnter")
         end
     end
 end
 
 function EPDBC:HookRepText()
-    local bar = EDB.repBar
+    local bar = EDB.StatusBars.Reputation
     if E.db.EPDBC.enabled and bar then
-        if not EPDBC:IsHooked(EDB, "UpdateReputation") then
-            EPDBC:SecureHook(EDB, "UpdateReputation", UpdateReputation)
+        if not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
+            EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
         end
     elseif not E.db.EPDBC.enabled or not bar then
-        if EPDBC:IsHooked(EDB, "UpdateReputation") then
-            EPDBC:Unhook(EDB, "UpdateReputation")
+        if EPDBC:IsHooked(EDB, "ReputationBar_Update") then
+            EPDBC:Unhook(EDB, "ReputationBar_Update")
         end
         EPDBC:RestoreRepColors()
     end
-    EDB:UpdateReputation()
+    EDB:ReputationBar_Update()
 end
 
 function EPDBC:RestoreRepColors()
-    local bar = EDB.repBar
+    local bar = EDB.StatusBars.Reputation
     if bar then
         local _, standingID = GetWatchedFactionInfo()
         local color = FACTION_BAR_COLORS[standingID] or BACKUP
 
-        bar.statusBar:SetStatusBarColor(color.r, color.g, color.b)
-        bar.statusBar:SetAlpha(1)
+        bar:SetStatusBarColor(color.r, color.g, color.b)
+        bar:SetAlpha(1)
     end
 end
