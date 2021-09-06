@@ -59,5 +59,7 @@ Core.lua
 Experience.lua
 Reputation.lua
 Honor.lua
+#@version-retail@
 Azerite.lua
+#@end-version-retail@
 Options.lua
