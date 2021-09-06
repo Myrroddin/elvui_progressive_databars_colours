@@ -1,4 +1,6 @@
-## Interface: 80300
+## Interface-Retail: 90100
+## Interface-Classic: 11307
+## Interface-BCC: 20502
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -12,7 +14,7 @@
 ## Notes-itIT: @localization(locale="itIT", key="Notes", namespace="ToC")@
 ## Notes-frFR: @localization(locale="frFR", key="Notes", namespace="ToC")@
 ## Version: @project-version@
-## Author: Myrroddin AKA Sygon
+## Author: Sygon
 ## X-Author-Guild: Crimson Embers
 ## X-Author-Faction: Alliance
 ## X-Author-Server: Lightbringer-US
@@ -20,13 +22,15 @@
 ## X-Date: @project-date-iso@
 ## X-Category: plugins
 ## X-License: MIT License
-## X-Copyright: Copyright (c) 2017 - 2020 Paul Vandersypen
-## X-Localizations: enUS, esES, esMX, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
+## X-Copyright: Copyright (c) 2017 - 2021 Paul Vandersypen
+## X-Localizations: enUS, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
+
+## X-Curse-Project-ID: 280393
+## X-WoWI-ID: 24498
 
 ## RequiredDeps: ElvUI
 ## OptionalDeps: LibStub, CallbackHandler-1.0, Ace3, LibAboutPanel-2.0
 
-#@no-lib-strip@
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\AceAddon-3.0\AceAddon-3.0.xml
@@ -38,7 +42,6 @@ Libs\AceLocale-3.0\AceLocale-3.0.xml
 Libs\AceConsole-3.0\AceConsole-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\LibAboutPanel-2.0\lib.xml
-#@end-no-lib-strip@
 
 Locales\enUS.lua
 Locales\deDE.lua
