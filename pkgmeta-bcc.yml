@@ -20,3 +20,5 @@ tools-used:
 ignore:
     - Libs/LibStub/tests
     - Azerite.lua
+    - pkgmeta-classic.yml
+    - pkgmeta-retail.yml

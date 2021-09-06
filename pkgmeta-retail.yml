@@ -19,3 +19,5 @@ tools-used:
 
 ignore:
     - Libs/LibStub/tests
+    - pkgmeta-classic.yml
+    - pkgmeta-bcc.yml
