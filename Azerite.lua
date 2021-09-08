@@ -4,20 +4,14 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateAzerite(self)
     local bar = EDB.StatusBars.Azerite
-    local color = E.db.EPDBC.azeriteBar.color
-    bar:SetStatusBarColor(color.r, color.g, color.b, color.a)
+    local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
 
-    local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
-
-    if E.db.EPDBC.azeriteBar.progress and azeriteItemLocation then
-        local xp, totalLevelXP = C_AzeriteItem.GetAzeriteItemXPInfo(azeriteItemLocation)
-        local currentLevel = C_AzeriteItem.GetPowerLevel(azeriteItemLocation) -- do I need this?
-
-        local avg = xp / totalLevelXP
+    if E.db.EPDBC.azeriteBar.progress then
+        local avg = currentValue / maximum
         avg = EPDBC:Round(avg, 2)
         bar:SetAlpha(avg)
     else
-        bar:SetAlpha(0.8)
+        bar:SetAlpha(1.0)
     end
 end
 

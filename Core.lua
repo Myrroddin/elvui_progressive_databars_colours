@@ -81,9 +81,18 @@ function EPDBC:EnableDisable()
 end
 
 function EPDBC:Round(num, idp)
-    if num <= 0.1 then
-        return 0.1
-    end
+    if num <= 0.1 then return 0.1 end
+    
     local mult = 10^(idp or 0)
     return math.floor(num * mult + 0.5) / mult
+end
+
+function EPDBC:GetCurentMaxValues(statusBar)
+    local minimum, maximum = statusBar:GetMinMaxValues()
+    local currentValue = statusBar:GetValue()
+
+    -- prevent divide by 0 error
+    if maximum <= 1 then maximum = 1 end
+
+    return currentValue, maximum
 end

@@ -133,7 +133,7 @@ function EPDBC:HookRepTooltip()
     local bar = EDB.StatusBars.Reputation
     if E.db.EPDBC.enabled and bar then
         if not EPDBC:IsHooked(EDB, "ReputationBar_OnEnter") then
-            EPDBC:SecureHookScript(EDB, "ReputationBar_OnEnter", ReputationBar_OnEnter)
+            EPDBC:SecureHook(EDB, "ReputationBar_OnEnter", ReputationBar_OnEnter)
         end
     elseif not E.db.EPDBC.enabled or not bar then
         if EPDBC:IsHooked(EDB, "ReputationBar_OnEnter") then

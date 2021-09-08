@@ -6,20 +6,7 @@ local function UpdateExperience(self)
     local bar = EDB.StatusBars.Experience
     local xpColor = E.db.EPDBC.experienceBar.xpColor
     local restColor = E.db.EPDBC.experienceBar.restColor
-    local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
-
-    if isMaxLevel then
-        status:SetMinMaxValues(0, 1)
-        rested:SetMinMaxValues(0, 0)
-        status:SetValue(1)
-        rested:SetValue(0)
-        status:SetAlpha(1)
-        rested:SetAlpha(0)
-
-        if E.db.EPDBC.experienceBar.capped then
-            bar.text:SetText(L["Capped"])
-        end
-    end
+    local isMaxLevel = UnitXPMax("player")
 
     bar:SetStatusBarColor(xpColor.r, xpColor.g, xpColor.b, xpColor.a)
     bar.Rested:SetStatusBarColor(restColor.r, restColor.g, restColor.b, restColor.a)
@@ -34,7 +21,7 @@ local function UpdateExperience(self)
 end
 
 local function ExperienceBar_OnEnter()
-    local isMaxLevel = UnitLevel("player") == MAX_PLAYER_LEVEL_TABLE[GetExpansionLevel()]
+    local isMaxLevel = UnitXPMax("player")
 
     if isMaxLevel and E.db.EPDBC.experienceBar.capped then
         GameTooltip:ClearLines()
@@ -66,7 +53,7 @@ function EPDBC:HookXPTooltip()
     local bar = EDB.StatusBars.Experience
     if E.db.EPDBC.enabled and bar then
         if not EPDBC:IsHooked(EDB, "ExperienceBar_OnEnter") then
-            EPDBC:SecureHookScript(EDB, "ExperienceBar_OnEnter", ExperienceBar_OnEnter)
+            EPDBC:SecureHook(EDB, "ExperienceBar_OnEnter", ExperienceBar_OnEnter)
         end
     elseif not E.db.EPDBC.enabled or not bar then
         if EPDBC:IsHooked(EDB, "ExperienceBar_OnEnter") then

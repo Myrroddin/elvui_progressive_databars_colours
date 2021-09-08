@@ -43,7 +43,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.experienceBar.capped = value
-                            EDB:UpdateExperience()
+                            EDB:ExperienceBar_Update()
                         end
                     },
                     progress = {
@@ -56,7 +56,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.experienceBar.progress = value
-                            EDB:UpdateExperience()
+                            EDB:ExperienceBar_Update()
                         end
                     },
                     xpColor = {
@@ -72,7 +72,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b, a)
                             local c = E.db.EPDBC.experienceBar.xpColor
                             c.r, c.g, c.b, c.a = r, g, b, a
-                            EDB:UpdateExperience()
+                            EDB:ExperienceBar_Update()
                         end
                     },
                     restColor = {
@@ -88,7 +88,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b, a)
                             local c = E.db.EPDBC.experienceBar.restColor
                             c.r, c.g, c.b, c.a = r, g, b, a
-                            EDB:UpdateExperience()
+                            EDB:ExperienceBar_Update()
                         end
                     }
                 }
@@ -108,7 +108,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.reputationBar.capped = value
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     progress = {
@@ -121,7 +121,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.reputationBar.progress = value
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     textFormat = {
@@ -138,7 +138,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.reputationBar.textFormat = value
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     color = {
@@ -156,7 +156,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.reputationBar.color = value
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     description = {
@@ -177,7 +177,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[1]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     hostile = {
@@ -192,7 +192,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[2]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     unfriendly = {
@@ -207,7 +207,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[3]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     neutral = {
@@ -222,7 +222,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[4]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     friendly = {
@@ -237,7 +237,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[5]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     honored = {
@@ -252,7 +252,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[6]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     revered = {
@@ -267,7 +267,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[7]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     exalted = {
@@ -282,7 +282,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[8]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     },
                     paragon = {
@@ -297,7 +297,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.reputationBar.userColors[9]
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateReputation()
+                            EDB:ReputationBar_Update()
                         end
                     }
                 }
@@ -317,7 +317,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.honorBar.progress = value
-                            EDB:UpdateHonor()
+                            EDB:HonorBar_Update()
                         end
                     },
                     color = {
@@ -333,7 +333,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b, a)
                             local c = E.db.EPDBC.honorBar.color
                             c.r, c.g, c.b, c.a = r, g, b, a
-                            EDB:UpdateHonor()
+                            EDB:HonorBar_Update()
                         end
                     }
                 }
@@ -353,7 +353,7 @@ function EPDBC:GetOptions()
                         end,
                         set = function(info, value)
                             E.db.EPDBC.azeriteBar.progress = value
-                            EDB:UpdateAzerite()
+                            EDB:AzeriteBar_Update()
                         end
                     },
                     color = {
@@ -369,7 +369,7 @@ function EPDBC:GetOptions()
                         set = function(info, r, g, b)
                             local c = E.db.EPDBC.azeriteBar.color
                             c.r, c.g, c.b = r, g, b
-                            EDB:UpdateAzerite()
+                            EDB:AzeriteBar_Update()
                         end
                     }
                 }
