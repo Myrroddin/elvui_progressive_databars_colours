@@ -12,35 +12,35 @@ local addonName, addon = ...
 P["EPDBC"] = {
     enabled = true,
     experienceBar = {
-        capped = true,
         progress = true,
         xpColor = {r = 0, g = 0.4, b = 1, a = 0.8},
-        restColor = {r = 1, g = 0, b = 1, a = 0.2}
+        restColor = {r = 1, g = 0, b = 1, a = 0.4},
+        questColor = {r = 0, g = 1, b = 0, a = 0.4}
     },
     reputationBar = {
-        capped = true,
         progress = true,
-        color = "ascii",
-        textFormat = "Paragon",
-        userColors = {
-            [1] = {r = 1.00, g = 0.00, b = 0.00},       -- hated
-            [2] = {r = 0.62, g = 0.62, b = 0.62},       -- hostile
-            [3] = {r = 0.00, g = 0.80, b = 1.00},       -- unfriendly
-            [4] = {r = 1.00, g = 1.00, b = 1.00},       -- neutral
-            [5] = {r = 0.00, g = 1.00, b = 0.00},       -- friendly
-            [6] = {r = 0.25, g = 0.40, b = 0.90},       -- honored
-            [7] = {r = 0.60, g = 0.20, b = 0.80},       -- revered
-            [8] = {r = 1.00, g = 0.50, b = 0.00},       -- exalted
-            [9] = {r = 0.90, g = 0.80, b = 0.50}        -- paragon
+        fillExalted = true,
+        factionColors = {
+            {r = 0.8, g = 0.3, b = 0.22},   -- hated
+			{r = 0.8, g = 0.3, b = 0.22},   -- hostile
+			{r = 0.75, g = 0.27, b = 0},    -- unfriendly
+			{r = 0.9, g = 0.7, b = 0},      -- neutral
+			{r = 0, g = 0.6, b = 0.1},      -- friendly
+			{r = 0, g = 0.6, b = 0.1},      -- honored
+			{r = 0, g = 0.6, b = 0.1},      -- revered
+			{r = 0, g = 0.6, b = 0.1},      -- exalted
+            --@version-retail@
+			{r = 0, g = 0.6, b = 0.1}       -- paragon
+            --@end-version-retail@
         }
     },
     honorBar = {
         progress = true,
-        color = {r = 0.941, g = 0.447, b = 0.254, a = 0.8}
+        honorColor = {r = 0.94, g = 0.45, b = 0.25, a = 1}
     },
     azeriteBar = {
         progress = true,
-        color = {r = 0.901, g = 0.8, b = 0.601, a = 0.8}
+        azeriteColor = {r = 0.901, g = 0.8, b = 0.601, a = 1}
     }
 }
 
@@ -80,9 +80,10 @@ function EPDBC:EnableDisable()
     end
 end
 
+-- utility functions
 function EPDBC:Round(num, idp)
     if num <= 0.1 then return 0.1 end
-    
+
     local mult = 10^(idp or 0)
     return math.floor(num * mult + 0.5) / mult
 end

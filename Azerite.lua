@@ -4,15 +4,18 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateAzerite(self)
     local bar = EDB.StatusBars.Azerite
-    local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
 
-    if E.db.EPDBC.azeriteBar.progress then
-        local avg = currentValue / maximum
-        avg = EPDBC:Round(avg, 2)
-        bar:SetAlpha(avg)
-    else
+    if not E.db.EPDBC.azeriteBar.progress then
         bar:SetAlpha(1.0)
+        return
     end
+
+    local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
+    local barColor = bar:GetStatusBarColor()
+
+    local avg = currentValue / maximum
+    avg = EPDBC:Round(avg, 2)
+    bar:SetStatusBarTexture(barColor.r, barColor.g, barColor.b, avg)
 end
 
 function EPDBC:HookAzeriteBar()
@@ -33,6 +36,6 @@ end
 function EPDBC:RestoreAzeriteBar()
     local bar = EDB.StatusBars.Azerite
     if bar then
-        bar:SetStatusBarColor(.901, .8, .601, 0.8)
+        bar:SetStatusBarTexture(0.901, 0.8, .601, 1.0)
     end
 end

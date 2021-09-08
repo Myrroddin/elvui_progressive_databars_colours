@@ -4,16 +4,18 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateHonor(self)
     local bar = EDB.StatusBars.Honor
-    local color = E.db.EPDBC.honorBar.color
-    bar:SetStatusBarColor(color.r, color.g, color.b, color.a)
-
-    if E.db.EPDBC.honorBar.progress then
-        local avg = UnitHonor("player") / UnitHonorMax("player")
-        avg = EPDBC:Round(avg, 2)
-        bar:SetAlpha(avg)
-    else
-        bar:SetAlpha(0.8)
+    
+    if not E.db.EPDBC.honorBar.progress then
+        bar:SetAlpha(1.0)
+        return
     end
+
+    local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
+    local barColor = bar:GetStatusBarColor()
+
+    local avg = currentValue / maximum
+    avg = EPDBC:Round(avg, 2)
+    bar:SetStatusBarTexture(barColor.r, barColor.g, barColor.b, avg)
 end
 
 function EPDBC:HookHonorBar()
@@ -34,6 +36,6 @@ end
 function EPDBC:RestoreHonorBar()
     local bar = EDB.StatusBars.Honor
     if bar then
-        bar:SetStatusBarColor(0.941, 0.447, 0.254, 0.8)
+        bar:SetStatusBarTexture(0.941, 0.447, 0.254, 1.0)
     end
 end
