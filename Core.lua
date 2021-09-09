@@ -20,6 +20,7 @@ P["EPDBC"] = {
     reputationBar = {
         progress = true,
         fillExalted = true,
+        coloredFactionTooltips = true,
         factionColors = {
             {r = 0.8, g = 0.3, b = 0.22},   -- hated
 			{r = 0.8, g = 0.3, b = 0.22},   -- hostile
@@ -38,10 +39,12 @@ P["EPDBC"] = {
         progress = true,
         honorColor = {r = 0.94, g = 0.45, b = 0.25, a = 1}
     },
+    --@version-retail@
     azeriteBar = {
         progress = true,
         azeriteColor = {r = 0.901, g = 0.8, b = 0.601, a = 1}
     }
+    --@end-version-retail@
 }
 
 local function InitializeCallback()

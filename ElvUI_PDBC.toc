@@ -23,7 +23,7 @@
 ## X-Category: plugins
 ## X-License: MIT License
 ## X-Copyright: Copyright (c) 2017 - 2021 Paul Vandersypen
-## X-Localizations: enUS, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
+## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498

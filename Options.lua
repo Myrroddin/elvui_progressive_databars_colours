@@ -28,85 +28,101 @@ function EPDBC:GetOptions()
                     EPDBC:EnableDisable()
                 end
             },
-            experienceBar = {
+            blendProgress = {
                 order = 20,
+                name = L["Blend Progress"],
+                type = "header",
+            },
+            experienceBar = {
+                order = 30,
                 name = XPBAR_LABEL,
-                type = "group",
-                args = {
-                    progress = {
-                        order = 20,
-                        name = L["Blend Progress"],
-                        desc = L["Progressively blend the bar as you gain XP."],
-                        type = "toggle",
-                        get = function()
-                            return E.db.EPDBC.experienceBar.progress
-                        end,
-                        set = function(info, value)
-                            E.db.EPDBC.experienceBar.progress = value
-                            EDB:ExperienceBar_Update()
-                        end
-                    }
-                }
+                desc = L["Progressively blend the bar as you gain XP."],
+                type = "toggle",
+                get = function()
+                    return E.db.EPDBC.experienceBar.progress
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.experienceBar.progress = value
+                    EDB:ExperienceBar_Update()
+                end
             },
             reputationBar = {
-                order = 30,
+                order = 40,
                 name = L["Reputation Bar"],
-                type = "group",
-                args = {
-                    progress = {
-                        order = 20,
-                        name = L["Blend Progress"],
-                        desc = L["Progressively blend the bar as you gain reputation."],
-                        type = "toggle",
-                        get = function()
-                            return E.db.EPDBC.reputationBar.progress
-                        end,
-                        set = function(info, value)
-                            E.db.EPDBC.reputationBar.progress = value
-                            EDB:ReputationBar_Update()
-                        end
-                    }
-                }
+                type = "toggle",
+                desc = L["Progressively blend the bar as you gain reputation."],
+                get = function()
+                    return E.db.EPDBC.reputationBar.progress
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.reputationBar.progress = value
+                    EDB:ReputationBar_Update()
+                end
             },
             honorBar = {
-                order = 40,
-                name = L["Honor Bar"],
-                type = "group",
-                args = {
-                    progress = {
-                        order = 10,
-                        name = L["Blend Progress"],
-                        desc = L["Progressively blend the bar as you gain honor."],
-                        type = "toggle",
-                        get = function()
-                            return E.db.EPDBC.honorBar.progress
-                        end,
-                        set = function(info, value)
-                            E.db.EPDBC.honorBar.progress = value
-                            EDB:HonorBar_Update()
-                        end
-                    }
-                }
-            },
-            azeriteBar = {
                 order = 50,
+                name = L["Honor Bar"],
+                desc = L["Progressively blend the bar as you gain honor."],
+                type = "toggle",
+                get = function()
+                    return E.db.EPDBC.honorBar.progress
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.honorBar.progress = value
+                    EDB:HonorBar_Update()
+                end
+            },
+            --@version-retail@
+            azeriteBar = {
+                order = 60,
                 name = L["Azerite Bar"],
-                type = "group",
-                args = {
-                    progress = {
-                        order = 10,
-                        name = L["Blend Progress"],
-                        desc = L["Progressively blend the bar as you gain Azerite Power"],
-                        type = "toggle",
-                        get = function()
-                            return E.db.EPDBC.azeriteBar.progress
-                        end,
-                        set = function(info, value)
-                            E.db.EPDBC.azeriteBar.progress = value
-                            EDB:AzeriteBar_Update()
-                        end
-                    }
-                }
+                desc = L["Progressively blend the bar as you gain Azerite Power"],
+                type = "toggle",
+                get = function()
+                    return E.db.EPDBC.azeriteBar.progress
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.azeriteBar.progress = value
+                    EDB:AzeriteBar_Update()
+                end
+            },
+            --@end-version-retail@
+            miscellaneous = {
+                order = 70,
+                name = MISCELLANEOUS,
+                type = "header",
+            },
+            fillExalted = {
+                order = 80,
+                name = L["Fill Exalted"],
+                desc = L["The Reputation bar looks full at exalted or max friendship"],
+                type = "toggle",
+                width = "double",
+                get = function()
+                    return E.db.EPDBC.reputationBar.fillExalted
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.reputationBar.fillExalted = value
+                    EDB:ReputationBar_Update()
+                end
+            },
+            coloredFactionTooltips = {
+                order = 90,
+                name = L["Tooltip Reaction Colors"],
+                desc = L["Use custom faction colours for reaction tooltips"],
+                type = "toggle",
+                width = "double",
+                get = function()
+                    return E.db.EPDBC.reputationBar.coloredFactionTooltips
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.reputationBar.coloredFactionTooltips = value
+                end
+            },
+            header3 = {
+                order = 100,
+                name = "",
+                type = "header",
             }
         }
     }

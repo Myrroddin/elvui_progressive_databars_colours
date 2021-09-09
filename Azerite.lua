@@ -11,11 +11,10 @@ local function UpdateAzerite(self)
     end
 
     local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
-    local barColor = bar:GetStatusBarColor()
 
     local avg = currentValue / maximum
     avg = EPDBC:Round(avg, 2)
-    bar:SetStatusBarTexture(barColor.r, barColor.g, barColor.b, avg)
+    bar:SetAlpha(avg)
 end
 
 function EPDBC:HookAzeriteBar()
