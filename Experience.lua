@@ -20,20 +20,8 @@ local function UpdateExperience(self)
     end
 end
 
-local function ExperienceBar_OnEnter()
-    local isMaxLevel = UnitXPMax("player")
-
-    if isMaxLevel and E.db.EPDBC.experienceBar.capped then
-        GameTooltip:ClearLines()
-        GameTooltip:AddLine(L["Experience"])
-	    GameTooltip:AddLine(" ")
-        GameTooltip:AddDoubleLine(L["XP:"], L["Capped"])
-        GameTooltip:Show()
-    end
-end
-
--- hook the XP bar text and colour
-function EPDBC:HookXPText()
+-- hook the XP bar
+function EPDBC:HookXPBar()
     local bar = EDB.StatusBars.Experience
     if E.db.EPDBC.enabled and bar then
         if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
@@ -46,20 +34,6 @@ function EPDBC:HookXPText()
         EPDBC:RestoreXPColours()
     end
     EDB:ExperienceBar_Update()
-end
-
--- hook the GameTooltip of the XP bar
-function EPDBC:HookXPTooltip()
-    local bar = EDB.StatusBars.Experience
-    if E.db.EPDBC.enabled and bar then
-        if not EPDBC:IsHooked(EDB, "ExperienceBar_OnEnter") then
-            EPDBC:SecureHook(EDB, "ExperienceBar_OnEnter", ExperienceBar_OnEnter)
-        end
-    elseif not E.db.EPDBC.enabled or not bar then
-        if EPDBC:IsHooked(EDB, "ExperienceBar_OnEnter") then
-            EPDBC:Unhook(EDB, "ExperienceBar_OnEnter")
-        end
-    end
 end
 
 function EPDBC:RestoreXPColours()

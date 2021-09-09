@@ -25,7 +25,11 @@ function EPDBC:GetOptions()
                 end,
                 set = function(info, value)
                     E.db.EPDBC.enabled = value
-                    EPDBC:EnableDisable()
+                    if value then
+                        EPDBC:StartUp()
+                    else
+                        EPDBC:ShutDown()
+                    end
                 end
             },
             blendProgress = {
@@ -113,10 +117,10 @@ function EPDBC:GetOptions()
                 type = "toggle",
                 width = "double",
                 get = function()
-                    return E.db.EPDBC.reputationBar.coloredFactionTooltips
+                    return E.db.EPDBC.tooltipColors.coloredFactionTooltips
                 end,
                 set = function(info, value)
-                    E.db.EPDBC.reputationBar.coloredFactionTooltips = value
+                    E.db.EPDBC.tooltipColors.coloredFactionTooltips = value
                 end
             },
             header3 = {

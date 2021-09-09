@@ -20,7 +20,6 @@ P["EPDBC"] = {
     reputationBar = {
         progress = true,
         fillExalted = true,
-        coloredFactionTooltips = true,
         factionColors = {
             {r = 0.8, g = 0.3, b = 0.22},   -- hated
 			{r = 0.8, g = 0.3, b = 0.22},   -- hostile
@@ -39,6 +38,19 @@ P["EPDBC"] = {
         progress = true,
         honorColor = {r = 0.94, g = 0.45, b = 0.25, a = 1}
     },
+    tooltipColors = {
+        coloredFactionTooltips = true,
+        factionColors = {
+            {r = 0.8, g = 0.3, b = 0.22},   -- hated
+			{r = 0.8, g = 0.3, b = 0.22},   -- hostile
+			{r = 0.75, g = 0.27, b = 0},    -- unfriendly
+			{r = 0.9, g = 0.7, b = 0},      -- neutral
+			{r = 0, g = 0.6, b = 0.1},      -- friendly
+			{r = 0, g = 0.6, b = 0.1},      -- honored
+			{r = 0, g = 0.6, b = 0.1},      -- revered
+			{r = 0, g = 0.6, b = 0.1},      -- exalted
+        }
+    },
     --@version-retail@
     azeriteBar = {
         progress = true,
@@ -54,7 +66,8 @@ end
 -- register plugin so options are properly inserted when config is loaded
 function EPDBC:Initialize()
     LEP:RegisterPlugin(addonName, EPDBC.InsertOptions)
-    EPDBC:EnableDisable()
+    EPDBC:StartUp()
+    EPDBC:ShutDown()
 end
 
 -- insert our GUI options into ElvUI's config screen
@@ -67,20 +80,34 @@ end
 -- register the module with ElvUI. ElvUI will now call EPDBC:Initialize() when ElvUI is ready to load our plugin
 E:RegisterModule(EPDBC:GetName(), InitializeCallback)
 
-function EPDBC:EnableDisable()
-    -- these functions have both enable/disable checks
-    EPDBC:HookXPText()
-    EPDBC:HookXPTooltip()
+function EPDBC:StartUp()
+    if not E.db.EPDBC.enabled then
+        EPDBC:ShutDown()
+    end
+
+    E.db.databars.useCustomFactionColors = true
+    if E.db.EPDBC.tooltipColors.coloredFactionTooltips then
+        E.db.tooltip.useCustomFactionColors = true
+    end
+
+    EPDBC:HookXPBar()
     EPDBC:HookRepText()
     EPDBC:HookRepTooltip()
     EPDBC:HookHonorBar()
     --@version-retail@
     EPDBC:HookAzeriteBar()
     --@end-version-retail@
+end
 
-    if not E.db.EPDBC.enabled then
-        EPDBC:UnhookAll() -- make sure no hooks are left behind
+function EPDBC:ShutDown()
+    if E.db.EPDBC.enabled then
+        EPDBC:StartUp()
     end
+
+    E.db.databars.useCustomFactionColors = false
+    E.db.tooltip.useCustomFactionColors = false
+
+    EPDBC:UnhookAll()
 end
 
 -- utility functions
