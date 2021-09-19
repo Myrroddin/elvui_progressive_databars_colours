@@ -12,51 +12,24 @@ local addonName, addon = ...
 P["EPDBC"] = {
     enabled = true,
     experienceBar = {
-        progress = true,
-        xpColor = {r = 0, g = 0.4, b = 1, a = 0.8},
-        restColor = {r = 1, g = 0, b = 1, a = 0.4},
-        questColor = {r = 0, g = 1, b = 0, a = 0.4}
+        progress = true
     },
     reputationBar = {
         progress = true,
         fillExalted = true,
-        factionColors = {
-            {r = 0.8, g = 0.3, b = 0.22},   -- hated
-			{r = 0.8, g = 0.3, b = 0.22},   -- hostile
-			{r = 0.75, g = 0.27, b = 0},    -- unfriendly
-			{r = 0.9, g = 0.7, b = 0},      -- neutral
-			{r = 0, g = 0.6, b = 0.1},      -- friendly
-			{r = 0, g = 0.6, b = 0.1},      -- honored
-			{r = 0, g = 0.6, b = 0.1},      -- revered
-			{r = 0, g = 0.6, b = 0.1},      -- exalted
-            --@version-retail@
-			{r = 0, g = 0.6, b = 0.1}       -- paragon
-            --@end-version-retail@
-        }
+        fillHated = true
     },
     honorBar = {
-        progress = true,
-        honorColor = {r = 0.94, g = 0.45, b = 0.25, a = 1}
-    },
-    tooltipColors = {
-        coloredFactionTooltips = true,
-        factionColors = {
-            {r = 0.8, g = 0.3, b = 0.22},   -- hated
-			{r = 0.8, g = 0.3, b = 0.22},   -- hostile
-			{r = 0.75, g = 0.27, b = 0},    -- unfriendly
-			{r = 0.9, g = 0.7, b = 0},      -- neutral
-			{r = 0, g = 0.6, b = 0.1},      -- friendly
-			{r = 0, g = 0.6, b = 0.1},      -- honored
-			{r = 0, g = 0.6, b = 0.1},      -- revered
-			{r = 0, g = 0.6, b = 0.1},      -- exalted
-        }
+        progress = true
     },
     --@version-retail@
     azeriteBar = {
-        progress = true,
-        azeriteColor = {r = 0.901, g = 0.8, b = 0.601, a = 1}
-    }
+        progress = true
+    },
     --@end-version-retail@
+    progressSmoothing = {
+        decimalLength = 3
+    }
 }
 
 local function InitializeCallback()
@@ -66,13 +39,17 @@ end
 -- register plugin so options are properly inserted when config is loaded
 function EPDBC:Initialize()
     LEP:RegisterPlugin(addonName, EPDBC.InsertOptions)
-    EPDBC:StartUp()
-    EPDBC:ShutDown()
+    if E.db.EPDBC.enabled then
+        EPDBC:StartUp()
+    end
 end
 
 -- insert our GUI options into ElvUI's config screen
 function EPDBC:InsertOptions()
-    if not E.Options.args.EPDBC then
+    --@debug@
+    E.Options.args.EPDBC = nil
+    --@end-debug@
+    if E.Options.args.EPDBC == nil then
         E.Options.args.EPDBC = EPDBC:GetOptions()
     end
 end
@@ -81,33 +58,131 @@ end
 E:RegisterModule(EPDBC:GetName(), InitializeCallback)
 
 function EPDBC:StartUp()
-    if not E.db.EPDBC.enabled then
-        EPDBC:ShutDown()
-    end
+    -- replace reputation databar colours
+    E.db["databars"]["colors"]["factionColors"][1]["b"] = 0
+    E.db["databars"]["colors"]["factionColors"][1]["g"] = 0
+    E.db["databars"]["colors"]["factionColors"][1]["r"] = 1
+    E.db["databars"]["colors"]["factionColors"][2]["b"] = 0.27843137254902
+    E.db["databars"]["colors"]["factionColors"][2]["g"] = 0.38823529411765
+    E.db["databars"]["colors"]["factionColors"][2]["r"] = 1
+    E.db["databars"]["colors"]["factionColors"][3]["b"] = 0
+    E.db["databars"]["colors"]["factionColors"][3]["g"] = 0.64705882352941
+    E.db["databars"]["colors"]["factionColors"][3]["r"] = 1
+    E.db["databars"]["colors"]["factionColors"][4]["g"] = 1
+    E.db["databars"]["colors"]["factionColors"][4]["r"] = 1
+    E.db["databars"]["colors"]["factionColors"][5]["b"] = 0
+    E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.50196078431373
+    E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.92941176470588
+    E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.5843137254902
+    E.db["databars"]["colors"]["factionColors"][6]["r"] = 0.3921568627451
+    E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.88627450980392
+    E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.16862745098039
+    E.db["databars"]["colors"]["factionColors"][7]["r"] = 0.54117647058824
+    E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
+    E.db["databars"]["colors"]["factionColors"][8]["g"] = 0
+    E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
+    --@version-retail@
+    E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.12549019607843
+    E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.64705882352941
+    E.db["databars"]["colors"]["factionColors"][9]["r"] = 0.85490196078431
+    --@end-version-retail@
+    E.db["databars"]["colors"]["useCustomFactionColors"] = true
 
-    E.db.databars.useCustomFactionColors = true
-    if E.db.EPDBC.tooltipColors.coloredFactionTooltips then
-        E.db.tooltip.useCustomFactionColors = true
-    end
+    -- replace tooltip faction colours
+    E.db["tooltip"]["factionColors"][1]["b"] = 0
+    E.db["tooltip"]["factionColors"][1]["g"] = 0
+    E.db["tooltip"]["factionColors"][1]["r"] = 1
+    E.db["tooltip"]["factionColors"][2]["b"] = 0.27843137254902
+    E.db["tooltip"]["factionColors"][2]["g"] = 0.38823529411765
+    E.db["tooltip"]["factionColors"][2]["r"] = 1
+    E.db["tooltip"]["factionColors"][3]["b"] = 0
+    E.db["tooltip"]["factionColors"][3]["g"] = 0.64705882352941
+    E.db["tooltip"]["factionColors"][3]["r"] = 1
+    E.db["tooltip"]["factionColors"][4]["g"] = 1
+    E.db["tooltip"]["factionColors"][4]["r"] = 1
+    E.db["tooltip"]["factionColors"][5]["b"] = 0
+    E.db["tooltip"]["factionColors"][5]["g"] = 0.50196078431373
+    E.db["tooltip"]["factionColors"][6]["b"] = 0.92941176470588
+    E.db["tooltip"]["factionColors"][6]["g"] = 0.5843137254902
+    E.db["tooltip"]["factionColors"][6]["r"] = 0.3921568627451
+    E.db["tooltip"]["factionColors"][7]["b"] = 0.88627450980392
+    E.db["tooltip"]["factionColors"][7]["g"] = 0.16862745098039
+    E.db["tooltip"]["factionColors"][7]["r"] = 0.54117647058824
+    E.db["tooltip"]["factionColors"][8]["b"] = 0.50196078431373
+    E.db["tooltip"]["factionColors"][8]["g"] = 0
+    E.db["tooltip"]["factionColors"][8]["r"] = 0.50196078431373
+    E.db["tooltip"]["useCustomFactionColors"] = true
 
-    EPDBC:HookXPBar()
-    EPDBC:HookRepText()
-    EPDBC:HookRepTooltip()
+    --EPDBC:HookXPBar()
+    EPDBC:HookRepBar()
     EPDBC:HookHonorBar()
     --@version-retail@
-    EPDBC:HookAzeriteBar()
+    --EPDBC:HookAzeriteBar()
     --@end-version-retail@
 end
 
 function EPDBC:ShutDown()
-    if E.db.EPDBC.enabled then
-        EPDBC:StartUp()
-    end
+    -- reset reputation databar colours
+    E.db["databars"]["colors"]["factionColors"][1]["b"] = 0.22
+    E.db["databars"]["colors"]["factionColors"][1]["g"] = 0.30
+    E.db["databars"]["colors"]["factionColors"][1]["r"] = 0.80
+    E.db["databars"]["colors"]["factionColors"][2]["b"] = 0.22
+    E.db["databars"]["colors"]["factionColors"][2]["g"] = 0.30
+    E.db["databars"]["colors"]["factionColors"][2]["r"] = 0.80
+    E.db["databars"]["colors"]["factionColors"][3]["b"] = 0
+    E.db["databars"]["colors"]["factionColors"][3]["g"] = 0.27
+    E.db["databars"]["colors"]["factionColors"][3]["r"] = 0.75
+    E.db["databars"]["colors"]["factionColors"][4]["b"] = 0
+    E.db["databars"]["colors"]["factionColors"][4]["g"] = 0.70
+    E.db["databars"]["colors"]["factionColors"][4]["r"] = 0.90
+    E.db["databars"]["colors"]["factionColors"][5]["b"] = 0.10
+    E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.60
+    E.db["databars"]["colors"]["factionColors"][5]["r"] = 0
+    E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.10
+    E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.60
+    E.db["databars"]["colors"]["factionColors"][6]["r"] = 0
+    E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.10
+    E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.60
+    E.db["databars"]["colors"]["factionColors"][7]["r"] = 0
+    E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.10
+    E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.60
+    E.db["databars"]["colors"]["factionColors"][8]["r"] = 0
+    --@version-retail@
+    E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.10
+    E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.60
+    E.db["databars"]["colors"]["factionColors"][9]["r"] = 0
+    --@end-version-retail@
+    E.db["databars"]["colors"]["useCustomFactionColors"] = false
 
-    E.db.databars.useCustomFactionColors = false
-    E.db.tooltip.useCustomFactionColors = false
+    -- reset tooltip faction colours
+    E.db["tooltip"]["factionColors"][1]["b"] = 0.22
+    E.db["tooltip"]["factionColors"][1]["g"] = 0.30
+    E.db["tooltip"]["factionColors"][1]["r"] = 0.80
+    E.db["tooltip"]["factionColors"][2]["b"] = 0.22
+    E.db["tooltip"]["factionColors"][2]["g"] = 0.30
+    E.db["tooltip"]["factionColors"][2]["r"] = 0.80
+    E.db["tooltip"]["factionColors"][3]["g"] = 0.27
+    E.db["tooltip"]["factionColors"][3]["r"] = 0.75
+    E.db["tooltip"]["factionColors"][4]["b"] = 0
+    E.db["tooltip"]["factionColors"][4]["g"] = 0.70
+    E.db["tooltip"]["factionColors"][4]["r"] = 0.90
+    E.db["tooltip"]["factionColors"][5]["b"] = 0.10
+    E.db["tooltip"]["factionColors"][5]["g"] = 0.60
+    E.db["tooltip"]["factionColors"][5]["r"] = 0
+    E.db["tooltip"]["factionColors"][6]["b"] = 0.10
+    E.db["tooltip"]["factionColors"][6]["g"] = 0.60
+    E.db["tooltip"]["factionColors"][6]["r"] = 0
+    E.db["tooltip"]["factionColors"][7]["b"] = 0.10
+    E.db["tooltip"]["factionColors"][7]["g"] = 0.60
+    E.db["tooltip"]["factionColors"][7]["r"] = 0
+    E.db["tooltip"]["factionColors"][8]["b"] = 0.10
+    E.db["tooltip"]["factionColors"][8]["g"] = 0.60
+    E.db["tooltip"]["factionColors"][8]["r"] = 0
+    E.db["tooltip"]["useCustomFactionColors"] = false
 
     EPDBC:UnhookAll()
+    EPDBC:RestoreHonorBar()
+    EPDBC:RestoreRepBar()
 end
 
 -- utility functions

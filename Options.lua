@@ -2,6 +2,7 @@
 local E, L, V, P, G = unpack(ElvUI)
 -- get the DataBars module
 local EDB = E:GetModule("DataBars")
+local ETT = E:GetModule("Tooltip")
 local EPDBC = E:GetModule("EPDBC")
 local module_name, private_table = ...
 
@@ -25,11 +26,14 @@ function EPDBC:GetOptions()
                 end,
                 set = function(info, value)
                     E.db.EPDBC.enabled = value
+                    EDB.db.colors.useCustomFactionColors = value
+                    ETT.db.useCustomFactionColors = value
                     if value then
                         EPDBC:StartUp()
                     else
                         EPDBC:ShutDown()
                     end
+                    E:RefreshGUI()
                 end
             },
             blendProgress = {
@@ -94,14 +98,13 @@ function EPDBC:GetOptions()
             miscellaneous = {
                 order = 70,
                 name = MISCELLANEOUS,
-                type = "header",
+                type = "header"
             },
             fillExalted = {
                 order = 80,
                 name = L["Fill Exalted"],
                 desc = L["The Reputation bar looks full at exalted or max friendship"],
                 type = "toggle",
-                width = "double",
                 get = function()
                     return E.db.EPDBC.reputationBar.fillExalted
                 end,
@@ -110,21 +113,36 @@ function EPDBC:GetOptions()
                     EDB:ReputationBar_Update()
                 end
             },
-            coloredFactionTooltips = {
+            fillHated = {
                 order = 90,
-                name = L["Tooltip Reaction Colors"],
-                desc = L["Use custom faction colours for reaction tooltips"],
+                name = L["Fill Hated"],
+                desc = L["The Reputation bar looks full at 0 hated, when you cannot lose any more reputation"],
                 type = "toggle",
-                width = "double",
                 get = function()
-                    return E.db.EPDBC.tooltipColors.coloredFactionTooltips
+                    return E.db.EPDBC.reputationBar.fillHated
                 end,
                 set = function(info, value)
-                    E.db.EPDBC.tooltipColors.coloredFactionTooltips = value
+                    E.db.EPDBC.reputationBar.fillHated = value
+                    EDB:ReputationBar_Update()
                 end
             },
-            header3 = {
+            progressSmoothing = {
                 order = 100,
+                name = L["Progress Smoothing"],
+                desc = L["Number of decimals to use when blending the bars' alpha as you gain xp, honour, rep, etc"],
+                type = "range",
+                get = function()
+                    return E.db.EPDBC.progressSmoothing.decimalLength
+                end,
+                set = function(info, value)
+                    E.db.EPDBC.progressSmoothing.decimalLength = value
+                end,
+                min = 1,
+                max = 14,
+                step = 1
+            },
+            header3 = {
+                order = 110,
                 name = "",
                 type = "header",
             }

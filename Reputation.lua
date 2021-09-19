@@ -13,7 +13,6 @@ local EPDBC_REP_BAR_COLORS = {
     [6] = {r = 0.25, g = 0.40, b = 0.90},       -- honored
     [7] = {r = 0.60, g = 0.20, b = 0.80},       -- revered
     [8] = {r = 1.00, g = 0.50, b = 0.00},       -- exalted
-    [9] = {r = 0.90, g = 0.80, b = 0.50},       -- paragon
 }
 local BACKUP = FACTION_BAR_COLORS[1]
 
@@ -36,40 +35,6 @@ local function CheckRep(standingID, factionID, friendID, nextFriendThreshold)
 end
 
 -- local functions called via hooking -----------------------------------------
-local function ReputationBar_OnEnter()
-    local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
-    local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID)
-    local isCapped, isParagon = CheckRep(standingID, factionID, friendID, nextFriendThreshold)
-
-
-    if name and E.db.EPDBC.reputationBar.capped then
-        if isCapped and not isParagon then
-            GameTooltip:ClearLines()
-
-            if friendID then
-                GameTooltip:AddLine(friendName)
-            elseif not isParagon then
-                GameTooltip:AddLine(name)
-            end
-
-            GameTooltip:AddLine(" ")
-            GameTooltip:AddDoubleLine(REPUTATION .. ":", L["Capped"])
-            GameTooltip:Show()
-        elseif isParagon then
-            local replacement = L[E.db.EPDBC.reputationBar.textFormat == "P" and "P" or "Paragon"]
-
-            for line = 1, GameTooltip:NumLines() do
-                local lineTextRight = _G["GameTooltipTextRight" .. line]
-                local lineTextRightText = lineTextRight:GetText()
-                if lineTextRightText and lineTextRightText:len() >= 1 then
-                    lineTextRight:SetText(gsub(lineTextRightText, FACTION_STANDING_LABEL8, replacement))
-                end
-            end
-            GameTooltip:Show()
-        end
-    end
-end
-
 local function UpdateReputation(self)
     local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
     local friendID, friendRep, friendMaxRep, friendName, friendText, friendTexture, friendTextLevel, friendThreshold, nextFriendThreshold = GetFriendshipReputation(factionID)
@@ -129,41 +94,27 @@ local function UpdateReputation(self)
 end
 
 -- hooking fuctions -----------------------------------------------------------
-function EPDBC:HookRepTooltip()
+function EPDBC:HookRepBar()
     local bar = EDB.StatusBars.Reputation
-    if E.db.EPDBC.enabled and bar then
-        if not EPDBC:IsHooked(EDB, "ReputationBar_OnEnter") then
-            EPDBC:SecureHook(EDB, "ReputationBar_OnEnter", ReputationBar_OnEnter)
-        end
-    elseif not E.db.EPDBC.enabled or not bar then
-        if EPDBC:IsHooked(EDB, "ReputationBar_OnEnter") then
-            EPDBC:Unhook(EDB, "ReputationBar_OnEnter")
-        end
-    end
-end
-
-function EPDBC:HookRepText()
-    local bar = EDB.StatusBars.Reputation
-    if E.db.EPDBC.enabled and bar then
+    if bar then
         if not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
             EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
         end
-    elseif not E.db.EPDBC.enabled or not bar then
-        if EPDBC:IsHooked(EDB, "ReputationBar_Update") then
-            EPDBC:Unhook(EDB, "ReputationBar_Update")
-        end
-        EPDBC:RestoreRepColors()
+    elseif EPDBC:IsHooked(EDB, "ReputationBar_Update") then
+        EPDBC:Unhook(EDB, "ReputationBar_Update")
+        EPDBC:RestoreRepBar()
     end
+    
     EDB:ReputationBar_Update()
 end
 
-function EPDBC:RestoreRepColors()
+function EPDBC:RestoreRepBar()
     local bar = EDB.StatusBars.Reputation
     if bar then
-        local _, standingID = GetWatchedFactionInfo()
-        local color = FACTION_BAR_COLORS[standingID] or BACKUP
+        if EPDBC:IsHooked("ReputationBar_Update") then
+            EPDBC:Unhook("ReputationBar_Update")
+        end
 
-        bar:SetStatusBarColor(color.r, color.g, color.b)
-        bar:SetAlpha(1)
+        EDB:ReputationBar_Update()
     end
 end
