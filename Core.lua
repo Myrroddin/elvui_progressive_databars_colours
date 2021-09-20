@@ -32,10 +32,6 @@ P["EPDBC"] = {
     }
 }
 
-local function InitializeCallback()
-    EPDBC:Initialize()
-end
-
 -- register plugin so options are properly inserted when config is loaded
 function EPDBC:Initialize()
     LEP:RegisterPlugin(addonName, EPDBC.InsertOptions)
@@ -46,16 +42,13 @@ end
 
 -- insert our GUI options into ElvUI's config screen
 function EPDBC:InsertOptions()
-    --@debug@
-    E.Options.args.EPDBC = nil
-    --@end-debug@
     if E.Options.args.EPDBC == nil then
         E.Options.args.EPDBC = EPDBC:GetOptions()
     end
 end
 
 -- register the module with ElvUI. ElvUI will now call EPDBC:Initialize() when ElvUI is ready to load our plugin
-E:RegisterModule(EPDBC:GetName(), InitializeCallback)
+E:RegisterModule(EPDBC:GetName())
 
 function EPDBC:StartUp()
     -- replace reputation databar colours

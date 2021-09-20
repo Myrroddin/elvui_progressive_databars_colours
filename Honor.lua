@@ -23,9 +23,6 @@ function EPDBC:HookHonorBar()
     if bar then
         if not EPDBC:IsHooked(EDB, "HonorBar_Update") then
             EPDBC:SecureHook(EDB, "HonorBar_Update", UpdateHonor)
-        elseif EPDBC:IsHooked(EDB, "HonorBar_Update") then
-            EPDBC:Unhook(EDB, "HonorBar_Update")
-            EPDBC:RestoreHonorBar()
         end
     end
     EDB:HonorBar_Update()

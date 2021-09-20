@@ -13,5 +13,5 @@ L["Progressively blend the bar as you gain XP."] = true
 L["Progressively Colored DataBars"] = true
 L["Reputation Bar"] = true
 L["The Reputation bar looks full at 0 hated, when you cannot lose any more reputation"] = true
-L["The Reputation bar looks full at exalted or max friendship"] = true
+L["The Reputation bar looks full at exalted"] = true
 L["Toggle module on/off. If off, it restores DataBars to ElvUI defaults."] = true

@@ -103,7 +103,7 @@ function EPDBC:GetOptions()
             fillExalted = {
                 order = 80,
                 name = L["Fill Exalted"],
-                desc = L["The Reputation bar looks full at exalted or max friendship"],
+                desc = L["The Reputation bar looks full at exalted"],
                 type = "toggle",
                 get = function()
                     return E.db.EPDBC.reputationBar.fillExalted
