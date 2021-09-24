@@ -113,6 +113,7 @@ function EPDBC:GetOptions()
                     EDB:ReputationBar_Update()
                 end
             },
+            --@debug@
             fillHated = {
                 order = 90,
                 name = L["Fill Hated"],
@@ -126,6 +127,7 @@ function EPDBC:GetOptions()
                     EDB:ReputationBar_Update()
                 end
             },
+            --@end-debug@
             progressSmoothing = {
                 order = 100,
                 name = L["Progress Smoothing"],
