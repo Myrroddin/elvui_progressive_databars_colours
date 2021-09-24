@@ -177,10 +177,10 @@ function EPDBC:ShutDown()
     EPDBC:RestoreHonorBar()
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
-    EPDBC:RestoreAzeriteBar()
     --@version-retail@
+    EPDBC:RestoreAzeriteBar()
+    --@end-version-retail@
     EPDBC:UnhookAll()
-    --@end-version-retail@S
 end
 
 -- utility functions
