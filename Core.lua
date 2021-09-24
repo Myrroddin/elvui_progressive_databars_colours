@@ -110,7 +110,7 @@ function EPDBC:StartUp()
     EPDBC:HookRepBar()
     EPDBC.HookHonorBar()
     --@version-retail@
-    --EPDBC:HookAzeriteBar()
+    EPDBC:HookAzeriteBar()
     --@end-version-retail@
 end
 
@@ -177,6 +177,10 @@ function EPDBC:ShutDown()
     EPDBC:RestoreHonorBar()
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
+    EPDBC:RestoreAzeriteBar()
+    --@version-retail@
+    EPDBC:UnhookAll()
+    --@end-version-retail@S
 end
 
 -- utility functions
