@@ -106,9 +106,9 @@ function EPDBC:StartUp()
     E.db["tooltip"]["factionColors"][8]["r"] = 0.50196078431373
     E.db["tooltip"]["useCustomFactionColors"] = true
 
-    --EPDBC:HookXPBar()
+    EPDBC:HookXPBar()
     EPDBC:HookRepBar()
-    EPDBC:HookHonorBar()
+    EPDBC.HookHonorBar()
     --@version-retail@
     --EPDBC:HookAzeriteBar()
     --@end-version-retail@
@@ -176,6 +176,7 @@ function EPDBC:ShutDown()
     EPDBC:UnhookAll()
     EPDBC:RestoreHonorBar()
     EPDBC:RestoreRepBar()
+    EPDBC:RestoreXPBar()
 end
 
 -- utility functions
@@ -186,7 +187,7 @@ function EPDBC:Round(num, idp)
     return math.floor(num * mult + 0.5) / mult
 end
 
-function EPDBC:GetCurentMaxValues(statusBar)
+function EPDBC:GetCurrentMaxValues(statusBar)
     local minimum, maximum = statusBar:GetMinMaxValues()
     local currentValue = statusBar:GetValue()
 

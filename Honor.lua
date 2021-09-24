@@ -5,7 +5,7 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 local function UpdateHonor(self)
     local bar = EDB.StatusBars.Honor
     local r, g, b, a = bar:GetStatusBarColor()
-    local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
+    local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
     local avg = currentValue / maximum
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
     
@@ -25,6 +25,7 @@ function EPDBC:HookHonorBar()
             EPDBC:SecureHook(EDB, "HonorBar_Update", UpdateHonor)
         end
     end
+    
     EDB:HonorBar_Update()
 end
 

@@ -6,8 +6,8 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 local function UpdateReputation(self)
     local bar = EDB.StatusBars.Reputation
     local r, g, b, a = bar:GetStatusBarColor()
-    local currentValue, maximum = EPDBC:GetCurentMaxValues(bar)
-    local avg = currentValue / maximum
+    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
     
     if not E.db.EPDBC.reputationBar.progress then
@@ -33,9 +33,16 @@ local function UpdateReputation(self)
 
     -- fill the bar at lowest reputation
     if E.db.EPDBC.reputationBar.fillHated then
-        if standingID == 1 and value == 0 then
-            bar:SetMinMaxValues(0, 1)
-            bar:SetValue(1)
+        if standingID <= 1 then
+            if value >= 1 or currentValue >= 1 then
+                bar:SetMinMaxValues(0, maximumValue)
+                bar:SetValue(currentValue)
+                a = avg
+            else
+                bar:SetMinMaxValues(0, 1)
+                bar:SetValue(1)
+                a = 1.0
+            end
         end
     end
 
@@ -51,6 +58,7 @@ function EPDBC:HookRepBar()
             EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
         end
     end
+    
     EDB:ReputationBar_Update()
 end
 

@@ -136,9 +136,15 @@ function EPDBC:GetOptions()
                 end,
                 set = function(info, value)
                     E.db.EPDBC.progressSmoothing.decimalLength = value
+                    EDB:ReputationBar_Update()
+                    EDB:HonorBar_Update()
+                    EDB:ExperienceBar_Update()
+                    --@version-retail@
+                    EDB:AzeriteBar_Update()
+                    --@end-version-retail@
                 end,
                 min = 1,
-                max = 14,
+                max = 10,
                 step = 1
             },
             header3 = {
