@@ -9,5 +9,6 @@ tools-used:
 
 ignore:
     - Azerite.lua
+    - pkgmeta-classic.yml
     - pkgmeta-bcc.yml
     - pkgmeta-retail.yml
