@@ -1,5 +1,5 @@
 ## Interface-Retail: 90105
-## Interface-Classic: 11400
+## Interface-Classic: 11401
 ## Interface-BCC: 20502
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
@@ -22,7 +22,7 @@
 ## X-Date: @project-date-iso@
 ## X-Category: plugins
 ## X-License: MIT License
-## X-Copyright: Copyright (c) 2017 - 2021 Paul Vandersypen
+## X-Copyright: Copyright (c) 2017 - 2022 Paul Vandersypen
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
 ## X-Curse-Project-ID: 280393
