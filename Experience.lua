@@ -4,6 +4,8 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateExperience(self)
     local bar = EDB.StatusBars.Experience
+    if not bar then return end -- nothing to see here
+    
     local r, g, b, a = bar:GetStatusBarColor()
     local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
     local avg = currentValue / maximum
@@ -23,6 +25,9 @@ end
 -- hook the XP bar
 function EPDBC:HookXPBar()
     local bar = EDB.StatusBars.Experience
+    local isEnabled = bar.db.enable
+    if not isEnabled then return end -- experience bar disabled, exit
+
     if bar then
         if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
             EPDBC:SecureHook(EDB, "ExperienceBar_Update", UpdateExperience)

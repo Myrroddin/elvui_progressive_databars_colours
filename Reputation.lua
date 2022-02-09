@@ -5,6 +5,10 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 -- local functions called via hooking -----------------------------------------
 local function UpdateReputation(self)
     local bar = EDB.StatusBars.Reputation
+    local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
+
+    if not bar or not name then return end -- nothing to see here
+
     local r, g, b, a = bar:GetStatusBarColor()
     local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
     local avg = currentValue / maximumValue
@@ -16,16 +20,15 @@ local function UpdateReputation(self)
         a = avg
     end
 
-    local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
-
     -- fill the bar at max reputation
     if E.db.EPDBC.reputationBar.fillExalted then
-        if standingID == MAX_REPUTATION_REACTION then
-            --@version-retail@
-            if C_Reputation.IsFactionParagon(factionID) then -- don't want fill the bar at Paragon
-                return
-            end
-            --@end-version-retail@
+        --@version-retail@
+        if C_Reputation.IsFactionParagon(factionID) and currentValue >= 1 then -- don't want fill the bar at Paragon
+            return
+        end
+        --@end-version-retail@
+
+        if (currentValue <= 0) or (maximumValue <= 0) then
             bar:SetMinMaxValues(0, 1)
             bar:SetValue(1)
         end
@@ -53,6 +56,9 @@ end
 -- hooking fuctions -----------------------------------------------------------
 function EPDBC:HookRepBar()
     local bar = EDB.StatusBars.Reputation
+    local isEnabled = bar.db.enable
+    if not isEnabled then return end -- reputaion bar disabled, exit
+
     if bar then
         if not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
             EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)

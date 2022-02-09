@@ -4,6 +4,8 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateHonor(self)
     local bar = EDB.StatusBars.Honor
+    if not bar then return end -- nothing to see here
+
     local r, g, b, a = bar:GetStatusBarColor()
     local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
     local avg = currentValue / maximum
@@ -20,6 +22,9 @@ end
 
 function EPDBC:HookHonorBar()
     local bar = EDB.StatusBars.Honor
+    local isEnabled = bar.db.enable
+    if not isEnabled then return end -- honour bar disabled, exit
+    
     if bar then
         if not EPDBC:IsHooked(EDB, "HonorBar_Update") then
             EPDBC:SecureHook(EDB, "HonorBar_Update", UpdateHonor)
