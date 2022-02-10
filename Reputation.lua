@@ -24,7 +24,23 @@ local function UpdateReputation(self)
     if E.db.EPDBC.reputationBar.fillExalted then
         --@version-retail@
         if C_Reputation.IsFactionParagon(factionID) then
-            -- do nothing
+            -- mainline factions work, now check for paragon friends
+            local friendID = GetFriendshipReputation(factionID)
+            if friendID then
+                local currentParagonValue, thresholdParagonValue = C_Reputation.GetFactionParagonInfo(factionID)
+                bar:SetMinMaxValues(0, thresholdParagonValue)
+                bar:SetValue(currentParagonValue)
+                avg = currentParagonValue / thresholdParagonValue
+                avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
+                
+                -- correctly colour friends who are paragons
+                local colour = EDB.db.colors.factionColors[9]
+                r, g, b = colour.r, colour.g, colour.b
+                a = avg
+
+                -- set bar text correctly
+                bar.text:SetText(name .. ":" .." " .. currentParagonValue .. " - " .. thresholdParagonValue .. " [" .. L["Paragon"] .. "]")
+            end
         --@end-version-retail@
         elseif (standingID == MAX_REPUTATION_REACTION) or (currentValue == maximumValue) then
             bar:SetMinMaxValues(0, 1)
