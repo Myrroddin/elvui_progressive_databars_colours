@@ -27,6 +27,7 @@
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
+## X-Wago-ID: xZKxmqGk
 
 ## RequiredDeps: ElvUI
 
