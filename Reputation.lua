@@ -40,6 +40,9 @@ local function UpdateReputation(self)
 
                 -- set bar text correctly
                 bar.text:SetText(name .. ":" .." " .. currentParagonValue .. " - " .. thresholdParagonValue .. " [" .. L["Paragon"] .. "]")
+
+                -- show paragon rewards icon (or not) as per user preferences
+                bar.Reward:SetPoint('CENTER', bar, EDB.db.reputation.rewardPosition)
             end
         --@end-version-retail@
         elseif (standingID == MAX_REPUTATION_REACTION) or (currentValue == maximumValue) then
