@@ -23,14 +23,13 @@ local function UpdateReputation(self)
     -- fill the bar at max reputation
     if E.db.EPDBC.reputationBar.fillExalted then
         --@version-retail@
-        if C_Reputation.IsFactionParagon(factionID) and currentValue >= 1 then -- don't want fill the bar at Paragon
-            return
-        end
+        if C_Reputation.IsFactionParagon(factionID) then
+            -- do nothing
         --@end-version-retail@
-
-        if (currentValue <= 0) or (maximumValue <= 0) then
+        elseif (standingID == MAX_REPUTATION_REACTION) or (currentValue == maximumValue) then
             bar:SetMinMaxValues(0, 1)
             bar:SetValue(1)
+            a = 1.0
         end
     end
 

@@ -75,9 +75,9 @@ function EPDBC:StartUp()
     E.db["databars"]["colors"]["factionColors"][8]["g"] = 0
     E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
     --@version-retail@
-    E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.12549019607843
-    E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.64705882352941
-    E.db["databars"]["colors"]["factionColors"][9]["r"] = 0.85490196078431
+    E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
+    E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
+    E.db["databars"]["colors"]["factionColors"][9]["r"] = 1
     --@end-version-retail@
     E.db["databars"]["colors"]["useCustomFactionColors"] = true
 

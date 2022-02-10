@@ -4,6 +4,8 @@ local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateAzerite(self)
     local bar = EDB.StatusBars.Azerite
+    if not bar then return end -- nothing to see here
+
     local r, g, b, a = bar:GetStatusBarColor()
     local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
     local avg = currentValue / maximum
@@ -20,6 +22,9 @@ end
 
 function EPDBC:HookAzeriteBar()
     local bar = EDB.StatusBars.Azerite
+    local isEnabled = bar.db.enable
+    if not isEnabled then return end -- azerite bar disabled, exit
+    
     if bar then
         if not EPDBC:IsHooked(EDB, "AzeriteBar_Update") then
             EPDBC:SecureHook(EDB, "AzeriteBar_Update", UpdateAzerite)
