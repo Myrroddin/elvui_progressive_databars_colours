@@ -8,6 +8,9 @@ local function UpdateReputation(self)
     local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
 
     if not bar or not name then return end -- nothing to see here
+    --@version-retail@
+    local friendID = GetFriendshipReputation(factionID)
+    --@end-version-retail@
 
     local r, g, b, a = bar:GetStatusBarColor()
     local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
@@ -25,7 +28,6 @@ local function UpdateReputation(self)
         --@version-retail@
         if C_Reputation.IsFactionParagon(factionID) then
             -- mainline factions work, now check for paragon friends
-            local friendID = GetFriendshipReputation(factionID)
             if friendID then
                 local currentParagonValue, thresholdParagonValue = C_Reputation.GetFactionParagonInfo(factionID)
                 bar:SetMinMaxValues(0, thresholdParagonValue)
