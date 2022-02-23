@@ -46,8 +46,28 @@ local function UpdateReputation(self)
                 -- show paragon rewards icon (or not) as per user preferences
                 bar.Reward:SetPoint('CENTER', bar, EDB.db.reputation.rewardPosition)
             end
+        elseif friendID then
+            -- colourize friends reputation bars
+            local difference  = standingID - 8 -- EX: -7 to 0
+            standingID = 8 + difference -- EX: 8 + -7 = 1
+    
+            -- make sure it is valid
+            if not standingID or standingID <= 1 then
+                standingID = 1
+            end
+            if not standingID or standingID >= 8 then
+                standingID = 8
+            end
+    
+            local colour = EDB.db.colors.factionColors[standingID]
+            r, g, b = colour.r, colour.g, colour.b
+            a = avg
+        end
         --@end-version-retail@
-        elseif (standingID == MAX_REPUTATION_REACTION) or (currentValue == maximumValue) then
+        if (standingID == MAX_REPUTATION_REACTION) or (currentValue == maximumValue) then
+            --@version-retail@
+            if C_Reputation.IsFactionParagon(factionID) then return end
+            --@end-version-retail@
             bar:SetMinMaxValues(0, 1)
             bar:SetValue(1)
             a = 1.0
