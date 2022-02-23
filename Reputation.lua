@@ -8,9 +8,6 @@ local function UpdateReputation(self)
     local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
 
     if not bar or not name then return end -- nothing to see here
-    --@version-retail@
-    local friendID = GetFriendshipReputation(factionID)
-    --@end-version-retail@
 
     local r, g, b, a = bar:GetStatusBarColor()
     local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
@@ -21,57 +18,6 @@ local function UpdateReputation(self)
         a = 1.0
     else
         a = avg
-    end
-
-    -- fill the bar at max reputation
-    if E.db.EPDBC.reputationBar.fillExalted then
-        --@version-retail@
-        if C_Reputation.IsFactionParagon(factionID) then
-            -- mainline factions work, now check for paragon friends
-            if friendID then
-                local currentParagonValue, thresholdParagonValue = C_Reputation.GetFactionParagonInfo(factionID)
-                bar:SetMinMaxValues(0, thresholdParagonValue)
-                bar:SetValue(currentParagonValue)
-                avg = currentParagonValue / thresholdParagonValue
-                avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
-                
-                -- correctly colour friends who are paragons
-                local colour = EDB.db.colors.factionColors[9]
-                r, g, b = colour.r, colour.g, colour.b
-                a = avg
-
-                -- set bar text correctly
-                bar.text:SetText(name .. ":" .." " .. currentParagonValue .. " - " .. thresholdParagonValue .. " [" .. L["Paragon"] .. "]")
-
-                -- show paragon rewards icon (or not) as per user preferences
-                bar.Reward:SetPoint('CENTER', bar, EDB.db.reputation.rewardPosition)
-            end
-        elseif friendID then
-            -- colourize friends reputation bars
-            local difference  = standingID - 8 -- EX: -7 to 0
-            standingID = 8 + difference -- EX: 8 + -7 = 1
-    
-            -- make sure it is valid
-            if not standingID or standingID <= 1 then
-                standingID = 1
-            end
-            if not standingID or standingID >= 8 then
-                standingID = 8
-            end
-    
-            local colour = EDB.db.colors.factionColors[standingID]
-            r, g, b = colour.r, colour.g, colour.b
-            a = avg
-        end
-        --@end-version-retail@
-        if (standingID == MAX_REPUTATION_REACTION) or (currentValue == maximumValue) then
-            --@version-retail@
-            if C_Reputation.IsFactionParagon(factionID) then return end
-            --@end-version-retail@
-            bar:SetMinMaxValues(0, 1)
-            bar:SetValue(1)
-            a = 1.0
-        end
     end
 
     -- fill the bar at lowest reputation
@@ -88,6 +34,63 @@ local function UpdateReputation(self)
             end
         end
     end
+
+    -- fill the bar at max reputation
+    if E.db.EPDBC.reputationBar.fillExalted then
+        if standingID == MAX_REPUTATION_REACTION then
+            if value == maximumValue then
+                bar:SetMinMaxValues(0, 1)
+                bar:SetValue(1)
+                a = 1.0
+            end
+        end
+    end
+    
+    --@version-retail@
+    -- handle friends
+    local friendID = GetFriendshipReputation(factionID)
+
+    if friendID then
+        local currentRank, maximumRank = GetFriendshipReputationRanks(friendID)
+        local difference = 8 - maximumRank
+
+        currentRank = currentRank + difference -- put it on a hated (1) to exalted (8) scale
+
+        -- keep it within bounds
+        if currentRank >= 8 then
+            currentRank = 8
+        end
+        if currentRank <= 1 then
+            currentRank = 1
+        end
+
+        if C_Reputation.IsFactionParagon(factionID) then
+            currentRank = currentRank + 1 -- put it on a hated (1) to paragon (9) scale
+
+            -- keep it within bounds
+            if currentRank >= 9 then
+                currentRank = 9
+            end
+
+            local currentParagonValue, thresholdParagonValue = C_Reputation.GetFactionParagonInfo(factionID)
+            bar:SetMinMaxValues(0, thresholdParagonValue)
+            bar:SetValue(currentParagonValue)
+            avg = currentParagonValue / thresholdParagonValue
+            avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
+            a = avg
+
+            -- set bar text correctly
+            bar.text:SetText(name .. ":" .." " .. currentParagonValue .. " - " .. thresholdParagonValue .. " [" .. L["Paragon"] .. "]")
+
+            -- show paragon rewards icon (or not) as per user preferences
+            bar.Reward:SetPoint('CENTER', bar, EDB.db.reputation.rewardPosition)
+        end
+
+        -- colour the reputation bar for friends
+        local colour = EDB.db.colors.factionColors[currentRank]
+        r, g, b = colour.r, colour.g, colour.b
+    end
+    --@end-version-retail@
 
     -- blend the bar
     bar:SetStatusBarColor(r, g, b, a)
