@@ -108,8 +108,8 @@ function EPDBC:StartUp()
 
     EPDBC:HookXPBar()
     EPDBC:HookRepBar()
-    EPDBC.HookHonorBar()
     --@version-retail@
+    EPDBC.HookHonorBar()
     EPDBC:HookAzeriteBar()
     --@end-version-retail@
 end
@@ -174,10 +174,10 @@ function EPDBC:ShutDown()
     E.db["tooltip"]["useCustomFactionColors"] = false
 
     EPDBC:UnhookAll()
-    EPDBC:RestoreHonorBar()
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
     --@version-retail@
+    EPDBC:RestoreHonorBar()
     EPDBC:RestoreAzeriteBar()
     --@end-version-retail@
     EPDBC:UnhookAll()

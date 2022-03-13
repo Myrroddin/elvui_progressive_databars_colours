@@ -67,6 +67,7 @@ function EPDBC:GetOptions()
                     EDB:ReputationBar_Update()
                 end
             },
+            --@version-retail@
             honorBar = {
                 order = 50,
                 name = L["Honor Bar"],
@@ -80,7 +81,6 @@ function EPDBC:GetOptions()
                     EDB:HonorBar_Update()
                 end
             },
-            --@version-retail@
             azeriteBar = {
                 order = 60,
                 name = L["Azerite Bar"],
@@ -137,9 +137,9 @@ function EPDBC:GetOptions()
                 set = function(info, value)
                     E.db.EPDBC.progressSmoothing.decimalLength = value
                     EDB:ReputationBar_Update()
-                    EDB:HonorBar_Update()
                     EDB:ExperienceBar_Update()
                     --@version-retail@
+                    EDB:HonorBar_Update()
                     EDB:AzeriteBar_Update()
                     --@end-version-retail@
                 end,
