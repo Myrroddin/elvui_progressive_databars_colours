@@ -1,6 +1,4 @@
 ## Interface: 90200
-## Interface-Classic: 11402
-## Interface-BCC: 20504
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -22,7 +20,7 @@
 ## X-Date: @project-date-iso@
 ## X-Category: plugins
 ## X-License: MIT License
-## X-Copyright: Copyright (c) 2017 - 2022 Paul Vandersypen
+## X-Copyright: Copyright (c) 2022 Paul Vandersypen
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
 ## X-Curse-Project-ID: 280393
@@ -45,11 +43,9 @@ Locales\frFR.lua
 Locales\esES.lua
 Locales\esMX.lua
 
-Core.lua
+Core-Retail.lua
 Experience.lua
-Reputation.lua
-#@version-retail@
+Reputation-Retail.lua
 Honor.lua
 Azerite.lua
-#@end-version-retail@
-Options.lua
+Options-Retail.lua

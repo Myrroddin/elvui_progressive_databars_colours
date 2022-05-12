@@ -4,12 +4,15 @@ wowi-archive-previous: no
 externals:
     Libs/LibAboutPanel-2.0: https://github.com/Myrroddin/libaboutpanel-2.0
 
-tools-used:
-    - findglobals
-
 ignore:
+    - Core-Retail.lua
+    - Core-Vanilla.lua
+    - Options-Retail.lua
+    - Options-Vanilla.lua
     - Azerite.lua
     - Honor.lua
-    - pkgmeta-classic.yml
-    - pkgmeta-bcc.yml
+    - Reputation-Retail.lua
+    - Repuation-Vanilla.lua
+    - pkgmeta-vanilla.yml
+    - pkgmeta-tbc.yml
     - pkgmeta-retail.yml

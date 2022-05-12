@@ -4,10 +4,13 @@ wowi-archive-previous: no
 externals:
     Libs/LibAboutPanel-2.0: https://github.com/Myrroddin/libaboutpanel-2.0
 
-tools-used:
-    - findglobals
-
 ignore:
-    - pkgmeta-classic.yml
-    - pkgmeta-bcc.yml
+    - Core-Vanilla.lua
+    - Core-TBC.lua
+    - Reputation-Vanilla.lua
+    - Reputation-TBC.lua
+    - Options-Vanilla.lua
+    - Options-TBC.lua
+    - pkgmeta-vanilla.yml
+    - pkgmeta-tbc.yml
     - pkgmeta-retail.yml
