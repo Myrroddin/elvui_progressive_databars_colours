@@ -46,8 +46,7 @@ local function UpdateReputation(self)
         end
     end
     
-    --@version-retail@
-    -- handle friends
+   -- handle friends
     local friendID = GetFriendshipReputation(factionID)
 
     if friendID then
@@ -90,7 +89,6 @@ local function UpdateReputation(self)
         local colour = EDB.db.colors.factionColors[currentRank]
         r, g, b = colour.r, colour.g, colour.b
     end
-    --@end-version-retail@
 
     -- blend the bar
     bar:SetStatusBarColor(r, g, b, a)
