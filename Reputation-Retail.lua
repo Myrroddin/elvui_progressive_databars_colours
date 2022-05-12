@@ -73,6 +73,7 @@ local function UpdateReputation(self)
 
             local currentParagonValue, thresholdParagonValue = C_Reputation.GetFactionParagonInfo(factionID)
             bar:SetMinMaxValues(0, thresholdParagonValue)
+            currentParagonValue = currentParagonValue % thresholdParagonValue
             bar:SetValue(currentParagonValue)
             avg = currentParagonValue / thresholdParagonValue
             avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
@@ -82,7 +83,7 @@ local function UpdateReputation(self)
             bar.text:SetText(name .. ":" .." " .. currentParagonValue .. " - " .. thresholdParagonValue .. " [" .. L["Paragon"] .. "]")
 
             -- show paragon rewards icon (or not) as per user preferences
-            bar.Reward:SetPoint('CENTER', bar, EDB.db.reputation.rewardPosition)
+            bar.Reward:SetPoint("CENTER", bar, EDB.db.reputation.rewardPosition)
         end
 
         -- colour the reputation bar for friends
