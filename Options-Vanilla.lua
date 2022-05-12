@@ -67,34 +67,6 @@ function EPDBC:GetOptions()
                     EDB:ReputationBar_Update()
                 end
             },
-            --@version-retail@
-            honorBar = {
-                order = 50,
-                name = L["Honor Bar"],
-                desc = L["Progressively blend the bar as you gain honor."],
-                type = "toggle",
-                get = function()
-                    return E.db.EPDBC.honorBar.progress
-                end,
-                set = function(info, value)
-                    E.db.EPDBC.honorBar.progress = value
-                    EDB:HonorBar_Update()
-                end
-            },
-            azeriteBar = {
-                order = 60,
-                name = L["Azerite Bar"],
-                desc = L["Progressively blend the bar as you gain Azerite Power"],
-                type = "toggle",
-                get = function()
-                    return E.db.EPDBC.azeriteBar.progress
-                end,
-                set = function(info, value)
-                    E.db.EPDBC.azeriteBar.progress = value
-                    EDB:AzeriteBar_Update()
-                end
-            },
-            --@end-version-retail@
             miscellaneous = {
                 order = 70,
                 name = MISCELLANEOUS,
@@ -138,10 +110,6 @@ function EPDBC:GetOptions()
                     E.db.EPDBC.progressSmoothing.decimalLength = value
                     EDB:ReputationBar_Update()
                     EDB:ExperienceBar_Update()
-                    --@version-retail@
-                    EDB:HonorBar_Update()
-                    EDB:AzeriteBar_Update()
-                    --@end-version-retail@
                 end,
                 min = 1,
                 max = 10,
