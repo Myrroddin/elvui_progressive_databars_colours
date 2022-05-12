@@ -22,11 +22,9 @@ P["EPDBC"] = {
     honorBar = {
         progress = true
     },
-    --@version-retail@
     azeriteBar = {
         progress = true
     },
-    --@end-version-retail@
     progressSmoothing = {
         decimalLength = 3
     }
@@ -74,11 +72,9 @@ function EPDBC:StartUp()
     E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
     E.db["databars"]["colors"]["factionColors"][8]["g"] = 0
     E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
-    --@version-retail@
     E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
     E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
     E.db["databars"]["colors"]["factionColors"][9]["r"] = 1
-    --@end-version-retail@
     E.db["databars"]["colors"]["useCustomFactionColors"] = true
 
     -- replace tooltip faction colours
@@ -108,10 +104,8 @@ function EPDBC:StartUp()
 
     EPDBC:HookXPBar()
     EPDBC:HookRepBar()
-    --@version-retail@
     EPDBC.HookHonorBar()
     EPDBC:HookAzeriteBar()
-    --@end-version-retail@
 end
 
 function EPDBC:ShutDown()
@@ -140,11 +134,9 @@ function EPDBC:ShutDown()
     E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.10
     E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.60
     E.db["databars"]["colors"]["factionColors"][8]["r"] = 0
-    --@version-retail@
     E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.10
     E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.60
     E.db["databars"]["colors"]["factionColors"][9]["r"] = 0
-    --@end-version-retail@
     E.db["databars"]["colors"]["useCustomFactionColors"] = false
 
     -- reset tooltip faction colours
@@ -176,10 +168,8 @@ function EPDBC:ShutDown()
     EPDBC:UnhookAll()
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
-    --@version-retail@
     EPDBC:RestoreHonorBar()
     EPDBC:RestoreAzeriteBar()
-    --@end-version-retail@
     EPDBC:UnhookAll()
 end
 
