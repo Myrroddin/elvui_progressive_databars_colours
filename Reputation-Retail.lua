@@ -71,16 +71,37 @@ local function UpdateReputation(self)
                 currentRank = 9
             end
 
+            local displayString, textFormat, label = "", EDB.db.reputation.textFormat
+            label = L["Paragon"]
+
             local currentParagonValue, thresholdParagonValue = C_Reputation.GetFactionParagonInfo(factionID)
             bar:SetMinMaxValues(0, thresholdParagonValue)
             currentParagonValue = currentParagonValue % thresholdParagonValue
             bar:SetValue(currentParagonValue)
             avg = currentParagonValue / thresholdParagonValue
+            local percent = avg * 100
             avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
             a = avg
 
             -- set bar text correctly
-            bar.text:SetText(name .. ":" .." " .. currentParagonValue .. " - " .. thresholdParagonValue .. " [" .. L["Paragon"] .. "]")
+            if textFormat ~= "NONE" then
+                displayString = format("%s: [%s]", name, label)
+            elseif textFormat == "PERCENT" then
+                displayString = format("%s: %d%% [%s]", name, percent, label)
+            elseif textFormat == "CURMAX" then
+                displayString = format("%s: %s - %s [%s]", name, E:ShortValue(currentParagonValue), E:ShortValue(thresholdParagonValue), label)
+            elseif textFormat == "CURPERC" then
+                displayString = format("%s: %s - %d%% [%s]", name, E:ShortValue(currentParagonValue), percent, label)
+            elseif textFormat == "CUR" then
+                displayString = format("%s: %s [%s]", name, E:ShortValue(currentParagonValue), label)
+            elseif textFormat == "REM" then
+                displayString = format("%s: %s [%s]", name, E:ShortValue(thresholdParagonValue - currentParagonValue), label)
+            elseif textFormat == "CURREM" then
+                displayString = format("%s: %s - %s [%s]", name, E:ShortValue(currentParagonValue), E:ShortValue(thresholdParagonValue - currentParagonValue), label)
+            elseif textFormat == "CURPERCREM" then
+                displayString = format("%s: %s - %d%% (%s) [%s]", name, E:ShortValue(currentParagonValue), percent, E:ShortValue(thresholdParagonValue - currentParagonValue), label)
+            end
+            bar.text:SetText(displayString)
 
             -- show paragon rewards icon (or not) as per user preferences
             bar.Reward:SetPoint("CENTER", bar, EDB.db.reputation.rewardPosition)
