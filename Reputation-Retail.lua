@@ -84,9 +84,7 @@ local function UpdateReputation(self)
             a = avg
 
             -- set bar text correctly
-            if textFormat ~= "NONE" then
-                displayString = format("%s: [%s]", name, label)
-            elseif textFormat == "PERCENT" then
+            if textFormat == "PERCENT" then
                 displayString = format("%s: %d%% [%s]", name, percent, label)
             elseif textFormat == "CURMAX" then
                 displayString = format("%s: %s - %s [%s]", name, E:ShortValue(currentParagonValue), E:ShortValue(thresholdParagonValue), label)
