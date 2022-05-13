@@ -8,6 +8,7 @@ name: Package and release
 on:
   push:
     tags:
+      branches: [ master ] # uncomment this line to make alpha builds
       - '**'
 
 # a workflow is built up as jobs, and within these jobs are steps
