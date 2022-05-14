@@ -30,6 +30,7 @@
 ## X-Wago-ID: xZKxmqGk
 
 ## RequiredDeps: ElvUI
+## OptionalDeps: LibAboutPanel-2.0
 
 Libs\LibAboutPanel-2.0\lib.xml
 
