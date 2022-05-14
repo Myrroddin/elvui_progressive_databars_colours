@@ -5,8 +5,6 @@ externals:
     Libs/LibAboutPanel-2.0: https://github.com/Myrroddin/libaboutpanel-2.0
 
 ignore:
-    - ElvUI_PDBC_TBC.toc
-    - ElvUI_PDBC.toc
     - Core-Retail.lua
     - Core-TBC.lua
     - Options-Retail.lua

@@ -1,4 +1,6 @@
 ## Interface: 90200
+## Interface-Classic: 11403
+## Interface-BCC: 25304
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -43,9 +45,27 @@ Locales\frFR.lua
 Locales\esES.lua
 Locales\esMX.lua
 
+#@non-debug@
+# #@version-classic@
+# Core-Vanilla.lua
+# Experience.lua
+# Reputation-Vanilla.lua
+# Options-Vanilla.lua
+# #@end-version-classic@
+
+# #@version-bcc@
+# Core-TBC.lua
+# Experience.lua
+# Reputation-TBC.lua
+# Options-TBC.lua
+# #@end-version-bcc@
+#@end-non-debug@
+
+#@version-retail@
 Core-Retail.lua
 Experience.lua
 Reputation-Retail.lua
 Honor.lua
 Azerite.lua
 Options-Retail.lua
+#@end-version-retail@

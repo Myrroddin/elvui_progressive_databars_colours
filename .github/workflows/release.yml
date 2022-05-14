@@ -8,7 +8,7 @@ name: Package and release
 on:
   push:
     tags:
-      # branches: [ master ] # uncomment this line to make alpha builds
+      branches: [ master ] # uncomment this line to make alpha builds
       - '**'
 
 # a workflow is built up as jobs, and within these jobs are steps
@@ -37,12 +37,6 @@ jobs:
         with:
           fetch-depth: 0  # gets git history for changelogs
 
-      # once cloned, we just run the GitHub Action for the packager project
-      - name: Package and release
-        uses: BigWigsMods/packager@v2
-        with:
-          args: -m pkgmeta-retail.yml
-
       # another example where we supply additional arguments, this example is specifically to release
       # for the Classic version of the game
       - name: Package and release for Classic
@@ -56,3 +50,9 @@ jobs:
         uses: BigWigsMods/packager@v2
         with:
           args: -g bcc -m pkgmeta-tbc.yml
+
+      # once cloned, we just run the GitHub Action for the packager project
+      - name: Package and release
+        uses: BigWigsMods/packager@v2
+        with:
+          args: -m pkgmeta-retail.yml
