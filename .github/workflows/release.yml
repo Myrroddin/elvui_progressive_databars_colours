@@ -7,8 +7,9 @@ name: Package and release
 # other branches or even pullrequests.
 on:
   push:
+    branches: # uncomment this line to make alpha builds
+      - master # uncomment this line to make alpha builds
     tags:
-      branches: [ master ] # uncomment this line to make alpha builds
       - '**'
 
 # a workflow is built up as jobs, and within these jobs are steps
