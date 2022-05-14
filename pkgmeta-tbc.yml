@@ -12,7 +12,7 @@ ignore:
     - Azerite.lua
     - Honor.lua
     - Reputation-Retail.lua
-    - Repuation-Vanilla.lua
+    - Reputation-Vanilla.lua
     - pkgmeta-vanilla.yml
     - pkgmeta-tbc.yml
     - pkgmeta-retail.yml

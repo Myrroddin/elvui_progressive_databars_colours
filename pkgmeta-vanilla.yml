@@ -11,7 +11,7 @@ ignore:
     - Options-TBC.lua
     - Azerite.lua
     - Honor.lua
-    - Reputaion-TBC.lua
+    - Reputation-TBC.lua
     - Reputation-Retail.lua
     - pkgmeta-vanilla.yml
     - pkgmeta-tbc.yml
