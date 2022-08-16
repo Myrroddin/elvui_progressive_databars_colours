@@ -1,4 +1,4 @@
-## Interface: 90205
+## Interface: 90207
 ## Interface-Classic: 11403
 ## Interface-BCC: 20504
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
@@ -17,7 +17,7 @@
 ## Author: Sygon
 ## X-Author-Guild: Crimson Embers
 ## X-Author-Faction: Alliance
-## X-Author-Server: Lightbringer-US
+## X-Author-Server: Lightbringer
 ## X-Website: https://www.curseforge.com/wow/addons/elvui-progressive-databars-colors
 ## X-Date: @project-date-iso@
 ## X-Category: plugins
