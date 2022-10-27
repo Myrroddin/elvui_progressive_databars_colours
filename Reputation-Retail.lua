@@ -47,13 +47,13 @@ local function UpdateReputation(self)
     end
     
    -- handle friends
-    local friendID = GetFriendshipReputation(factionID)
+    local friendID = C_GossipInfo.GetFriendshipReputation(factionID)
 
     if friendID then
-        local currentRank, maximumRank = GetFriendshipReputationRanks(friendID)
-        local difference = 8 - maximumRank
+        local rankInfo = C_GossipInfo.GetFriendshipReputationRanks(factionID)
+        local difference = 8 - rankInfo.maxLevel
 
-        currentRank = currentRank + difference -- put it on a hated (1) to exalted (8) scale
+        local currentRank = rankInfo.currentLevel + difference -- put it on a hated (1) to exalted (8) scale
 
         -- keep it within bounds
         if currentRank >= 8 then
