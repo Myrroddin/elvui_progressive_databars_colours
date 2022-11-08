@@ -5,12 +5,13 @@ local EDB = E:GetModule("DataBars")
 local ETT = E:GetModule("Tooltip")
 local EPDBC = E:GetModule("EPDBC")
 local module_name, private_table = ...
+local InstallerData = private_table.InstallerData
 
 -- translate the module's name. normally I wouldn't do this, but it does have an awkward name
 local uiName = L["Progressively Colored DataBars"]
 
 function EPDBC:GetOptions()
-    local options = options or {
+    local options = {
         order = 10,
         type = "group",
         name = uiName,
@@ -148,6 +149,16 @@ function EPDBC:GetOptions()
                 name = "",
                 type = "header",
             }
+        },
+        install = {
+            order = 120,
+            type = "execute",
+            name = L["Install"],
+            desc = L["Run the installation process"],
+            func = function()
+                E:GetModule("PluginInstaller"):Queue(InstallerData)
+                E:ToggleOptionsUI()
+            end
         }
     }
     -- support for LibAboutPanel-2.0

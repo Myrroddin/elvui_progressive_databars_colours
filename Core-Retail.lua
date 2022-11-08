@@ -1,12 +1,18 @@
+-- the vaarg statement
+local addonName, addon = ...
+local Version = GetAddOnMetadata(addonName, "Version")
+Version = tonumber(Version)
+local Old_Version = tonumber("2.1.13") -- last release version, used to force reinstall
+
 -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local E, L, V, P, G = unpack(ElvUI)
 
 -- create the plugin for ElvUI
+local MyPluginName = L["Progressively Colored DataBars"]
 local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0", "LibAboutPanel-2.0")
+
 -- we can use this to automatically insert our GUI tables when ElvUI_Config is loaded
 local LEP = LibStub("LibElvUIPlugin-1.0")
--- the vaarg statement
-local addonName, addon = ...
 
 -- default options
 P["EPDBC"] = {
@@ -30,9 +36,147 @@ P["EPDBC"] = {
     }
 }
 
+-- This function will hold our layout settings
+local function SetupLayout(layout)
+    if layout == "databars" then
+        -- replace reputation databar colours
+        E.db["databars"]["colors"]["factionColors"][1]["b"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][1]["g"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][1]["r"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][2]["b"] = 0.27843137254902
+        E.db["databars"]["colors"]["factionColors"][2]["g"] = 0.38823529411765
+        E.db["databars"]["colors"]["factionColors"][2]["r"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][3]["b"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][3]["g"] = 0.64705882352941
+        E.db["databars"]["colors"]["factionColors"][3]["r"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][4]["g"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][4]["r"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][5]["b"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.50196078431373
+        E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.92941176470588
+        E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.58431372549020
+        E.db["databars"]["colors"]["factionColors"][6]["r"] = 0.39215686274510
+        E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.88627450980392
+        E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.16862745098039
+        E.db["databars"]["colors"]["factionColors"][7]["r"] = 0.54117647058824
+        E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
+        E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
+        E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
+        E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
+        E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.95000000000000
+        E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.74000000000000
+        E.db["databars"]["colors"]["factionColors"][10]["r"] = 0.00000000000000
+    elseif layout == "tooltip" then
+        -- replace tooltip faction colours
+        E.db["tooltip"]["factionColors"][1]["b"] = 0.00000000000000
+        E.db["tooltip"]["factionColors"][1]["g"] = 0.00000000000000
+        E.db["tooltip"]["factionColors"][1]["r"] = 1.00000000000000
+        E.db["tooltip"]["factionColors"][2]["b"] = 0.27843137254902
+        E.db["tooltip"]["factionColors"][2]["g"] = 0.38823529411765
+        E.db["tooltip"]["factionColors"][2]["r"] = 1.00000000000000
+        E.db["tooltip"]["factionColors"][3]["b"] = 0.00000000000000
+        E.db["tooltip"]["factionColors"][3]["g"] = 0.64705882352941
+        E.db["tooltip"]["factionColors"][3]["r"] = 1.00000000000000
+        E.db["tooltip"]["factionColors"][4]["g"] = 1.00000000000000
+        E.db["tooltip"]["factionColors"][4]["r"] = 1.00000000000000
+        E.db["tooltip"]["factionColors"][5]["b"] = 0.00000000000000
+        E.db["tooltip"]["factionColors"][5]["g"] = 0.50196078431373
+        E.db["tooltip"]["factionColors"][6]["b"] = 0.92941176470588
+        E.db["tooltip"]["factionColors"][6]["g"] = 0.58431372549020
+        E.db["tooltip"]["factionColors"][6]["r"] = 0.39215686274510
+        E.db["tooltip"]["factionColors"][7]["b"] = 0.88627450980392
+        E.db["tooltip"]["factionColors"][7]["g"] = 0.16862745098039
+        E.db["tooltip"]["factionColors"][7]["r"] = 0.54117647058824
+        E.db["tooltip"]["factionColors"][8]["b"] = 0.50196078431373
+        E.db["tooltip"]["factionColors"][8]["g"] = 0.00000000000000
+        E.db["tooltip"]["factionColors"][8]["r"] = 0.50196078431373
+    end
+
+    -- Update ElvUI
+    E:UpdateAll(true)
+
+    -- Show message about layout being set
+    PluginInstallStepComplete.message = L["Layout Set"]
+    PluginInstallStepComplete:Show()
+end
+
+-- This function is executed when you press "Skip Process" or "Finished" in the installer.
+local function InstallComplete()
+    if GetCVarBool("Sound_EnableMusic") then
+        StopMusic()
+    end
+
+    -- Set a variable tracking the version of the addon when layout was installed
+    E.db["EPDBC"].install_version = Version
+
+    ReloadUI()
+end
+
+-- This is the data we pass on to the ElvUI Plugin Installer.
+-- The Plugin Installer is reponsible for displaying the install guide for this layout.
+local InstallerData = {
+    Title = format("|cff4beb2c%s %s|r", MyPluginName, L["Installation"]),
+	Name = MyPluginName,
+    Pages = {
+        [1] = function()
+            PluginInstallFrame.SubTitle:SetFormattedText(L["Welcome to the installation for %s."], MyPluginName)
+            PluginInstallFrame.Desc1:SetText(L["This installation process will guide you through a few steps and apply settings to your current ElvUI profile. If you want to be able to go back to your original settings then create a new profile before going through this installation process."])
+            PluginInstallFrame.Desc2:SetText(L["Please press the continue button if you wish to go through the installation process, otherwise click the 'Skip Process' button."])
+            PluginInstallFrame.Option1:Show()
+			PluginInstallFrame.Option1:SetScript("OnClick", InstallComplete)
+			PluginInstallFrame.Option1:SetText(L["Skip Process"])
+        end,
+        [2] = function()
+            PluginInstallFrame.SubTitle:SetText(L["DataBars"])
+            PluginInstallFrame.Desc1:SetText(L["Colourize your DataBars"])
+            PluginInstallFrame.Desc2:SetText(L["Importance: |cffFF3333High|r"])
+            PluginInstallFrame.Option1:Show()
+			PluginInstallFrame.Option1:SetScript("OnClick", function() SetupLayout("databars") end)
+			PluginInstallFrame.Option1:SetText(L["Colourize"])
+        end,
+        [3] = function()
+            PluginInstallFrame.SubTitle:SetText(L["Tooltip"])
+            PluginInstallFrame.Desc1:SetText(L["Colourize your Tooltip"])
+            PluginInstallFrame.Desc2:SetText(L["Importance: |cffFF3333High|r"])
+            PluginInstallFrame.Option1:Show()
+			PluginInstallFrame.Option1:SetScript("OnClick", function() SetupLayout("tooltip") end)
+			PluginInstallFrame.Option1:SetText(L["Colourize"])
+        end,
+        [4] = function()
+            PluginInstallFrame.SubTitle:SetText(L["Installation Complete"])
+			PluginInstallFrame.Desc1:SetText(L["You have completed the installation process."])
+			PluginInstallFrame.Desc2:SetText(L["Please click the button below in order to finalize the process and automatically reload your UI."])
+			PluginInstallFrame.Option1:Show()
+			PluginInstallFrame.Option1:SetScript("OnClick", InstallComplete)
+			PluginInstallFrame.Option1:SetText(L["Finished"])
+        end,
+    },
+	StepTitles = {
+		[1] = L["Welcome"],
+		[2] = L["DataBars"],
+		[3] = L["Tooltip"],
+        [4] = L["Installation Complete"],
+	},
+	StepTitlesColor = {1, 1, 1},
+	StepTitlesColorSelected = {0, 0.702, 1},
+	StepTitleWidth = 200,
+	StepTitleButtonWidth = 180,
+	StepTitleTextJustification = "RIGHT",
+}
+addon.InstallerData = InstallerData
+
 -- register plugin so options are properly inserted when config is loaded
 function EPDBC:Initialize()
+    -- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
+	if E.private.install_complete and E.db["EPDBC"].install_version == nil then
+		E:GetModule("PluginInstaller"):Queue(InstallerData)
+	end
+
+    -- Insert our options table when ElvUI config is loaded
     LEP:RegisterPlugin(addonName, EPDBC.InsertOptions)
+
     if E.db.EPDBC.enabled then
         EPDBC:StartUp()
     end
@@ -40,66 +184,14 @@ end
 
 -- insert our GUI options into ElvUI's config screen
 function EPDBC:InsertOptions()
-    if E.Options.args.EPDBC == nil then
-        E.Options.args.EPDBC = EPDBC:GetOptions()
-    end
+    E.Options.args.EPDBC = EPDBC:GetOptions()
 end
 
 -- register the module with ElvUI. ElvUI will now call EPDBC:Initialize() when ElvUI is ready to load our plugin
 E:RegisterModule(EPDBC:GetName())
 
 function EPDBC:StartUp()
-    -- replace reputation databar colours
-    E.db["databars"]["colors"]["factionColors"][1]["b"] = 0
-    E.db["databars"]["colors"]["factionColors"][1]["g"] = 0
-    E.db["databars"]["colors"]["factionColors"][1]["r"] = 1
-    E.db["databars"]["colors"]["factionColors"][2]["b"] = 0.27843137254902
-    E.db["databars"]["colors"]["factionColors"][2]["g"] = 0.38823529411765
-    E.db["databars"]["colors"]["factionColors"][2]["r"] = 1
-    E.db["databars"]["colors"]["factionColors"][3]["b"] = 0
-    E.db["databars"]["colors"]["factionColors"][3]["g"] = 0.64705882352941
-    E.db["databars"]["colors"]["factionColors"][3]["r"] = 1
-    E.db["databars"]["colors"]["factionColors"][4]["g"] = 1
-    E.db["databars"]["colors"]["factionColors"][4]["r"] = 1
-    E.db["databars"]["colors"]["factionColors"][5]["b"] = 0
-    E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.50196078431373
-    E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.92941176470588
-    E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.5843137254902
-    E.db["databars"]["colors"]["factionColors"][6]["r"] = 0.3921568627451
-    E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.88627450980392
-    E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.16862745098039
-    E.db["databars"]["colors"]["factionColors"][7]["r"] = 0.54117647058824
-    E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
-    E.db["databars"]["colors"]["factionColors"][8]["g"] = 0
-    E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
-    E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
-    E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
-    E.db["databars"]["colors"]["factionColors"][9]["r"] = 1
     E.db["databars"]["colors"]["useCustomFactionColors"] = true
-
-    -- replace tooltip faction colours
-    E.db["tooltip"]["factionColors"][1]["b"] = 0
-    E.db["tooltip"]["factionColors"][1]["g"] = 0
-    E.db["tooltip"]["factionColors"][1]["r"] = 1
-    E.db["tooltip"]["factionColors"][2]["b"] = 0.27843137254902
-    E.db["tooltip"]["factionColors"][2]["g"] = 0.38823529411765
-    E.db["tooltip"]["factionColors"][2]["r"] = 1
-    E.db["tooltip"]["factionColors"][3]["b"] = 0
-    E.db["tooltip"]["factionColors"][3]["g"] = 0.64705882352941
-    E.db["tooltip"]["factionColors"][3]["r"] = 1
-    E.db["tooltip"]["factionColors"][4]["g"] = 1
-    E.db["tooltip"]["factionColors"][4]["r"] = 1
-    E.db["tooltip"]["factionColors"][5]["b"] = 0
-    E.db["tooltip"]["factionColors"][5]["g"] = 0.50196078431373
-    E.db["tooltip"]["factionColors"][6]["b"] = 0.92941176470588
-    E.db["tooltip"]["factionColors"][6]["g"] = 0.5843137254902
-    E.db["tooltip"]["factionColors"][6]["r"] = 0.3921568627451
-    E.db["tooltip"]["factionColors"][7]["b"] = 0.88627450980392
-    E.db["tooltip"]["factionColors"][7]["g"] = 0.16862745098039
-    E.db["tooltip"]["factionColors"][7]["r"] = 0.54117647058824
-    E.db["tooltip"]["factionColors"][8]["b"] = 0.50196078431373
-    E.db["tooltip"]["factionColors"][8]["g"] = 0
-    E.db["tooltip"]["factionColors"][8]["r"] = 0.50196078431373
     E.db["tooltip"]["useCustomFactionColors"] = true
 
     EPDBC:HookXPBar()
@@ -109,63 +201,9 @@ function EPDBC:StartUp()
 end
 
 function EPDBC:ShutDown()
-    -- reset reputation databar colours
-    E.db["databars"]["colors"]["factionColors"][1]["b"] = 0.22
-    E.db["databars"]["colors"]["factionColors"][1]["g"] = 0.30
-    E.db["databars"]["colors"]["factionColors"][1]["r"] = 0.80
-    E.db["databars"]["colors"]["factionColors"][2]["b"] = 0.22
-    E.db["databars"]["colors"]["factionColors"][2]["g"] = 0.30
-    E.db["databars"]["colors"]["factionColors"][2]["r"] = 0.80
-    E.db["databars"]["colors"]["factionColors"][3]["b"] = 0
-    E.db["databars"]["colors"]["factionColors"][3]["g"] = 0.27
-    E.db["databars"]["colors"]["factionColors"][3]["r"] = 0.75
-    E.db["databars"]["colors"]["factionColors"][4]["b"] = 0
-    E.db["databars"]["colors"]["factionColors"][4]["g"] = 0.70
-    E.db["databars"]["colors"]["factionColors"][4]["r"] = 0.90
-    E.db["databars"]["colors"]["factionColors"][5]["b"] = 0.10
-    E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.60
-    E.db["databars"]["colors"]["factionColors"][5]["r"] = 0
-    E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.10
-    E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.60
-    E.db["databars"]["colors"]["factionColors"][6]["r"] = 0
-    E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.10
-    E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.60
-    E.db["databars"]["colors"]["factionColors"][7]["r"] = 0
-    E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.10
-    E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.60
-    E.db["databars"]["colors"]["factionColors"][8]["r"] = 0
-    E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.10
-    E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.60
-    E.db["databars"]["colors"]["factionColors"][9]["r"] = 0
     E.db["databars"]["colors"]["useCustomFactionColors"] = false
-
-    -- reset tooltip faction colours
-    E.db["tooltip"]["factionColors"][1]["b"] = 0.22
-    E.db["tooltip"]["factionColors"][1]["g"] = 0.30
-    E.db["tooltip"]["factionColors"][1]["r"] = 0.80
-    E.db["tooltip"]["factionColors"][2]["b"] = 0.22
-    E.db["tooltip"]["factionColors"][2]["g"] = 0.30
-    E.db["tooltip"]["factionColors"][2]["r"] = 0.80
-    E.db["tooltip"]["factionColors"][3]["g"] = 0.27
-    E.db["tooltip"]["factionColors"][3]["r"] = 0.75
-    E.db["tooltip"]["factionColors"][4]["b"] = 0
-    E.db["tooltip"]["factionColors"][4]["g"] = 0.70
-    E.db["tooltip"]["factionColors"][4]["r"] = 0.90
-    E.db["tooltip"]["factionColors"][5]["b"] = 0.10
-    E.db["tooltip"]["factionColors"][5]["g"] = 0.60
-    E.db["tooltip"]["factionColors"][5]["r"] = 0
-    E.db["tooltip"]["factionColors"][6]["b"] = 0.10
-    E.db["tooltip"]["factionColors"][6]["g"] = 0.60
-    E.db["tooltip"]["factionColors"][6]["r"] = 0
-    E.db["tooltip"]["factionColors"][7]["b"] = 0.10
-    E.db["tooltip"]["factionColors"][7]["g"] = 0.60
-    E.db["tooltip"]["factionColors"][7]["r"] = 0
-    E.db["tooltip"]["factionColors"][8]["b"] = 0.10
-    E.db["tooltip"]["factionColors"][8]["g"] = 0.60
-    E.db["tooltip"]["factionColors"][8]["r"] = 0
     E.db["tooltip"]["useCustomFactionColors"] = false
 
-    EPDBC:UnhookAll()
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
     EPDBC:RestoreHonorBar()
