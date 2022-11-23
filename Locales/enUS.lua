@@ -4,6 +4,7 @@ missingTranslationWarning = false
 --@end-debug@
 local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, missingTranslationWarning)
 
+L["%s\n\nYour ElvUI version %.2f is not compatible with EPDBC.\nMinimum ElvUI version needed is %.2f. Please download it from here:\n"] = true
 L["Blend Progress"] = true
 L["Colourize"] = true
 L["Colourize your DataBars"] = true

@@ -148,17 +148,17 @@ function EPDBC:GetOptions()
                 order = 110,
                 name = "",
                 type = "header",
+            },
+            install = {
+                order = 120,
+                type = "execute",
+                name = L["Install"],
+                desc = L["Run the installation process"],
+                func = function()
+                    E:GetModule("PluginInstaller"):Queue(InstallerData)
+                    E:ToggleOptionsUI()
+                end
             }
-        },
-        install = {
-            order = 120,
-            type = "execute",
-            name = L["Install"],
-            desc = L["Run the installation process"],
-            func = function()
-                E:GetModule("PluginInstaller"):Queue(InstallerData)
-                E:ToggleOptionsUI()
-            end
         }
     }
     -- support for LibAboutPanel-2.0

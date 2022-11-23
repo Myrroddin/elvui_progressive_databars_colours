@@ -1,8 +1,25 @@
+-- local references to global functions so we don't conflict
+local _G = _G
+local CLOSE = _G.CLOSE
+local LibStub = _G.LibStub
+local GetCVarBool = _G.GetCVarBool
+local GetAddOnMetadata = _G.GetAddOnMetadata
+local math = _G.math
+local PluginInstallFrame = _G.PluginInstallFrame
+local PluginInstallStepComplete = _G.PluginInstallStepComplete
+local ReloadUI = _G.ReloadUI
+local StopMusic = _G.StopMusic
+local unpack = _G.unpack
+
 -- the vaarg statement
 local addonName, addon = ...
 local Version = GetAddOnMetadata(addonName, "Version")
+--@debug@
+if Version:match("@") then
+    Version = 1
+end
+--@end-debug@
 Version = tonumber(Version)
-local Old_Version = tonumber("2.1.13") -- last release version, used to force reinstall
 
 -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local E, L, V, P, G = unpack(ElvUI)
@@ -10,6 +27,8 @@ local E, L, V, P, G = unpack(ElvUI)
 -- create the plugin for ElvUI
 local MyPluginName = L["Progressively Colored DataBars"]
 local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0", "LibAboutPanel-2.0")
+EPDBC.Eversion = tonumber(GetAddOnMetadata(addonName, "X-ElvUI-Version")) -- minimum compatible ElvUI version
+local Eversion = tonumber(E.version) -- installed ElvUI version
 
 -- we can use this to automatically insert our GUI tables when ElvUI_Config is loaded
 local LEP = LibStub("LibElvUIPlugin-1.0")
@@ -169,6 +188,12 @@ addon.InstallerData = InstallerData
 
 -- register plugin so options are properly inserted when config is loaded
 function EPDBC:Initialize()
+    -- check ElvUI version for mismatch
+    if Eversion < EPDBC.Eversion then
+        E:Delay(2, function() E:StaticPopup_Show("EPDBC_VERSION_MISMATCH") end)
+		return
+    end
+
     -- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
 	if E.private.install_complete and E.db["EPDBC"].install_version == nil then
 		E:GetModule("PluginInstaller"):Queue(InstallerData)
@@ -190,6 +215,45 @@ end
 -- register the module with ElvUI. ElvUI will now call EPDBC:Initialize() when ElvUI is ready to load our plugin
 E:RegisterModule(EPDBC:GetName())
 
+-- ElvUI version check popup if mismatch
+E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {
+    format(L["%s\n\nYour ElvUI version %.2f is not compatible with EPDBC.\nMinimum ElvUI version needed is %.2f. Please download it from here:\n"], MyPluginName, Eversion, EPDBC.Eversion),
+    button1 = CLOSE,
+	timeout = 0,
+	whileDead = 1,
+	preferredIndex = 3,
+	hasEditBox = 1,
+	OnShow = function(self)
+		self.editBox:SetAutoFocus(false)
+		self.editBox.width = self.editBox:GetWidth()
+		self.editBox:Width(280)
+		self.editBox:AddHistoryLine("text")
+		self.editBox.temptxt = "https://www.tukui.org/download.php?ui=elvui"
+		self.editBox:SetText("https://www.tukui.org/download.php?ui=elvui")
+		self.editBox:HighlightText()
+		self.editBox:SetJustifyH("CENTER")
+	end,
+	OnHide = function(self)
+		self.editBox:Width(self.editBox.width or 50)
+		self.editBox.width = nil
+		self.temptxt = nil
+	end,
+	EditBoxOnEnterPressed = function(self)
+		self:GetParent():Hide();
+	end,
+	EditBoxOnEscapePressed = function(self)
+		self:GetParent():Hide();
+	end,
+	EditBoxOnTextChanged = function(self)
+		if(self:GetText() ~= self.temptxt) then
+			self:SetText(self.temptxt)
+		end
+		self:HighlightText()
+		self:ClearFocus()
+	end
+}
+
+-- called when EPDBC is enabled in the options
 function EPDBC:StartUp()
     E.db["databars"]["colors"]["useCustomFactionColors"] = true
     E.db["tooltip"]["useCustomFactionColors"] = true
@@ -200,6 +264,7 @@ function EPDBC:StartUp()
     EPDBC:HookAzeriteBar()
 end
 
+-- called when EPDBC is disabled in the options
 function EPDBC:ShutDown()
     E.db["databars"]["colors"]["useCustomFactionColors"] = false
     E.db["tooltip"]["useCustomFactionColors"] = false
@@ -220,7 +285,7 @@ function EPDBC:Round(num, idp)
 end
 
 function EPDBC:GetCurrentMaxValues(statusBar)
-    local minimum, maximum = statusBar:GetMinMaxValues()
+    local _, maximum = statusBar:GetMinMaxValues()
     local currentValue = statusBar:GetValue()
 
     -- prevent divide by 0 error
