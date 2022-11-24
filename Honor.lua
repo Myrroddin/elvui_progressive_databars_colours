@@ -1,29 +1,35 @@
+-- local references to global functions so we don't conflict
+local _G = _G
+local unpack = _G.unpack
+
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
-local function UpdateHonor(self)
-    local bar = EDB.StatusBars.Honor
-    if not bar then return end -- nothing to see here
+local function UpdateHonor(event, unit)
+    if event == "PLAYER_FLAGS_CHANGED" and unit ~= "player" then return end
 
-    local r, g, b, a = bar:GetStatusBarColor()
-    local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
-    local avg = currentValue / maximum
+    local bar = EDB.StatusBars.Honor
+    EDB:SetVisibility(bar)
+
+	if not EDB.db.honor.enable then return end -- nothing to see here
+
+    local honColour = EDB.db.colors.honor
+    local r, g, b, a = honColour.r, honColour.g, honColour.b, honColour.a
+
+    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+
+    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+    local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
     
-    if not E.db.EPDBC.honorBar.progress then
-        a = 1.0
-    else
-        a = avg
-    end
+    a = E.db.EPDBC.honorBar.progress and avg or a
 
     bar:SetStatusBarColor(r, g, b, a)
 end
 
 function EPDBC:HookHonorBar()
     local bar = EDB.StatusBars.Honor
-    local isEnabled = bar.db.enable
-    if not isEnabled then return end -- honour bar disabled, exit
     
     if bar then
         if not EPDBC:IsHooked(EDB, "HonorBar_Update") then
