@@ -1,23 +1,33 @@
+-- local references to global functions so we don't conflict
+local _G = _G
+local unpack = _G.unpack
+
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
-local function UpdateExperience(self)
+local function UpdateExperience()
     local bar = EDB.StatusBars.Experience
-    if not bar then return end -- nothing to see here
+    EDB:SetVisibility(bar)
+
+	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
     
-    local r, g, b, a = bar:GetStatusBarColor()
-    local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
-    local avg = currentValue / maximum
+    local xpColour = EDB.db.colors.experience
+    local r, g, b, a = xpColour.r, xpColour.g, xpColour.b, xpColour.a
+
+    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+
+    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+
+    local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
 
-    local playerAtMaxLevel = UnitXPMax("player") <= 0
-
-    if not E.db.EPDBC.experienceBar.progress or playerAtMaxLevel then
-        a = 0.8
-    else
-        a = avg
+    if E:XPIsLevelMax() then
+        avg = 1.0
+        a = 1.0
     end
+
+    a = E.db.EPDBC.experienceBar.progress and avg or a
 
     bar:SetStatusBarColor(r, g, b, a)
 end
@@ -25,8 +35,6 @@ end
 -- hook the XP bar
 function EPDBC:HookXPBar()
     local bar = EDB.StatusBars.Experience
-    local isEnabled = bar.db.enable
-    if not isEnabled then return end -- experience bar disabled, exit
 
     if bar then
         if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
