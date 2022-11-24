@@ -23,7 +23,7 @@ local function UpdateAzerite(event, unit)
     local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
 
-    a = E.db.EPDBC.AzeriteBarProgress and avg or a
+    a = E.db.EPDBC.azeriteBar.progress and avg or a
 
     bar:SetStatusBarColor(r, g, b, a)
 end
