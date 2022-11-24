@@ -1,29 +1,35 @@
+-- local references to global functions so we don"t conflict
+local _G = _G
+local unpack = _G.unpack
+
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
+local EDB = E:GetModule("DataBars") -- ElvUI"s DataBars
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
-local function UpdateAzerite(self)
-    local bar = EDB.StatusBars.Azerite
-    if not bar then return end -- nothing to see here
+local function UpdateAzerite(event, unit)
+    if event == "UNIT_INVENTORY_CHANGED" and unit ~= "player" then return end
 
-    local r, g, b, a = bar:GetStatusBarColor()
-    local currentValue, maximum = EPDBC:GetCurrentMaxValues(bar)
-    local avg = currentValue / maximum
+    local bar = EDB.StatusBars.Azerite
+    EDB:SetVisibility(bar)
+
+	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
+
+    local azColour = EDB.db.colors.azerite
+    local r, g, b, a = azColour.r, azColour.g, azColour.b, azColour.a
+
+    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+
+    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+    local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
 
-    if not E.db.EPDBC.AzeriteBarProgress then
-        a = 1.0
-    else
-        a = avg
-    end
+    a = E.db.EPDBC.AzeriteBarProgress and avg or a
 
     bar:SetStatusBarColor(r, g, b, a)
 end
 
 function EPDBC:HookAzeriteBar()
     local bar = EDB.StatusBars.Azerite
-    local isEnabled = bar.db.enable
-    if not isEnabled then return end -- azerite bar disabled, exit
     
     if bar then
         if not EPDBC:IsHooked(EDB, "AzeriteBar_Update") then
@@ -36,6 +42,7 @@ end
 
 function EPDBC:RestoreAzeriteBar()
     local bar = EDB.StatusBars.Azerite
+
     if bar then
         if EPDBC:IsHooked(EDB, "AzeriteBar_Update") then
             EPDBC:Unhook(EDB, "AzeriteBar_Update")
