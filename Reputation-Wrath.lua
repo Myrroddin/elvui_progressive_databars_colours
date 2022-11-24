@@ -1,36 +1,36 @@
+-- local references to global functions so we don't conflict
+local _G = _G
+local MAX_REPUTATION_REACTION = _G.MAX_REPUTATION_REACTION
+local UNKNOWN = _G.UNKNOWN
+local unpack = _G.unpack
+local format = _G.format
+local GetWatchedFactionInfo = _G.GetWatchedFactionInfo
+
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 -- local functions called via hooking -----------------------------------------
-local function UpdateReputation(self)
+local function UpdateReputation()
     local bar = EDB.StatusBars.Reputation
-    local name, standingID, minimum, maximum, value, factionID = GetWatchedFactionInfo()
+    EDB:SetVisibility(bar)
 
-    if not bar or not name then return end -- nothing to see here
+    if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
 
-    local r, g, b, a = bar:GetStatusBarColor()
+    local name, standingID, _, _, _, factionID = GetWatchedFactionInfo()
+    if not factionID then return end -- nothing to see here
+
+    local displayString, textFormat = "", EDB.db.reputation.textFormat
+    local label, avg, capped, percent
+    local r, g, b, a
+
     local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
-    local avg = currentValue / maximumValue
-    avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
-    
-    if not E.db.EPDBC.reputationBar.progress then
-        a = 1.0
-    else
-        a = avg
-    end
 
     -- fill the bar at lowest reputation
     if E.db.EPDBC.reputationBar.fillHated then
         if standingID <= 1 then
-            if value >= 1 or currentValue >= 1 then
-                bar:SetMinMaxValues(0, maximumValue)
-                bar:SetValue(currentValue)
-                a = avg
-            else
-                bar:SetMinMaxValues(0, 1)
-                bar:SetValue(1)
-                a = 1.0
+            if currentValue and currentValue == 0 then
+                a, currentValue, maximumValue = 1.0, 1, 1
             end
         end
     end
@@ -38,30 +38,67 @@ local function UpdateReputation(self)
     -- fill the bar at max reputation
     if E.db.EPDBC.reputationBar.fillExalted then
         if standingID == MAX_REPUTATION_REACTION then
-            if value == maximumValue then
-                bar:SetMinMaxValues(0, 1)
-                bar:SetValue(1)
-                a = 1.0
-            end
+            a, currentValue, maximumValue = 1.0, 1, 1
+            capped = true
+            percent = 100
         end
     end
 
-    -- blend the bar
-    bar:SetStatusBarColor(r, g, b, a)
+    bar:SetMinMaxValues(0, maximumValue)
+    bar:SetValue(currentValue)
+
+    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+
+    avg = currentValue / maximumValue
+    percent = percent or avg * 100
+    if percent == 100 then
+        percent = EPDBC:Round(percent, 0)
+    else
+        percent = EPDBC:Round(percent, 2)
+    end
+    avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
+    a = a or E.db.EPDBC.reputationBar.progress and avg
+
+    -- set bar text correctly
+    if not label then
+        label = _G["FACTION_STANDING_LABEL" .. standingID] or UNKNOWN
+    end
+
+    if capped and textFormat ~= "NONE" then -- show only name and standing on exalted
+        displayString = format("%s: [%s]", name, label)
+    elseif textFormat == "PERCENT" then
+        displayString = format("%s: %d%% [%s]", name, percent, label)
+    elseif textFormat == "CURMAX" then
+        displayString = format("%s: %s - %s [%s]", name, E:ShortValue(currentValue), E:ShortValue(maximumValue), label)
+    elseif textFormat == "CURPERC" then
+        displayString = format("%s: %s - %d%% [%s]", name, E:ShortValue(currentValue), percent, label)
+    elseif textFormat == "CUR" then
+        displayString = format("%s: %s [%s]", name, E:ShortValue(currentValue), label)
+    elseif textFormat == "REM" then
+        displayString = format("%s: %s [%s]", name, E:ShortValue(maximumValue - currentValue), label)
+    elseif textFormat == "CURREM" then
+        displayString = format("%s: %s - %s [%s]", name, E:ShortValue(currentValue), E:ShortValue(maximumValue - currentValue), label)
+    elseif textFormat == "CURPERCREM" then
+        displayString = format("%s: %s - %d%% (%s) [%s]", name, E:ShortValue(currentValue), percent, E:ShortValue(maximumValue - currentValue), label)
+    end
+    bar.text:SetText(displayString)
+
+    -- colour the bar
+    local colour = EDB.db.colors.factionColors[standingID]
+    r, g, b = colour.r, colour.g, colour.b
+    bar:SetStatusBarColor(r, g, b, a or 1.0)
 end
 
 -- hooking fuctions -----------------------------------------------------------
 function EPDBC:HookRepBar()
     local bar = EDB.StatusBars.Reputation
-    local isEnabled = bar.db.enable
-    if not isEnabled then return end -- reputaion bar disabled, exit
 
     if bar then
         if not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
             EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
         end
     end
-    
+
     EDB:ReputationBar_Update()
 end
 
