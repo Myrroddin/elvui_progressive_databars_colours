@@ -2,7 +2,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 -- get the DataBars module
 local EDB = E:GetModule("DataBars")
-local ETT = E:GetModule("Tooltip")
 local EPDBC = E:GetModule("EPDBC")
 local module_name, private_table = ...
 local InstallerData = private_table.InstallerData
@@ -27,14 +26,11 @@ function EPDBC:GetOptions()
                 end,
                 set = function(info, value)
                     E.db.EPDBC.enabled = value
-                    EDB.db.colors.useCustomFactionColors = value
-                    ETT.db.useCustomFactionColors = value
                     if value then
                         EPDBC:StartUp()
                     else
                         EPDBC:ShutDown()
                     end
-                    E:RefreshGUI()
                 end
             },
             blendProgress = {

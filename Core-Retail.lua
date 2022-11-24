@@ -1,15 +1,16 @@
 -- local references to global functions so we don't conflict
 local _G = _G
 local CLOSE = _G.CLOSE
-local LibStub = _G.LibStub
-local GetCVarBool = _G.GetCVarBool
-local GetAddOnMetadata = _G.GetAddOnMetadata
+local ReloadUI = _G.ReloadUI
 local math = _G.math
 local PluginInstallFrame = _G.PluginInstallFrame
 local PluginInstallStepComplete = _G.PluginInstallStepComplete
-local ReloadUI = _G.ReloadUI
+local LibStub = _G.LibStub
+local GetCVarBool = _G.GetCVarBool
+local GetAddOnMetadata = _G.GetAddOnMetadata
 local StopMusic = _G.StopMusic
 local unpack = _G.unpack
+local tonumber = _G.tonumber
 
 -- the vaarg statement
 local addonName, addon = ...
@@ -257,6 +258,7 @@ E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {
 function EPDBC:StartUp()
     E.db["databars"]["colors"]["useCustomFactionColors"] = true
     E.db["tooltip"]["useCustomFactionColors"] = true
+    E:RefreshGUI()
 
     EPDBC:HookXPBar()
     EPDBC:HookRepBar()
@@ -268,6 +270,7 @@ end
 function EPDBC:ShutDown()
     E.db["databars"]["colors"]["useCustomFactionColors"] = false
     E.db["tooltip"]["useCustomFactionColors"] = false
+    E:RefreshGUI()
 
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
