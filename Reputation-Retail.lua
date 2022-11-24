@@ -1,15 +1,14 @@
 -- local references to global functions so we don't conflict
 local _G = _G
-local LibStub = _G.LibStub
 local C_GossipInfo = _G.C_GossipInfo
 local C_MajorFactions = _G.C_MajorFactions
 local C_Reputation = _G.C_Reputation
-local format = _G.format
-local GetWatchedFactionInfo = _G.GetWatchedFactionInfo
 local MAX_REPUTATION_REACTION = _G.MAX_REPUTATION_REACTION
 local RENOWN_LEVEL_LABEL = _G.RENOWN_LEVEL_LABEL
 local UNKNOWN = _G.UNKNOWN
 local unpack = _G.unpack
+local format = _G.format
+local GetWatchedFactionInfo = _G.GetWatchedFactionInfo
 
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI"s DataBars
@@ -103,13 +102,19 @@ local function UpdateReputation()
             end
         end
     end
-    
+
     bar:SetMinMaxValues(0, maximumValue)
     bar:SetValue(currentValue)
 
-    avg = currentValue / maximumValue -- division by 0 is handled by Core-nnn.lua
+    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+
+    avg = currentValue / maximumValue
     percent = percent or avg * 100
-    percent = EPDBC:Round(percent, 2)
+    if percent == 100 then
+        percent = EPDBC:Round(percent, 0)
+    else
+        percent = EPDBC:Round(percent, 2)
+    end
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
     a = a or E.db.EPDBC.reputationBar.progress and avg
 
@@ -152,7 +157,7 @@ function EPDBC:HookRepBar()
             EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
         end
     end
-    
+
     EDB:ReputationBar_Update()
 end
 

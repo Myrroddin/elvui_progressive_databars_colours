@@ -240,10 +240,10 @@ E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {
 		self.temptxt = nil
 	end,
 	EditBoxOnEnterPressed = function(self)
-		self:GetParent():Hide();
+		self:GetParent():Hide()
 	end,
 	EditBoxOnEscapePressed = function(self)
-		self:GetParent():Hide();
+		self:GetParent():Hide()
 	end,
 	EditBoxOnTextChanged = function(self)
 		if(self:GetText() ~= self.temptxt) then
