@@ -28,6 +28,7 @@ local E, L, V, P, G = unpack(ElvUI)
 -- create the plugin for ElvUI
 local MyPluginName = L["Progressively Colored DataBars"]
 local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0", "LibAboutPanel-2.0")
+local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 EPDBC.Eversion = tonumber(GetAddOnMetadata(addonName, "X-ElvUI-Version")) -- minimum compatible ElvUI version
 local Eversion = tonumber(E.version) -- installed ElvUI version
 
@@ -258,25 +259,35 @@ E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {
 function EPDBC:StartUp()
     E.db["databars"]["colors"]["useCustomFactionColors"] = true
     E.db["tooltip"]["useCustomFactionColors"] = true
-    E:RefreshGUI()
 
     EPDBC:HookXPBar()
     EPDBC:HookRepBar()
     EPDBC.HookHonorBar()
     EPDBC:HookAzeriteBar()
+
+    -- call ElvUI's functions to update the bars
+    EDB:ExperienceBar_Update()
+    EDB:ReputationBar_Update()
+    EDB:HonorBar_Update()
+    EDB:AzeriteBar_Update()
 end
 
 -- called when EPDBC is disabled in the options
 function EPDBC:ShutDown()
     E.db["databars"]["colors"]["useCustomFactionColors"] = false
     E.db["tooltip"]["useCustomFactionColors"] = false
-    E:RefreshGUI()
 
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
     EPDBC:RestoreHonorBar()
     EPDBC:RestoreAzeriteBar()
     EPDBC:UnhookAll()
+
+    -- call ElvUI's functions to update the bars
+    EDB:ExperienceBar_Update()
+    EDB:ReputationBar_Update()
+    EDB:HonorBar_Update()
+    EDB:AzeriteBar_Update()
 end
 
 -- utility functions
