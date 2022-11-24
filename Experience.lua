@@ -12,12 +12,12 @@ local function UpdateExperience()
 
 	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
     
-    local xpColour = EDB.db.colors.experience
-    local r, g, b, a = xpColour.r, xpColour.g, xpColour.b, xpColour.a
+    local colour = EDB.db.colors.experience
+    local r, g, b, a = colour.r, colour.g, colour.b, colour.a
 
-    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
-    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+    if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
 
     local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
@@ -27,7 +27,7 @@ local function UpdateExperience()
         a = 1.0
     end
 
-    a = E.db.EPDBC.experienceBar.progress and avg or a
+    a = E.db.EPDBC.experienceBar.progress and avg or 0.8
 
     bar:SetStatusBarColor(r, g, b, a)
 end

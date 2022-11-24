@@ -299,11 +299,8 @@ function EPDBC:Round(num, idp)
 end
 
 function EPDBC:GetCurrentMaxValues(statusBar)
-    local _, maximum = statusBar:GetMinMaxValues()
+    local minimumValue, maximumValue = statusBar:GetMinMaxValues()
     local currentValue = statusBar:GetValue()
 
-    -- prevent divide by 0 error
-    if maximum <= 1 then maximum = 1 end
-
-    return currentValue, maximum
+    return minimumValue, currentValue, maximumValue
 end

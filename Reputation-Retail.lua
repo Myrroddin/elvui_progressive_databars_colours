@@ -27,7 +27,7 @@ local function UpdateReputation()
     local friendshipInfo, rankInfo, majorFactionData
     local displayString, textFormat = "", EDB.db.reputation.textFormat
     local label, avg, rewardPending, capped, percent
-    local r, g, b, a
+    local r, g, b, a = bar:GetStatusBarColor()
 
     -- handle friends
     friendshipInfo = factionID and C_GossipInfo.GetFriendshipReputation(factionID)
@@ -49,13 +49,13 @@ local function UpdateReputation()
         end
     end
 
-    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
     -- fill the bar at lowest reputation
     if E.db.EPDBC.reputationBar.fillHated then
         if (standingID <= 1) or (friendshipInfo.friendshipFactionID > 0 and friendshipInfo.standing <= 1) then
-            if currentValue and currentValue == 0 then
-                a, currentValue, maximumValue = 1.0, 1, 1
+            if currentValue == minimumValue then
+                a, minimumValue, currentValue, maximumValue = 1.0, 0, 1, 1
             end
         end
     end
@@ -63,7 +63,7 @@ local function UpdateReputation()
     -- fill the bar at max reputation
     if E.db.EPDBC.reputationBar.fillExalted then
         if (standingID == MAX_REPUTATION_REACTION) or (friendshipInfo.friendshipFactionID > 0 and rankInfo.currentLevel == rankInfo.maxLevel) then
-            a, currentValue, maximumValue = 1.0, 1, 1
+            a, minimumValue, currentValue, maximumValue = 1.0, 0, 1, 1
             capped = true
             percent = 100
         end
@@ -76,6 +76,7 @@ local function UpdateReputation()
 
         currentValue, maximumValue, _, rewardPending = C_Reputation.GetFactionParagonInfo(factionID)
         currentValue = currentValue % maximumValue
+        minimumValue = 0
         capped = nil
         percent = nil
 
@@ -97,26 +98,27 @@ local function UpdateReputation()
                 currentValue = majorFactionData.renownReputationEarned
                 maximumValue = majorFactionData.renownLevelThreshold
                 currentValue = currentValue % maximumValue
+                minimumValue = 0
                 capped = nil
                 percent = nil
             end
         end
     end
 
-    bar:SetMinMaxValues(0, maximumValue)
+    bar:SetMinMaxValues(minimumValue, maximumValue)
     bar:SetValue(currentValue)
 
-    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+    if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
 
     avg = currentValue / maximumValue
     percent = percent or avg * 100
-    if percent == 100 then
-        percent = EPDBC:Round(percent, 0)
-    else
+    if percent < 100 then
         percent = EPDBC:Round(percent, 2)
+    else
+        percent = EPDBC:Round(percent, 0)
     end
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
-    a = a or E.db.EPDBC.reputationBar.progress and avg
+    a = E.db.EPDBC.reputationBar.progress and avg or a
 
     -- set bar text correctly
     if not label then

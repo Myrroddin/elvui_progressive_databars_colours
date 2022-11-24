@@ -14,16 +14,17 @@ local function UpdateHonor(event, unit)
 
 	if not EDB.db.honor.enable then return end -- nothing to see here
 
-    local honColour = EDB.db.colors.honor
-    local r, g, b, a = honColour.r, honColour.g, honColour.b, honColour.a
+    local colour = EDB.db.colors.honor
+    local r, g, b, a = colour.r, colour.g, colour.b, colour.a
 
-    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
-    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+    if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
+
     local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
     
-    a = E.db.EPDBC.honorBar.progress and avg or a
+    a = E.db.EPDBC.honorBar.progress and avg or 1.0
 
     bar:SetStatusBarColor(r, g, b, a)
 end

@@ -14,16 +14,17 @@ local function UpdateAzerite(event, unit)
 
 	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
 
-    local azColour = EDB.db.colors.azerite
-    local r, g, b, a = azColour.r, azColour.g, azColour.b, azColour.a
+    local colour = EDB.db.colors.azerite
+    local r, g, b, a = colour.r, colour.g, colour.b, colour.a
 
-    local currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
-    if maximumValue <= 1 then maximumValue = 1 end -- prevent division by 0 error
+    if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
+
     local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
 
-    a = E.db.EPDBC.azeriteBar.progress and avg or a
+    a = E.db.EPDBC.azeriteBar.progress and avg or 1.0
 
     bar:SetStatusBarColor(r, g, b, a)
 end
