@@ -15,7 +15,7 @@ local function UpdateHonor(event, unit)
 	if not EDB.db.honor.enable then return end -- nothing to see here
 
     local colour = EDB.db.colors.honor
-    local r, g, b, a = colour.r, colour.g, colour.b, colour.a
+    local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 1.0
 
     local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 

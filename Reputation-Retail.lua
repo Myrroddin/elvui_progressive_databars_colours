@@ -27,7 +27,8 @@ local function UpdateReputation()
     local friendshipInfo, rankInfo, majorFactionData
     local displayString, textFormat = "", EDB.db.reputation.textFormat
     local label, avg, rewardPending, capped, percent
-    local r, g, b, a = bar:GetStatusBarColor()
+    local colour = EDB.db.colors.factionColors[standingID]
+    local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 1.0
 
     -- handle friends
     friendshipInfo = factionID and C_GossipInfo.GetFriendshipReputation(factionID)
@@ -118,7 +119,7 @@ local function UpdateReputation()
         percent = EPDBC:Round(percent, 0)
     end
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
-    a = E.db.EPDBC.reputationBar.progress and avg or a
+    a = E.db.EPDBC.reputationBar.progress and avg or 1.0
 
     -- set bar text correctly
     if not label then
@@ -145,7 +146,7 @@ local function UpdateReputation()
     bar.text:SetText(displayString)
 
     -- colour the bar
-    local colour = EDB.db.colors.factionColors[standingID]
+    colour = EDB.db.colors.factionColors[standingID]
     r, g, b = colour.r, colour.g, colour.b
     bar:SetStatusBarColor(r, g, b, a or 1.0)
 end

@@ -15,7 +15,7 @@ local function UpdateAzerite(event, unit)
 	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
 
     local colour = EDB.db.colors.azerite
-    local r, g, b, a = colour.r, colour.g, colour.b, colour.a
+    local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 1.0
 
     local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
