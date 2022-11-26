@@ -21,9 +21,7 @@ local function UpdateReputation()
     if not factionID then return end -- nothing to see here
 
     local displayString, textFormat = "", EDB.db.reputation.textFormat
-    local label, avg, capped, percent
-    local colour = EDB.db.colors.factionColors[standingID]
-    local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 1.0
+    local label, avg, capped, percent, colour, a
 
     local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
@@ -57,6 +55,12 @@ local function UpdateReputation()
     else
         percent = EPDBC:Round(percent, 0)
     end
+
+    -- avg may be out of 0-1 bounds for alpha, fix
+    if avg > 1 then
+        avg = avg / 10
+    end
+
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
     a = E.db.EPDBC.reputationBar.progress and avg or 1.0
 
@@ -86,8 +90,7 @@ local function UpdateReputation()
 
     -- colour the bar
     colour = EDB.db.colors.factionColors[standingID]
-    r, g, b = colour.r, colour.g, colour.b
-    bar:SetStatusBarColor(r, g, b, a or 1.0)
+    bar:SetStatusBarColor(colour.r, colour.g, colour.b, a or 1)
 end
 
 -- hooking fuctions -----------------------------------------------------------
