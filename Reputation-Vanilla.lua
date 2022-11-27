@@ -2,6 +2,7 @@
 local _G = _G
 local MAX_REPUTATION_REACTION = _G.MAX_REPUTATION_REACTION
 local UNKNOWN = _G.UNKNOWN
+local math = _G.math
 local unpack = _G.unpack
 local format = _G.format
 local GetWatchedFactionInfo = _G.GetWatchedFactionInfo
@@ -17,13 +18,19 @@ local function UpdateReputation()
 
     if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
 
-    local name, standingID, _, _, _, factionID = GetWatchedFactionInfo()
+    local name, standingID, minimumValue, maximumValue, currentValue, factionID = GetWatchedFactionInfo()
     if not factionID then return end -- nothing to see here
 
     local displayString, textFormat = "", EDB.db.reputation.textFormat
     local label, avg, capped, percent, colour, a
 
-    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    -- normalize bar values, otherwise minimumValue gets added to maximumValue and currentValue, EX: friendly looks like 3000-9000 instead of 0-6000
+    maximumValue = maximumValue or 0
+    currentValue = currentValue or 0
+    minimumValue = minimumValue or 0
+    maximumValue = maximumValue - minimumValue
+    currentValue = currentValue - minimumValue
+    minimumValue = 0
 
     -- fill the bar at lowest reputation
     if E.db.EPDBC.reputationBar.fillHated then
@@ -49,16 +56,18 @@ local function UpdateReputation()
     if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
 
     avg = currentValue / maximumValue
+
+    -- avg may be out of 0-1 bounds for alpha, fix
+    avg = math.abs(avg)
+    while avg > 1 do
+        avg = avg / 10
+    end
+
     percent = percent or avg * 100
     if percent < 100 then
         percent = EPDBC:Round(percent, 2)
     else
         percent = EPDBC:Round(percent, 0)
-    end
-
-    -- avg may be out of 0-1 bounds for alpha, fix
-    if avg > 1 then
-        avg = avg / 10
     end
 
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)

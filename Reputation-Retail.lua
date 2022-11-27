@@ -6,6 +6,7 @@ local C_Reputation = _G.C_Reputation
 local MAX_REPUTATION_REACTION = _G.MAX_REPUTATION_REACTION
 local RENOWN_LEVEL_LABEL = _G.RENOWN_LEVEL_LABEL
 local UNKNOWN = _G.UNKNOWN
+local math = _G.math
 local unpack = _G.unpack
 local format = _G.format
 local GetWatchedFactionInfo = _G.GetWatchedFactionInfo
@@ -21,10 +22,10 @@ local function UpdateReputation()
 
     if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
 
-    local name, standingID, _, _, _, factionID = GetWatchedFactionInfo()
+    local name, standingID, minimumValue, maximumValue, currentValue, factionID = GetWatchedFactionInfo()
     if not factionID then return end -- nothing to see here
 
-    local friendshipInfo, rankInfo, majorFactionData
+    local _, friendshipInfo, rankInfo, majorFactionData
     local displayString, textFormat = "", EDB.db.reputation.textFormat
     local label, avg, rewardPending, capped, percent, colour, a
 
@@ -46,13 +47,21 @@ local function UpdateReputation()
         if standingID <= 1 then
             standingID = 1
         end
+
+        minimumValue, maximumValue, currentValue = friendshipInfo.reactionThreshold or 0, friendshipInfo.nextThreshold or 0, friendshipInfo.standing or 0
     end
 
-    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    -- normalize bar values, otherwise minimumValue gets added to maximumValue and currentValue, EX: friendly looks like 3000-9000 instead of 0-6000
+    maximumValue = maximumValue or 0
+    currentValue = currentValue or 0
+    minimumValue = minimumValue or 0
+    maximumValue = maximumValue - minimumValue
+    currentValue = currentValue - minimumValue
+    minimumValue = 0
 
     -- fill the bar at lowest reputation
     if E.db.EPDBC.reputationBar.fillHated then
-        if (standingID <= 1) or (friendshipInfo.friendshipFactionID > 0 and friendshipInfo.standing <= 1) then
+        if standingID <= 1 then
             if currentValue == minimumValue then
                 a, minimumValue, currentValue, maximumValue = 1.0, 0, 1, 1
             end
@@ -75,6 +84,9 @@ local function UpdateReputation()
 
         currentValue, maximumValue, _, rewardPending = C_Reputation.GetFactionParagonInfo(factionID)
         currentValue = currentValue % maximumValue
+        if rewardPending then
+            currentValue = currentValue + maximumValue
+        end
         minimumValue = 0
         capped = nil
         percent = nil
@@ -93,13 +105,13 @@ local function UpdateReputation()
                 local renownColor = EDB.db.colors.factionColors[10]
                 local renownHex = E:RGBToHex(renownColor.r, renownColor.g, renownColor.b)
                 label = format("%s%s|r %s", renownHex, RENOWN_LEVEL_LABEL, majorFactionData.renownLevel)
+                
+                capped = C_MajorFactions.HasMaximumRenown(factionID)
+                percent = capped and 100 or nil
 
-                currentValue = majorFactionData.renownReputationEarned
+                currentValue = capped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
                 maximumValue = majorFactionData.renownLevelThreshold
-                currentValue = currentValue % maximumValue
                 minimumValue = 0
-                capped = nil
-                percent = nil
             end
         end
     end
@@ -110,16 +122,18 @@ local function UpdateReputation()
     if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
 
     avg = currentValue / maximumValue
+
+    -- avg may be out of 0-1 bounds for alpha, fix
+    avg = math.abs(avg)
+    while avg > 1 do
+        avg = avg / 10
+    end
+
     percent = percent or avg * 100
     if percent < 100 then
         percent = EPDBC:Round(percent, 2)
     else
         percent = EPDBC:Round(percent, 0)
-    end
-
-    -- avg may be out of 0-1 bounds for alpha, fix
-    if avg > 1 then
-        avg = avg / 10
     end
 
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
