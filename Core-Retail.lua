@@ -19,6 +19,7 @@ if Version:match("@") then
 end
 --@end-debug@
 Version = tonumber(Version)
+local OLD_VERSION = tonumber("2.2.00")
 
 -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local E, L, V, P, G = unpack(ElvUI)
@@ -197,10 +198,7 @@ function EPDBC:Initialize()
     end
 
     -- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
-    -- Fix repeating installation, then set the variable correctly
-    E.db["EPDBC"].install_version = nil
-    
-	if not E.private["EPDBC"].install_complete then
+	if not E.private["EPDBC"].install_complete or E.db["EPDBC"].install_version and E.db["EPDBC"].install_version <= OLD_VERSION then
 		E:GetModule("PluginInstaller"):Queue(InstallerData)
 	end
 
