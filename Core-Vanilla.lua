@@ -19,7 +19,6 @@ if Version:match("@") then
 end
 --@end-debug@
 Version = tonumber(Version)
-local OLD_VERSION = tonumber("2.2.00")
 
 -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local E, L, V, P, G = unpack(ElvUI)
