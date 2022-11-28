@@ -197,8 +197,10 @@ function EPDBC:Initialize()
 		return
     end
 
+    E.private["EPDBC"] = E.private["EPDBC"] or {}
+
     -- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
-	if not E.private["EPDBC"].install_complete or E.db["EPDBC"].install_version and E.db["EPDBC"].install_version <= OLD_VERSION then
+	if E.private["EPDBC"].install_complete == nil then
 		E:GetModule("PluginInstaller"):Queue(InstallerData)
 	end
 
