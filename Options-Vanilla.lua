@@ -124,7 +124,7 @@ function EPDBC:GetOptions()
                 desc = L["Run the installation process"],
                 func = function()
                     E:GetModule("PluginInstaller"):Queue(InstallerData)
-                    E:ToggleOptionsUI()
+                    E:ToggleOptions()
                 end
             }
         }
