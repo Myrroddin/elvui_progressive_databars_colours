@@ -116,7 +116,9 @@ local function InstallComplete()
     end
 
     -- Set a variable tracking the version of the addon when layout was installed
-    E.db["EPDBC"].install_version = Version
+    -- Fix repeating installation, then set the variable correctly
+    E.db["EPDBC"].install_version = nil
+    E.private["EPDBC"].install_complete = Version
 
     ReloadUI()
 end
@@ -183,9 +185,12 @@ function EPDBC:Initialize()
     end
 
     -- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
-	if E.private.install_complete and E.db["EPDBC"].install_version == nil then
-		E:GetModule("PluginInstaller"):Queue(InstallerData)
-	end
+    -- Fix repeating installation, then set the variable correctly
+    E.db["EPDBC"].install_version = nil
+
+    if not E.private["EPDBC"].install_complete then
+        E:GetModule("PluginInstaller"):Queue(InstallerData)
+    end
 
     -- Insert our options table when ElvUI config is loaded
     LEP:RegisterPlugin(addonName, EPDBC.InsertOptions)
