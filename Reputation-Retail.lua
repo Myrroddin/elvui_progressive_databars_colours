@@ -52,11 +52,16 @@ local function UpdateReputation()
     end
 
     -- normalize bar values, otherwise minimumValue gets added to maximumValue and currentValue, EX: friendly looks like 3000-9000 instead of 0-6000
+    -- major factions only adjust maximumValue
     maximumValue = maximumValue or 0
     currentValue = currentValue or 0
     minimumValue = minimumValue or 0
-    maximumValue = maximumValue - minimumValue
-    currentValue = currentValue - minimumValue
+    if C_Reputation.IsMajorFaction(factionID) then
+        maximumValue = maximumValue - minimumValue
+    else
+        maximumValue = maximumValue - minimumValue
+        currentValue = currentValue - minimumValue
+    end
     minimumValue = 0
 
     -- fill the bar at lowest reputation
