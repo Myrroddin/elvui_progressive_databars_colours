@@ -52,16 +52,8 @@ local function UpdateReputation()
     end
 
     -- normalize bar values, otherwise minimumValue gets added to maximumValue and currentValue, EX: friendly looks like 3000-9000 instead of 0-6000
-    -- major factions only adjust maximumValue
-    maximumValue = maximumValue or 0
-    currentValue = currentValue or 0
-    minimumValue = minimumValue or 0
-    if C_Reputation.IsMajorFaction(factionID) then
-        maximumValue = maximumValue - minimumValue
-    else
-        maximumValue = maximumValue - minimumValue
-        currentValue = currentValue - minimumValue
-    end
+    maximumValue = maximumValue - minimumValue
+    currentValue = currentValue - minimumValue
     minimumValue = 0
 
     -- fill the bar at lowest reputation
@@ -105,18 +97,21 @@ local function UpdateReputation()
     elseif C_Reputation.IsMajorFaction(factionID) then
         majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
         if majorFactionData and majorFactionData.factionID > 0 then
-            if (standingID == MAX_REPUTATION_REACTION) or (friendshipInfo.friendshipFactionID > 0 and rankInfo.currentLevel == rankInfo.maxLevel) then
-                standingID = 10 -- jump to major faction colour
-                local renownColor = EDB.db.colors.factionColors[10]
-                local renownHex = E:RGBToHex(renownColor.r, renownColor.g, renownColor.b)
-                label = format("%s%s|r %s", renownHex, RENOWN_LEVEL_LABEL, majorFactionData.renownLevel)
-                
-                capped = C_MajorFactions.HasMaximumRenown(factionID)
-                percent = capped and 100 or nil
+            standingID = 10 -- jump to major faction colour
+            local renownColor = EDB.db.colors.factionColors[10]
+            local renownHex = E:RGBToHex(renownColor.r, renownColor.g, renownColor.b)
+            label = format("%s%s|r %s", renownHex, RENOWN_LEVEL_LABEL, majorFactionData.renownLevel)
+            
+            capped = C_MajorFactions.HasMaximumRenown(factionID)
+            percent = capped and 100 or nil
 
-                currentValue = capped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
-                maximumValue = majorFactionData.renownLevelThreshold
-                minimumValue = 0
+            currentValue = capped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
+            maximumValue = majorFactionData.renownLevelThreshold
+            minimumValue = 0
+
+            if capped then
+                -- make the bar full at max renown
+                minimumValue, currentValue, maximumValue = 0, 1, 1
             end
         end
     end
