@@ -220,8 +220,8 @@ E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {
 		self.editBox.width = self.editBox:GetWidth()
 		self.editBox:Width(280)
 		self.editBox:AddHistoryLine("text")
-		self.editBox.temptxt = "https://tukui.org/elvui#"
-		self.editBox:SetText("https://tukui.org/elvui#")
+		self.editBox.temptxt = "https://tukui.org/elvui"
+		self.editBox:SetText("https://tukui.org/elvui")
 		self.editBox:HighlightText()
 		self.editBox:SetJustifyH("CENTER")
 	end,
