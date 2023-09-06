@@ -24,7 +24,7 @@
 ## X-License: Copyright (c) 2023 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.38
+## X-ElvUI-Version: 13.40
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
