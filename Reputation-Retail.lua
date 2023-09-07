@@ -94,7 +94,7 @@ local function UpdateReputation()
         bar.Reward:SetShown(rewardPending and EDB.db.reputation.showReward)
 
     -- major faction code
-    elseif not standingID and factionID and C_Reputation.IsMajorFaction(factionID) then
+    elseif C_Reputation.IsMajorFaction(factionID) then
         majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
         if majorFactionData and majorFactionData.factionID > 0 then
             standingID = 10 -- jump to major faction colour
@@ -116,8 +116,7 @@ local function UpdateReputation()
         end
     end
 
-    local total = maximumValue == math.huge and 1 or maximumValue -- we need to correct the min/max of friendship factions to display the bar at 100%
-    bar:SetMinMaxValues((maximumValue == math.huge or minimumValue == maximumValue) and 0 or minimumValue, total) -- we force min to 0 because the min will match max when a rep is maxxed and cause the bar to be 0%
+    bar:SetMinMaxValues(0, maximumValue)
     bar:SetValue(currentValue)
 
     if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
