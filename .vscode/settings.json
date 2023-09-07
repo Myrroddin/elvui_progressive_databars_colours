@@ -6,6 +6,12 @@
     "Lua.diagnostics.globals": [
         "ENABLE",
         "XPBAR_LABEL",
-        "MISCELLANEOUS"
+        "MISCELLANEOUS",
+        "ToggleCharacter",
+        "BLUE_FONT_COLOR",
+        "RENOWN_LEVEL_LABEL",
+        "REPUTATION",
+        "STANDING",
+        "UNKNOWN"
     ]
 }

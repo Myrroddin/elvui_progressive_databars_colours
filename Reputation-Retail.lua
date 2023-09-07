@@ -48,7 +48,7 @@ local function UpdateReputation()
             standingID = 1
         end
 
-        minimumValue, maximumValue, currentValue = friendshipInfo.reactionThreshold or 0, friendshipInfo.nextThreshold or 0, friendshipInfo.standing or 0
+        minimumValue, maximumValue, currentValue = friendshipInfo.reactionThreshold or 0, friendshipInfo.nextThreshold or math.huge, friendshipInfo.standing or 0
     end
 
     -- normalize bar values, otherwise minimumValue gets added to maximumValue and currentValue, EX: friendly looks like 3000-9000 instead of 0-6000
@@ -94,14 +94,14 @@ local function UpdateReputation()
         bar.Reward:SetShown(rewardPending and EDB.db.reputation.showReward)
 
     -- major faction code
-    elseif C_Reputation.IsMajorFaction(factionID) then
+    elseif not standingID and factionID and C_Reputation.IsMajorFaction(factionID) then
         majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
         if majorFactionData and majorFactionData.factionID > 0 then
             standingID = 10 -- jump to major faction colour
             local renownColor = EDB.db.colors.factionColors[10]
             local renownHex = E:RGBToHex(renownColor.r, renownColor.g, renownColor.b)
             label = format("%s%s|r %s", renownHex, RENOWN_LEVEL_LABEL, majorFactionData.renownLevel)
-            
+
             capped = C_MajorFactions.HasMaximumRenown(factionID)
             percent = capped and 100 or nil
 
@@ -116,7 +116,8 @@ local function UpdateReputation()
         end
     end
 
-    bar:SetMinMaxValues(minimumValue, maximumValue)
+    local total = maximumValue == math.huge and 1 or maximumValue -- we need to correct the min/max of friendship factions to display the bar at 100%
+    bar:SetMinMaxValues((maximumValue == math.huge or minimumValue == maximumValue) and 0 or minimumValue, total) -- we force min to 0 because the min will match max when a rep is maxxed and cause the bar to be 0%
     bar:SetValue(currentValue)
 
     if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
@@ -144,7 +145,7 @@ local function UpdateReputation()
         label = _G["FACTION_STANDING_LABEL" .. standingID] or UNKNOWN
     end
 
-    if capped and textFormat ~= "NONE" then -- show only name and standing on exalted
+    if capped and textFormat ~= "NONE" then -- show only name and standing at Exalted,Best Friends, or max Renown
         displayString = format("%s: [%s]", name, label)
     elseif textFormat == "PERCENT" then
         displayString = format("%s: %d%% [%s]", name, percent, label)
