@@ -3,4 +3,4 @@ wowi-archive-previous: no
 enable-toc-creation: yes
 
 externals:
-    Libs/LibAboutPanel-2.0: https://github.com/Myrroddin/libaboutpanel-2.0/LibAbouptPanel-2.0
+    Libs/LibAboutPanel-2.0: https://github.com/Myrroddin/libaboutpanel-2.0
