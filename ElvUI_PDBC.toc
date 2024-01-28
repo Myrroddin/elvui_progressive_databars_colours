@@ -21,7 +21,7 @@
 ## X-Website: https://www.curseforge.com/wow/addons/elvui-progressive-databars-colors
 ## X-Date: @project-date-iso@
 ## X-Category: plugins
-## X-License: Copyright (c) 2023 Paul Vandersypen. All Rights Reserved
+## X-License: Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
 ## X-ElvUI-Version: 13.55
