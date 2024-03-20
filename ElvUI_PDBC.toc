@@ -1,4 +1,4 @@
-## Interface: 100205
+## Interface: 100206
 ## Interface-Classic: 11501
 ## Interface-Wrath: 30403
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
@@ -24,7 +24,7 @@
 ## X-License: Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.57
+## X-ElvUI-Version: 13.60
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
