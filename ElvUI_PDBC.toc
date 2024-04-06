@@ -1,5 +1,5 @@
 ## Interface: 100206
-## Interface-Classic: 11501
+## Interface-Classic: 11502
 ## Interface-Wrath: 30403
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
@@ -24,7 +24,7 @@
 ## X-License: Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.60
+## X-ElvUI-Version: 13.61
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
