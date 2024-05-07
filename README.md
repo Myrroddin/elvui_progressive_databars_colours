@@ -1,46 +1,47 @@
 # ElvUI Progressive DataBars
-The default DataBars (XP, Honor, Artifact, Reputation) in [URL="https://www.tukui.org/download.php?ui=elvui"]ElvUI[/URL] are visually boring, so spice them up! This plugin should work with all other ElvUI plugins, but if it doesn't, file a bug report via the link below.
+The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tukui.org/) are visually boring, so spice them up! This plugin should work with all other ElvUI plugins, but if it doesn't, file a bug report via the link below.
 
-[SIZE="5"]The XP DataBar:[/SIZE]
-[LIST]
-[*]Blend the alpha/opacity of the bar as you gain XP
-[/LIST]
+## Supported WoW Versions
 
-[SIZE="5"]The Reputation DataBar and Tooltip:[/SIZE]
+- Classic, which includes Classic Era, hardcore, and seasons
+- Cataclysm Classic
+- Retail, currently that is Dragonflight
 
-[LIST]
-[*]Assigns distinct colours within ElvUI's main settings
-[*]Blend the alpha/opactity of the bar as you gain reputation
-[*]Fill the reputation bar at Exalted (but not Paragon for retail WoW)
-[/LIST]
+## The XP DataBar
 
-[SIZE="5"]The Honor DataBar:[/SIZE]
+- Blend the alpha/opacity of the bar as you gain XP
+- Supported by all WoW versions
 
-[LIST]
-[*]Blend the alpha/opacity of the bar as you gain honor
-[/LIST]
+## The Reputation DataBar and Tooltip
 
-[SIZE="5"]The Azerite Power DataBar:[/SIZE]
+- Blend the alpha/opacity of the bar as you gain reputation
+- Pre-defined colours which you can change in ElvUI's main settings > DataBars and main settings > Tooltip
+- Fills the repuation bar at Exalted (not applicable in Retail for Paragon factions)
+- Fills the reputation bar at Hated until you start gaining reputation
+- Friendship factions (retail only) are adjusted based on the number of ranks the faction has, meaning some may display higher than Hated colour to start and cap at Exalted colour
 
-[LIST]
-[*]Blend the alpha/opacity of the bar as you gain Azerite Power
-[/LIST]
+## The Honor DataBar
 
-[SIZE="5"]Localization:[/SIZE]
+- Retail only
+- Blend the alpha/opacity of the bar as you gain Honor
 
-You can help [URL="https://www.curseforge.com/wow/addons/elvui-progressive-databars-colors/localization"]contribute translations[/URL] so other people around the world of Azeroth can have this glorious AddOn in their native tongues.
-Bugs or Suggestions:
+## The Azerite Power DataBar
 
-Did you find something that isn't working, or thought of an improvement? By all means please [URL="https://www.curseforge.com/wow/addons/elvui-progressive-databars-colors/issues"]let me know[/URL].
+- Retail only
+- Blend the alpha/opacity of the bar as you gain Azerite Power
+- Hidden if you do not have the legendary necklace
 
-[SIZE="5"]Credits:[/SIZE]
+## Localization
+You can help [contribute translations](https://legacy.curseforge.com/wow/addons/elvui-progressive-databars-colors/localization) so other people around the world of Azeroth can have this glorious AddOn in their native tongues.
 
-Credit is due to Blazeflack on the TukUI forums who graciously helped me get going with writing a plugin for ElvUI, and to Torhal who worked me through some logic bombs. Thank you guys!
+## Bugs or Suggestions
+Did you find something that isn't working, or thought of an improvement? By all means please [let me know](https://legacy.curseforge.com/wow/addons/elvui-progressive-databars-colors/issues).
 
-[SIZE="5"]Cookies & Treats:[/SIZE]
+## Credits
+Credit is due to Blazeflack on the TukUI forums who graciously helped me get going with writing a plugin for ElvUI, and to Torhal on Curseforge who worked me through some logic bombs. Thank you guys!
 
-I accept cookies, treats, donations, game time, and hot Night Elf women. Er wait... Anyway, if you want to help me out, you can find me in these places: 
-[LIST]
-[*][URL="https://www.patreon.com/Myrroddin"]https://www.patreon.com/Myrroddin[/URL]
-[*]Paypal psvander@gmail.com
-[/LIST]
+## Cookies & Treats
+I accept cookies, treats, donations, game time, and hot Night Elf women. Er wait... Anyway, if you want to help me out, you can find me in these places:
+
+- [PayPal](https://www.paypal.com/paypalme/PVandersypen)
+- [Patreon](https://www.patreon.com/Myrroddin)
