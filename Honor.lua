@@ -23,7 +23,7 @@ local function UpdateHonor(event, unit)
 
     local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
-    
+
     a = E.db.EPDBC.honorBar.progress and avg or 1.0
 
     bar:SetStatusBarColor(r, g, b, a)
@@ -31,13 +31,13 @@ end
 
 function EPDBC:HookHonorBar()
     local bar = EDB.StatusBars.Honor
-    
+
     if bar then
         if not EPDBC:IsHooked(EDB, "HonorBar_Update") then
             EPDBC:SecureHook(EDB, "HonorBar_Update", UpdateHonor)
         end
     end
-    
+
     EDB:HonorBar_Update()
 end
 

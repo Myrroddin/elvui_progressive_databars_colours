@@ -12,6 +12,8 @@
         "RENOWN_LEVEL_LABEL",
         "REPUTATION",
         "STANDING",
-        "UNKNOWN"
+        "UNKNOWN",
+        "TogglePVPUI",
+        "HONOR"
     ]
 }

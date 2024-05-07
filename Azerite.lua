@@ -31,7 +31,7 @@ end
 
 function EPDBC:HookAzeriteBar()
     local bar = EDB.StatusBars.Azerite
-    
+
     if bar then
         if not EPDBC:IsHooked(EDB, "AzeriteBar_Update") then
             EPDBC:SecureHook(EDB, "AzeriteBar_Update", UpdateAzerite)

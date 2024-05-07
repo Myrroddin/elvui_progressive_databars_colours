@@ -1,6 +1,6 @@
 ## Interface: 100206
 ## Interface-Classic: 11502
-## Interface-Wrath: 30403
+## Interface-Cata: 40400
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -24,7 +24,7 @@
 ## X-License: Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.61
+## X-ElvUI-Version: 13.63
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
@@ -55,12 +55,12 @@ Locales\esMX.lua
 # Options-Vanilla.lua
 # #@end-version-classic@
 
-# #@version-wrath@
-# Core-Wrath.lua
+# #@version-cata@
+# Core-Cata.lua
 # Experience.lua
-# Reputation-Wrath.lua
-# Options-Wrath.lua
-# #@end-version-wrath@
+# Reputation-Cata.lua
+# Options-Cata.lua
+# #@end-version-cata@
 #@end-non-debug@
 
 #@version-retail@

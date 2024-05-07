@@ -11,7 +11,7 @@ local function UpdateExperience()
     EDB:SetVisibility(bar)
 
 	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
-    
+
     local colour = EDB.db.colors.experience
     local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 0.8
 

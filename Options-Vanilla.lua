@@ -24,7 +24,7 @@ function EPDBC:GetOptions()
                 get = function()
                     return E.db.EPDBC.enabled
                 end,
-                set = function(info, value)
+                set = function(_, value)
                     E.db.EPDBC.enabled = value
                     if value then
                         EPDBC:StartUp()
@@ -46,7 +46,7 @@ function EPDBC:GetOptions()
                 get = function()
                     return E.db.EPDBC.experienceBar.progress
                 end,
-                set = function(info, value)
+                set = function(_, value)
                     E.db.EPDBC.experienceBar.progress = value
                     EDB:ExperienceBar_Update()
                 end
@@ -59,7 +59,7 @@ function EPDBC:GetOptions()
                 get = function()
                     return E.db.EPDBC.reputationBar.progress
                 end,
-                set = function(info, value)
+                set = function(_, value)
                     E.db.EPDBC.reputationBar.progress = value
                     EDB:ReputationBar_Update()
                 end
@@ -77,7 +77,7 @@ function EPDBC:GetOptions()
                 get = function()
                     return E.db.EPDBC.reputationBar.fillExalted
                 end,
-                set = function(info, value)
+                set = function(_, value)
                     E.db.EPDBC.reputationBar.fillExalted = value
                     EDB:ReputationBar_Update()
                 end
@@ -90,7 +90,7 @@ function EPDBC:GetOptions()
                 get = function()
                     return E.db.EPDBC.reputationBar.fillHated
                 end,
-                set = function(info, value)
+                set = function(_, value)
                     E.db.EPDBC.reputationBar.fillHated = value
                     EDB:ReputationBar_Update()
                 end
@@ -103,7 +103,7 @@ function EPDBC:GetOptions()
                 get = function()
                     return E.db.EPDBC.progressSmoothing.decimalLength
                 end,
-                set = function(info, value)
+                set = function(_, value)
                     E.db.EPDBC.progressSmoothing.decimalLength = value
                     EDB:ReputationBar_Update()
                     EDB:ExperienceBar_Update()
