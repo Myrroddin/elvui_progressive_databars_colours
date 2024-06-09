@@ -1,6 +1,4 @@
-## Interface: 100207
-## Interface-Classic: 11502
-## Interface-Cata: 40400
+## Interface: 11502, 40400, 100207
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -24,7 +22,7 @@
 ## X-License: Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.64
+## X-ElvUI-Version: 13.66
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498

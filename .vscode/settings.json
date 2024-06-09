@@ -14,6 +14,8 @@
         "STANDING",
         "UNKNOWN",
         "TogglePVPUI",
-        "HONOR"
+        "HONOR",
+        "CLOSE",
+        "ReloadUI"
     ]
 }

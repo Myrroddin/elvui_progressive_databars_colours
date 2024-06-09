@@ -1,17 +1,16 @@
 -- local references to global functions so we don't conflict
-local _G = _G
-local CLOSE = _G.CLOSE
-local ReloadUI = _G.ReloadUI
-local math = _G.math
-local LibStub = _G.LibStub
-local GetCVarBool = _G.GetCVarBool
-local C_AddOns = _G.C_AddOns
-local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata or _G.GetAddOnMetadata
-local StopMusic = _G.StopMusic
-local unpack = _G.unpack
-local tonumber = _G.tonumber
+local CLOSE = CLOSE
+local ReloadUI = ReloadUI
+local math = math
+local LibStub = LibStub
+local GetCVarBool = GetCVarBool
+local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata
+local StopMusic = StopMusic
+local unpack = unpack
+local tonumber = tonumber
 
 -- the vaarg statement
+---@class string, table
 local addonName, addon = ...
 local Version = GetAddOnMetadata(addonName, "Version")
 --@debug@

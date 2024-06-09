@@ -3,6 +3,7 @@ local E, L, V, P, G = unpack(ElvUI)
 -- get the DataBars module
 local EDB = E:GetModule("DataBars")
 local EPDBC = E:GetModule("EPDBC")
+---@class string, table
 local module_name, private_table = ...
 local InstallerData = private_table.InstallerData
 
