@@ -1,5 +1,6 @@
 package-as: ElvUI_PDBC
 wowi-archive-previous: no
+enable-toc-creation: yes
 
 externals:
     Libs/LibAboutPanel-2.0:
