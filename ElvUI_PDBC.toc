@@ -52,7 +52,6 @@ Locales\esMX.lua
 # Reputation-Vanilla.lua
 # Options-Vanilla.lua
 # #@end-version-classic@
-
 # #@version-cata@
 # Core-Cata.lua
 # Experience.lua
@@ -60,7 +59,6 @@ Locales\esMX.lua
 # Options-Cata.lua
 # #@end-version-cata@
 #@end-non-debug@
-
 #@version-retail@
 Core-Retail.lua
 Experience.lua
