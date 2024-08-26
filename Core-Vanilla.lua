@@ -1,10 +1,10 @@
 -- local references to global functions so we don't conflict
 local CLOSE = CLOSE
 local ReloadUI = ReloadUI
-local math = math
+local floor = math.floor
 local LibStub = LibStub
 local GetCVarBool = GetCVarBool
-local GetAddOnMetadata = C_AddOns and C_AddOns.GetAddOnMetadata
+local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local StopMusic = StopMusic
 local unpack = unpack
 local tonumber = tonumber
@@ -277,7 +277,7 @@ function EPDBC:Round(num, idp)
     if num <= 0.1 then return 0.1 end
 
     local mult = 10^(idp or 0)
-    return math.floor(num * mult + 0.5) / mult
+    return floor(num * mult + 0.5) / mult
 end
 
 function EPDBC:GetCurrentMaxValues(statusBar)

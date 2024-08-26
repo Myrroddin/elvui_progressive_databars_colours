@@ -1,6 +1,5 @@
 -- local references to global functions so we don't conflict
-local _G = _G
-local unpack = _G.unpack
+local unpack = unpack
 
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
@@ -40,9 +39,9 @@ function EPDBC:HookXPBar()
         if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
             EPDBC:SecureHook(EDB, "ExperienceBar_Update", UpdateExperience)
         end
-    end
 
-    EDB:ExperienceBar_Update()
+        EDB:ExperienceBar_Update()
+    end
 end
 
 function EPDBC:RestoreXPBar()

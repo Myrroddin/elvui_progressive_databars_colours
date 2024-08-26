@@ -1,6 +1,5 @@
 -- local references to global functions so we don"t conflict
-local _G = _G
-local unpack = _G.unpack
+local unpack = unpack
 
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI"s DataBars
@@ -36,9 +35,9 @@ function EPDBC:HookAzeriteBar()
         if not EPDBC:IsHooked(EDB, "AzeriteBar_Update") then
             EPDBC:SecureHook(EDB, "AzeriteBar_Update", UpdateAzerite)
         end
-    end
 
-    EDB:AzeriteBar_Update()
+        EDB:AzeriteBar_Update()
+    end
 end
 
 function EPDBC:RestoreAzeriteBar()

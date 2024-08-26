@@ -1,11 +1,10 @@
 -- local references to global functions so we don't conflict
-local _G = _G
-local MAX_REPUTATION_REACTION = _G.MAX_REPUTATION_REACTION
-local UNKNOWN = _G.UNKNOWN
-local math = _G.math
-local unpack = _G.unpack
-local format = _G.format
-local GetWatchedFactionInfo = _G.GetWatchedFactionInfo
+local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
+local UNKNOWN = UNKNOWN
+local abs = math.abs
+local unpack = unpack
+local format = format
+local GetWatchedFactionInfo = GetWatchedFactionInfo
 
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
@@ -58,7 +57,7 @@ local function UpdateReputation()
     avg = currentValue / maximumValue
 
     -- avg may be out of 0-1 bounds for alpha, fix
-    avg = math.abs(avg)
+    avg = abs(avg)
     while avg > 1 do
         avg = avg / 10
     end
@@ -110,9 +109,9 @@ function EPDBC:HookRepBar()
         if not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
             EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
         end
-    end
 
-    EDB:ReputationBar_Update()
+        EDB:ReputationBar_Update()
+    end
 end
 
 function EPDBC:RestoreRepBar()
