@@ -47,23 +47,19 @@ Locales\frFR.lua
 Locales\esES.lua
 Locales\esMX.lua
 
+Core.lua
+Experience.lua
 #@non-debug@
 # #@version-classic@
-# Core-Vanilla.lua
-# Experience.lua
 # Reputation-Vanilla.lua
 # Options-Vanilla.lua
 # #@end-version-classic@
 # #@version-mists@
-# Core-Mists.lua
-# Experience.lua
 # Reputation-Mists.lua
 # Options-Mists.lua
 # #@end-version-mists@
 #@end-non-debug@
 #@version-retail@
-Core-Retail.lua
-Experience.lua
 Reputation-Retail.lua
 Honor.lua
 Azerite.lua

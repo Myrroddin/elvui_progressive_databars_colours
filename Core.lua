@@ -24,7 +24,7 @@ Version = tonumber(Version)
 local E, L, V, P, G = unpack(ElvUI)
 
 -- create the plugin for ElvUI
-local MyPluginName = L["Progressively Colored DataBars"]
+local MyPluginName = L["Coloured DataBars"]
 local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0", "LibAboutPanel-2.0")
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 EPDBC.Eversion = tonumber(GetAddOnMetadata(addonName, "X-ElvUI-Version")) -- minimum compatible ElvUI version
@@ -44,16 +44,16 @@ P["EPDBC"] = {
         fillExalted = true,
         fillHated = true
     },
-    honorBar = {
-        progress = true
-    },
-    azeriteBar = {
-        progress = true
-    },
     progressSmoothing = {
         decimalLength = 3
     }
 }
+
+if E.Retail then
+    -- add the default options for the retail version
+    P["EPDBC"].honorBar.progress = true
+    P["EPDBC"].azeriteBar.progress = true
+end
 
 -- This function will hold our layout settings
 local function SetupLayout(layout)
@@ -81,12 +81,14 @@ local function SetupLayout(layout)
         E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
         E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.00000000000000
         E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
-        E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
-        E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
-        E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
-        E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.95000000000000
-        E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.74000000000000
-        E.db["databars"]["colors"]["factionColors"][10]["r"] = 0.00000000000000
+        if E.Retail then
+            E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
+            E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
+            E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
+            E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.00000000000000
+            E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.00000000000000
+            E.db["databars"]["colors"]["factionColors"][10]["r"] = 1.00000000000000
+        end
     elseif layout == "tooltip" then
         -- replace tooltip faction colours
         E.db["tooltip"]["factionColors"][1]["b"] = 0.00000000000000
@@ -264,14 +266,18 @@ function EPDBC:StartUp()
 
     EPDBC:HookXPBar()
     EPDBC:HookRepBar()
-    EPDBC.HookHonorBar()
-    EPDBC:HookAzeriteBar()
+    if E.Retail then
+        EPDBC.HookHonorBar()
+        EPDBC:HookAzeriteBar()
+    end
 
     -- call ElvUI's functions to update the bars
     EDB:ExperienceBar_Update()
     EDB:ReputationBar_Update()
-    EDB:HonorBar_Update()
-    EDB:AzeriteBar_Update()
+    if E.Retail then
+        EDB:HonorBar_Update()
+        EDB:AzeriteBar_Update()
+    end
 end
 
 -- called when EPDBC is disabled in the options
@@ -281,15 +287,19 @@ function EPDBC:ShutDown()
 
     EPDBC:RestoreRepBar()
     EPDBC:RestoreXPBar()
-    EPDBC:RestoreHonorBar()
-    EPDBC:RestoreAzeriteBar()
+    if E.Retail then
+        EPDBC:RestoreHonorBar()
+        EPDBC:RestoreAzeriteBar()
+    end
     EPDBC:UnhookAll()
 
     -- call ElvUI's functions to update the bars
     EDB:ExperienceBar_Update()
     EDB:ReputationBar_Update()
-    EDB:HonorBar_Update()
-    EDB:AzeriteBar_Update()
+    if E.Retail then
+        EDB:HonorBar_Update()
+        EDB:AzeriteBar_Update()
+    end
 end
 
 -- utility functions

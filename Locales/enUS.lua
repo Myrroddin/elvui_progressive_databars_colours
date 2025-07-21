@@ -6,6 +6,7 @@ local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, missingTranslationW
 
 L["%s\n\nYour ElvUI version %.2f is not compatible with EPDBC.\nMinimum ElvUI version needed is %.2f. Please download it from here:\n"] = true
 L["Blend Progress"] = true
+L["Coloured DataBars"] = true
 L["Colourize"] = true
 L["Colourize your DataBars"] = true
 L["Colourize your Tooltip"] = true
@@ -22,7 +23,6 @@ L["Progressively blend the bar as you gain Azerite Power"] = true
 L["Progressively blend the bar as you gain honor."] = true
 L["Progressively blend the bar as you gain reputation."] = true
 L["Progressively blend the bar as you gain XP."] = true
-L["Progressively Colored DataBars"] = true
 L["Run the installation process"] = true
 L["Skip Process"] = true
 L["The Reputation bar looks full at 0 hated, when you cannot lose any more reputation"] = true

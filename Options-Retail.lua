@@ -8,7 +8,7 @@ local module_name, private_table = ...
 local InstallerData = private_table.InstallerData
 
 -- translate the module's name. normally I wouldn't do this, but it does have an awkward name
-local uiName = L["Progressively Colored DataBars"]
+local uiName = L["Coloured DataBars"]
 
 function EPDBC:GetOptions()
     local options = {

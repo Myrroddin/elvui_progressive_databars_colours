@@ -10,3 +10,5 @@ igmore:
   - README.md
   - "*Mists*.*"
   - "*Retail*.*"
+  - Azurite.lua
+  - Honor.lua
