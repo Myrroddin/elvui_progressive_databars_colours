@@ -4,7 +4,7 @@ The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tu
 ## Supported WoW Versions
 
 - Classic, which includes Classic Era, hardcore, and seasons
-- Cataclysm Classic
+- Mists of Pandaria Classic
 - Retail, currently that is Dragonflight
 
 ## The XP DataBar

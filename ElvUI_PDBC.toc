@@ -1,6 +1,6 @@
-## Interface: 110002
-## Interface-Classic: 11503
-## Interface-Cata: 40400
+## Interface: 110107
+## Interface-Classic: 11507
+## Interface-Mists: 50500
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
@@ -21,10 +21,10 @@
 ## X-Website: https://www.curseforge.com/wow/addons/elvui-progressive-databars-colors
 ## X-Date: @project-date-iso@
 ## X-Category: plugins
-## X-License: Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
+## X-License: Copyright (c) 2024-2025 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.75
+## X-ElvUI-Version: 13.94
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
@@ -54,12 +54,12 @@ Locales\esMX.lua
 # Reputation-Vanilla.lua
 # Options-Vanilla.lua
 # #@end-version-classic@
-# #@version-cata@
-# Core-Cata.lua
+# #@version-mists@
+# Core-Mists.lua
 # Experience.lua
-# Reputation-Cata.lua
-# Options-Cata.lua
-# #@end-version-cata@
+# Reputation-Mists.lua
+# Options-Mists.lua
+# #@end-version-mists@
 #@end-non-debug@
 #@version-retail@
 Core-Retail.lua

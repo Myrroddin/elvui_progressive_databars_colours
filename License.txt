@@ -1,4 +1,4 @@
-Copyright (c) 2024 Paul Vandersypen. All Rights Reserved
+Copyright (c) 2024-2025 Paul Vandersypen. All Rights Reserved
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to the rights to use, copy, modify, merge, distribute, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
