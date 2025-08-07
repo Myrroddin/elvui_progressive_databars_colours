@@ -18,7 +18,7 @@ The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tu
 - Pre-defined colours which you can change in ElvUI's main settings > DataBars and main settings > Tooltip
 - Fills the repuation bar at Exalted (not applicable in Retail for Paragon factions)
 - Fills the reputation bar at Hated until you start gaining reputation
-- Friendship factions (retail only) are adjusted based on the number of ranks the faction has, meaning some may display higher than Hated colour to start and cap at Exalted colour
+- Friendship factions (Mists & retail) are adjusted based on the number of ranks the faction has, meaning some may display higher than Hated colour to start and cap at Exalted colour
 
 ## The Honor DataBar
 
@@ -35,7 +35,7 @@ The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tu
 You can help [contribute translations](https://legacy.curseforge.com/wow/addons/elvui-progressive-databars-colors/localization) so other people around the world of Azeroth can have this glorious AddOn in their native tongues.
 
 ## Bugs or Suggestions
-Did you find something that isn't working, or thought of an improvement? By all means please [let me know](https://legacy.curseforge.com/wow/addons/elvui-progressive-databars-colors/issues).
+Did you find something that isn't working, or thought of an improvement? By all means please [let me know](https://github.com/Myrroddin/elvui_progressive_databars_colours/issues).
 
 ## Credits
 Credit is due to Blazeflack on the TukUI forums who graciously helped me get going with writing a plugin for ElvUI, and to Torhal on Curseforge who worked me through some logic bombs. Thank you guys!

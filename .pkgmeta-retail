@@ -2,9 +2,9 @@ package-as: ElvUI_PDBC
 wowi-archive-previous: no
 
 externals:
-    Libs/LibAboutPanel-2.0:
-        url: https://github.com/Myrroddin/libaboutpanel-2.0/LibAboutPanel-2.0
-        curse-slug: libaboutpanel-2-0
+  Libs/LibAboutPanel-2.0:
+    url: https://github.com/Myrroddin/libaboutpanel-2.0/LibAboutPanel-2.0
+    curse-slug: libaboutpanel-2-0
 
 igmore:
   - README.md
