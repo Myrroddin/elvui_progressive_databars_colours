@@ -2,7 +2,7 @@
 name: Bug Report
 about: Create a report to help us improve
 title: ""
-labels: bug, improvement, invalid, fixed, declined
+labels: bug, invalid, fixed, declined
 assignees: Myrroddin
 
 ---

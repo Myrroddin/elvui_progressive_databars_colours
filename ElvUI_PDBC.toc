@@ -24,7 +24,7 @@
 ## X-License: Copyright (c) 2024-2025 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
 
-## X-ElvUI-Version: 13.95
+## X-ElvUI-Version: 13.96
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
@@ -49,19 +49,9 @@ Locales\esMX.lua
 
 Core.lua
 Experience.lua
-#@non-debug@
-# #@version-classic@
-# Reputation-Vanilla.lua
-# Options-Vanilla.lua
-# #@end-version-classic@
-# #@version-mists@
-# Reputation-Mists.lua
-# Options-Mists.lua
-# #@end-version-mists@
-#@end-non-debug@
+Reputation.lua
 #@version-retail@
-Reputation-Retail.lua
 Honor.lua
 Azerite.lua
-Options-Retail.lua
 #@end-version-retail@
+Options.lua

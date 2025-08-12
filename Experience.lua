@@ -1,12 +1,12 @@
--- local references to global functions so we don't conflict
-local unpack = unpack
-
 local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
 local function UpdateExperience()
-    local bar = EDB.StatusBars.Experience
+    local bar = EDB.StatusBars and EDB.StatusBars.Experience
+    if not bar then return end
+
+    -- visibility handled by EDB; bail if honor disabled
     EDB:SetVisibility(bar)
 
 	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
@@ -14,9 +14,9 @@ local function UpdateExperience()
     local colour = EDB.db.colors.experience
     local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 0.8
 
-    local minimumValue, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
+    local _, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
 
-    if maximumValue == 0 then maximumValue = 1 end -- prevent division by 0 error
+    if (not maximumValue) or (maximumValue <= 0) then maximumValue = 1 end -- prevent division by 0 error
 
     local avg = currentValue / maximumValue
     avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)

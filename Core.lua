@@ -1,16 +1,15 @@
 -- local references to global functions so we don't conflict
 local CLOSE = CLOSE
-local ReloadUI = ReloadUI
+local ReloadUI = C_UI.Reload
 local floor = math.floor
 local LibStub = LibStub
-local GetCVarBool = GetCVarBool
+local GetCVarBool = C_CVar.GetCVarBool
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local StopMusic = StopMusic
 local unpack = unpack
 local tonumber = tonumber
 
 -- the vaarg statement
----@class string, table
 local addonName, addon = ...
 local Version = GetAddOnMetadata(addonName, "Version")
 --@debug@
@@ -36,7 +35,13 @@ local LEP = LibStub("LibElvUIPlugin-1.0")
 -- default options
 P["EPDBC"] = {
     enabled = true,
+    azeriteBar = {
+        progress = true
+    },
     experienceBar = {
+        progress = true
+    },
+    honorBar = {
         progress = true
     },
     reputationBar = {
@@ -48,12 +53,6 @@ P["EPDBC"] = {
         decimalLength = 3
     }
 }
-
-if E.Retail then
-    -- add the default options for the retail version
-    P["EPDBC"].honorBar.progress = true
-    P["EPDBC"].azeriteBar.progress = true
-end
 
 -- This function will hold our layout settings
 local function SetupLayout(layout)
@@ -81,14 +80,12 @@ local function SetupLayout(layout)
         E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
         E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.00000000000000
         E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
-        if E.Retail then
-            E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
-            E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
-            E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
-            E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.00000000000000
-            E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.00000000000000
-            E.db["databars"]["colors"]["factionColors"][10]["r"] = 1.00000000000000
-        end
+        E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
+        E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
+        E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
+        E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.00000000000000
+        E.db["databars"]["colors"]["factionColors"][10]["r"] = 1.00000000000000
     elseif layout == "tooltip" then
         -- replace tooltip faction colours
         E.db["tooltip"]["factionColors"][1]["b"] = 0.00000000000000
@@ -130,8 +127,6 @@ local function InstallComplete()
     end
 
     -- Set a variable tracking the version of the addon when layout was installed
-    -- Fix repeating installation, then set the variable correctly
-    E.db["EPDBC"].install_version = nil
     E.private["EPDBC"].install_complete = Version
 
     ReloadUI()

@@ -3,7 +3,6 @@ local E, L, V, P, G = unpack(ElvUI)
 -- get the DataBars module
 local EDB = E:GetModule("DataBars")
 local EPDBC = E:GetModule("EPDBC")
----@class string, table
 local module_name, private_table = ...
 local InstallerData = private_table.InstallerData
 
@@ -65,6 +64,36 @@ function EPDBC:GetOptions()
                     EDB:ReputationBar_Update()
                 end
             },
+            honorBar = {
+                order = 50,
+                name = L["Honor Bar"],
+                desc = L["Progressively blend the bar as you gain honor."],
+                type = "toggle",
+                get = function()
+                    return E.db.EPDBC.honorBar.progress
+                end,
+                set = function(_, value)
+                    E.db.EPDBC.honorBar.progress = value
+                    EDB:HonorBar_Update()
+                end,
+                disabled = function() return not E.Retail end,
+                hidden = function() return not E.Retail end
+            },
+            azeriteBar = {
+                order = 60,
+                name = L["Azerite Bar"],
+                desc = L["Progressively blend the bar as you gain Azerite Power"],
+                type = "toggle",
+                get = function()
+                    return E.db.EPDBC.azeriteBar.progress
+                end,
+                set = function(_, value)
+                    E.db.EPDBC.azeriteBar.progress = value
+                    EDB:AzeriteBar_Update()
+                end,
+                disabled = function() return not E.Retail end,
+                hidden = function() return not E.Retail end
+            },
             miscellaneous = {
                 order = 70,
                 name = MISCELLANEOUS,
@@ -108,6 +137,10 @@ function EPDBC:GetOptions()
                     E.db.EPDBC.progressSmoothing.decimalLength = value
                     EDB:ReputationBar_Update()
                     EDB:ExperienceBar_Update()
+                    if E.Retail then
+                        EDB:HonorBar_Update()
+                        EDB:AzeriteBar_Update()
+                    end
                 end,
                 min = 1,
                 max = 10,
