@@ -11,11 +11,8 @@ local function UpdateAzerite(event, unit)
     local bar = EDB.StatusBars and EDB.StatusBars.Azerite
     if not bar then return end
 
-    -- visibility handled by EDB; bail if azerite disabled
-    EDB:SetVisibility(bar)
-    if not (EDB.db and EDB.db.azerite and EDB.db.azerite.enable) then
-        return
-    end
+    -- bail if azerite disabled
+	if not bar.db and bar.db.enable or bar:ShouldHide() then return end
 
     local color = EDB.db.colors and EDB.db.colors.azerite or {}
     local r, g, b = color.r or 1, color.g or 1, color.b or 1

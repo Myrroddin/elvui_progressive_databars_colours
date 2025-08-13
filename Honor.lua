@@ -11,11 +11,8 @@ local function UpdateHonor(event, unit)
     local bar = EDB.StatusBars and EDB.StatusBars.Honor
     if not bar then return end
 
-    -- visibility handled by EDB; bail if honor disabled
-    EDB:SetVisibility(bar)
-    if not (EDB.db and EDB.db.honor and EDB.db.honor.enable) then
-        return
-    end
+    -- bail if honor disabled
+	if not bar.db and bar.db.enable or bar:ShouldHide() then return end
 
     local color = EDB.db.colors and EDB.db.colors.honor or {}
     local r, g, b = color.r or 1, color.g or 1, color.b or 1

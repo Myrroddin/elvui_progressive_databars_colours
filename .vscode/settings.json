@@ -17,7 +17,11 @@
         "HONOR",
         "CLOSE",
         "ReloadUI",
-        "MAX_REPUTATION_REACTION"
+        "MAX_REPUTATION_REACTION",
+        "UIParentLoadAddOn",
+        "ToggleFrame",
+        "ARTIFACT_POWER",
+        "FACTION_BAR_COLORS"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {

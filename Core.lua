@@ -281,7 +281,7 @@ function EPDBC:ShutDown()
     E.db["tooltip"]["useCustomFactionColors"] = false
 
     EPDBC:RestoreRepBar()
-    EPDBC:RestoreXPBar()
+    EPDBC:RestoreExperienceBar()
     if E.Retail then
         EPDBC:RestoreHonorBar()
         EPDBC:RestoreAzeriteBar()

@@ -6,51 +6,46 @@ local function UpdateExperience()
     local bar = EDB.StatusBars and EDB.StatusBars.Experience
     if not bar then return end
 
-    -- visibility handled by EDB; bail if honor disabled
-    EDB:SetVisibility(bar)
+    -- bail if experience disabled
+	if not bar.db and bar.db.enable or bar:ShouldHide() then return end
 
-	if not bar.db.enable or bar:ShouldHide() then return end -- nothing to see here
-
-    local colour = EDB.db.colors.experience
-    local r, g, b, a = colour.r, colour.g, colour.b, colour.a or 0.8
+    local color = EDB.db.colors and EDB.db.colors.experience or {}
+    local r, g, b = color.r or 1, color.g or 1, color.b or 1
+    local baseA = (E:XPIsLevelMax() and 1.0) or color.a or 0.8
 
     local _, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
-
-    if (not maximumValue) or (maximumValue <= 0) then maximumValue = 1 end -- prevent division by 0 error
+    maximumValue = (maximumValue and maximumValue > 0) and maximumValue or 1
 
     local avg = currentValue / maximumValue
-    avg = EPDBC:Round(avg, E.db.EPDBC.progressSmoothing.decimalLength)
+    avg = EPDBC:Round(avg, (E.db and E.db.EPDBC and E.db.EPDBC.progressSmoothing and E.db.EPDBC.progressSmoothing.decimalLength) or 3)
 
-    if E:XPIsLevelMax() then
-        avg = 1.0
-        a = 1.0
-    end
-
-    a = E.db.EPDBC.experienceBar.progress and avg or 0.8
+    -- alpha: use progress smoothing alpha when enabled, otherwise base alpha 0.8
+    local useProgress = E.db and E.db.EPDBC and E.db.EPDBC.experienceBar and E.db.EPDBC.experienceBar.progress
+    local a = useProgress and avg or baseA
 
     bar:SetStatusBarColor(r, g, b, a)
 end
 
 -- hook the XP bar
 function EPDBC:HookXPBar()
-    local bar = EDB.StatusBars.Experience
+    local bar = EDB.StatusBars and EDB.StatusBars.Experience
+    if not bar then return end
 
-    if bar then
-        if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
-            EPDBC:SecureHook(EDB, "ExperienceBar_Update", UpdateExperience)
-        end
-
-        EDB:ExperienceBar_Update()
+    if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
+        EPDBC:SecureHook(EDB, "ExperienceBar_Update", UpdateExperience)
     end
+
+    -- force an immediate update after hooking
+    EDB:ExperienceBar_Update()
 end
 
-function EPDBC:RestoreXPBar()
-    local bar = EDB.StatusBars.Experience
-    if bar then
-        if EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
-            EPDBC:Unhook(EDB, "ExperienceBar_Update")
-        end
+function EPDBC:RestoreExperienceBar()
+    local bar = EDB.StatusBars and EDB.StatusBars.Experience
+    if not bar then return end
 
-        EDB:ExperienceBar_Update()
+    if EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
+        EPDBC:Unhook(EDB, "ExperienceBar_Update")
     end
+
+    EDB:ExperienceBar_Update()
 end

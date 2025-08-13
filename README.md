@@ -5,7 +5,7 @@ The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tu
 
 - Classic, which includes Classic Era, hardcore, and seasons
 - Mists of Pandaria Classic
-- Retail, currently that is Dragonflight
+- Retail, currently that is The War Within
 
 ## The XP DataBar
 
@@ -16,7 +16,7 @@ The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tu
 
 - Blend the alpha/opacity of the bar as you gain reputation
 - Pre-defined colours which you can change in ElvUI's main settings > DataBars and main settings > Tooltip
-- Fills the repuation bar at Exalted (not applicable in Retail for Paragon factions)
+- Fills the repuation bar at Exalted (not applicable in Retail for Paragon or "Major" factions)
 - Fills the reputation bar at Hated until you start gaining reputation
 - Friendship factions (Mists & retail) are adjusted based on the number of ranks the faction has, meaning some may display higher than Hated colour to start and cap at Exalted colour
 
