@@ -1,18 +1,16 @@
-## Interface: 110200
-## Interface-Classic: 11507
-## Interface-Mists: 50500
+## Interface: 120001, 50503, 38000, 20505, 11508
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
-## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
 ## Notes-deDE: @localization(locale="deDE", key="Notes", namespace="ToC")@
-## Notes-koKR: @localization(locale="koKR", key="Notes", namespace="ToC")@
-## Notes-esMX: @localization(locale="esMX", key="Notes", namespace="ToC")@
 ## Notes-esES: @localization(locale="esES", key="Notes", namespace="ToC")@
+## Notes-esMX: @localization(locale="esMX", key="Notes", namespace="ToC")@
+## Notes-frFR: @localization(locale="frFR", key="Notes", namespace="ToC")@
+## Notes-itIT: @localization(locale="itIT", key="Notes", namespace="ToC")@
+## Notes-koKR: @localization(locale="koKR", key="Notes", namespace="ToC")@
 ## Notes-ptBR: @localization(locale="ptBR", key="Notes", namespace="ToC")@
+## Notes-ruRU: @localization(locale="ruRU", key="Notes", namespace="ToC")@
 ## Notes-zhCN: @localization(locale="zhCN", key="Notes", namespace="ToC")@
 ## Notes-zhTW: @localization(locale="zhTW", key="Notes", namespace="ToC")@
-## Notes-itIT: @localization(locale="itIT", key="Notes", namespace="ToC")@
-## Notes-frFR: @localization(locale="frFR", key="Notes", namespace="ToC")@
 ## Version: @project-version@
 ## Author: Sygon
 ## X-Author-Guild: Crimson Embers
@@ -20,11 +18,23 @@
 ## X-Author-Server: Lightbringer
 ## X-Website: https://www.curseforge.com/wow/addons/elvui-progressive-databars-colors
 ## X-Date: @project-date-iso@
-## X-Category: plugins
-## X-License: Copyright (c) 2024-2025 Paul Vandersypen. All Rights Reserved
-## X-Localizations: enUS, esMX, esES, ptBR, zhCN, zhTW, ruRU, frFR, deDE, koKR, itIT
+## Category: UI Overhaul
+## Category-deDE: UI-Überholung
+## Category-esES: Renovación de la Interfaz de Usuario
+## Category-esMX: Renovación de la Interfaz de Usuario
+## Category-frFR: Révision de l'Interface Utilisateur
+## Category-itIT: Revisione dell'interfaccia utente
+## Category-koKR: UI 개조
+## Category-ptBR: Reformulação da Interface do Usuário
+## Category-ruRU: Переработка интерфейса
+## Category-zhCN: UI重构
+## Category-zhTW: UI重構
+## X-License: Copyright (c) 2017-2026 Paul Vandersypen. All Rights Reserved
+## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
+## Group: ElvUI
+## IconTexture: Interface\Icons\INV_Misc_ProgressBar_01
 
-## X-ElvUI-Version: 13.96
+## X-ElvUI-Version: 15.11
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
@@ -37,21 +47,22 @@ Libs\LibAboutPanel-2.0\lib.xml
 
 Locales\enUS.lua
 Locales\deDE.lua
-Locales\ptBR.lua
-Locales\itIT.lua
-Locales\koKR.lua
-Locales\ruRU.lua
-Locales\zhTW.lua
-Locales\zhCN.lua
-Locales\frFR.lua
 Locales\esES.lua
 Locales\esMX.lua
+Locales\frFR.lua
+Locales\itIT.lua
+Locales\koKR.lua
+Locales\ptBR.lua
+Locales\ruRU.lua
+Locales\zhCN.lua
+Locales\zhTW.lua
 
-Core.lua
+Core-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
+Core-Mainline.lua [AllowLoadGameType mainline]
 Experience.lua
-Reputation.lua
-#@version-retail@
-Honor.lua
-Azerite.lua
-#@end-version-retail@
-Options.lua
+Reputation-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
+Reputation-Mainline.lua [AllowLoadGameType mainline]
+Honor.lua [AllowLoadGameType mainline]
+Azerite.lua [AllowLoadGameType mainline]
+Options-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
+Options-Mainline.lua [AllowLoadGameType mainline]

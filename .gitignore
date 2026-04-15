@@ -1,0 +1,35 @@
+# World of Warcraft client folders when testing from a game install root
+/_retail_/
+/_classic_/
+/_classic_era_/
+/_classic_ptr_/
+/_ptr_/
+/_beta_/
+/_xptr_/
+/Interface/
+/WTF/
+/Cache/
+/Errors/
+/Logs/
+/Screenshots/
+
+# Release and packaging output
+/release/
+/dist/
+*.zip
+
+# External library checkout pulled locally by the packager
+/Libs/LibAboutPanel-2.0/
+
+# Local editor settings
+/.vscode/
+
+# OS and editor temp files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.bak
+*.orig
+*.swp
+*.tmp
+*~
