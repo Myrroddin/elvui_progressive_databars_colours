@@ -4,7 +4,11 @@ missingTranslationWarning = false
 --@end-debug@
 local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, missingTranslationWarning)
 
-L["%s\n\nYour ElvUI version %.2f is not compatible with EPDBC.\nMinimum ElvUI version needed is %.2f. Please download it from here:\n"] = true
+L[ [=[%s
+
+Your ElvUI version %.2f is not compatible with EPDBC.
+Minimum ElvUI version needed is %.2f. Please download it from here:
+]=] ] = true
 L["Blend Progress"] = true
 L["Coloured DataBars"] = true
 L["Colourize"] = true
@@ -15,8 +19,8 @@ L["Fill Exalted"] = true
 L["Fill Hated"] = true
 L["Install"] = true
 L["Installation"] = true
-L["Number of decimals to use when blending the bars' alpha as you gain xp, honour, rep, etc"] = true
-L["Please click the button below in order to finalize the process and automatically reload your UI."] = true
+L["Number of decimals to use when blending the bars' alpha as you gain XP, Honor, Reputation, etc."] = true
+L["Please click the button below to finalize the process and automatically reload your UI."] = true
 L["Please press the continue button if you wish to go through the installation process, otherwise click the 'Skip Process' button."] = true
 L["Progress Smoothing"] = true
 L["Progressively blend the bar as you gain Azerite Power"] = true
