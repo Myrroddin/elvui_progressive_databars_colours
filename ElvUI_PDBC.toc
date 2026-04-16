@@ -60,9 +60,11 @@ Locales\zhTW.lua
 Core-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
 Core-Mainline.lua [AllowLoadGameType mainline]
 Experience.lua
-Reputation-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
+Reputation-Classic.lua [AllowLoadGameType vanilla, tbc, wrath]
+Reputation-Mist.lua [AllowLoadGameType mists]
 Reputation-Mainline.lua [AllowLoadGameType mainline]
 Honor.lua [AllowLoadGameType mainline]
 Azerite.lua [AllowLoadGameType mainline]
-Options-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
+Options-Classic.lua [AllowLoadGameType vanilla, tbc, wrath]
+Options-Mists.lua [AllowLoadGameType mists]
 Options-Mainline.lua [AllowLoadGameType mainline]
