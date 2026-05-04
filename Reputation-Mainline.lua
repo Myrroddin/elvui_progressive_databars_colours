@@ -1,150 +1,126 @@
--- local references to global functions so we don't conflict
-local UNKNOWN = UNKNOWN
+-- local references to global functions
+local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 local huge = math.huge
-local abs = math.abs
 local min = math.min
 local max = math.max
-local format = format
-local unpack = unpack
+local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation
+local GetFriendshipReputationRanks = C_GossipInfo.GetFriendshipReputationRanks
+local IsFactionParagonForCurrentPlayer = C_Reputation.IsFactionParagonForCurrentPlayer
+local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
+local IsMajorFaction = C_Reputation.IsMajorFaction
+local GetMajorFactionData = C_MajorFactions.GetMajorFactionData
+local HasMaximumRenown = C_MajorFactions.HasMaximumRenown
 
--- API compatibility flags
-local isMainline = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local isMists = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
-
-local E, L, V, P, G = unpack(ElvUI)
+local E = ElvUI[1]
+local ElvUF = E.oUF
 local EDB = E:GetModule("DataBars")
 local EPDBC = E:GetModule("EPDBC")
 
-local formatStrings = {
-	["PERCENT"] = "%s: %d%% [%s]",
-	["CURMAX"] = "%s: %s - %s [%s]",
-	["CURPERC"] = "%s: %s - %d%% [%s]",
-	["CUR"] = "%s: %s [%s]",
-	["REM"] = "%s: %s [%s]",
-	["CURREM"] = "%s: %s - %s [%s]",
-	["CURPERCREM"] = "%s: %s - %d%% (%s) [%s]",
-}
+local function GetCurrentAndMaximumValues(currentStanding, currentReactionThreshold, nextReactionThreshold)
+	local current = currentStanding - currentReactionThreshold
+	local maximum = nextReactionThreshold - currentReactionThreshold
 
--------------------------------------------------
--- Unified Faction API Wrapper
--------------------------------------------------
-local function GetFactionData()
-	if isMainline then
-		local data = C_Reputation.GetWatchedFactionData()
-		if not data then return nil end
-		return data.name, data.reaction, data.factionID
+	if maximum < 0 then
+		maximum = current -- account for negative maximum
+	end
+
+	if current == maximum then
+		return 1, 1
 	else
-		local name, standingID, _, _, _, factionID = GetWatchedFactionInfo()
-		return name, standingID, factionID
+		maximum = (maximum ~= 0 and maximum) or 1 -- prevent a division by zero
+		return current, maximum
 	end
 end
 
 local function UpdateReputation()
-	local bar = EDB.StatusBars and EDB.StatusBars.Reputation
-	if not bar then return end
+	local bar = EDB.StatusBars.Reputation
+	EDB:SetVisibility(bar)
 
-	-- bail if reputation disabled
-	if not bar.db and bar.db.enable or bar:ShouldHide() then return end
+	if not bar.db.enable or bar:ShouldHide() then return end
 
-	local name, standingID, factionID = GetFactionData()
-	if not name or not factionID or factionID <= 0 then return end
+	local data = E:GetWatchedFactionInfo() -- ElvUI function that converts returned values into a table https://warcraft.wiki.gg/wiki/API_C_Reputation.GetWatchedFactionData
+	local name, reaction, currentReactionThreshold, nextReactionThreshold, currentStanding, factionID = data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding, data.factionID
+	if not name then return end -- exit if we don't have a faction
 
-	local label, avg, percent, capped, rewardPending, a
-	local friendshipInfo, rankInfo, majorFactionData
-	local textFormat = EDB.db and EDB.db.reputation and EDB.db.reputation.textFormat
+	local rational, alpha, friendshipInfo, rankInfo, majorFactionData, currentValue, maximumValue
+	local isFriendshipCapped, isCappedExalted, isRenownCapped
 
-	-- get current & max values
-	local _, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
-	maximumValue = (maximumValue and maximumValue > 0) and maximumValue or 1
+	friendshipInfo = GetFriendshipReputation(factionID)
+	if friendshipInfo and friendshipInfo.friendshipFactionID and friendshipInfo.friendshipFactionID > 0 then
+		-- friendshipInfo has different fields than regular faction info, so we need to overwrite some of the values we just got
+		currentReactionThreshold, nextReactionThreshold, currentStanding = friendshipInfo.reactionThreshold or 0, friendshipInfo.nextThreshold or huge, friendshipInfo.standing or 1
+		rankInfo = GetFriendshipReputationRanks(factionID)
+		-- normalize friendship rank to the standard 0-8 standingID scale
+		local diff = MAX_REPUTATION_REACTION - (rankInfo.maxLevel or 0)
+		reaction = min(max((rankInfo.currentLevel or 0) + diff, 0), 8)
+		isFriendshipCapped = nextReactionThreshold == huge
+	end
 
-	if isMists or E.Retail then
-		friendshipInfo = C_GossipInfo.GetFriendshipReputation(factionID)
-		if friendshipInfo and friendshipInfo.friendshipFactionID and friendshipInfo.friendshipFactionID > 1 then
-			rankInfo = C_GossipInfo.GetFriendshipReputationRanks(factionID)
-			label = friendshipInfo.reaction
-			local diff = 8 - (rankInfo.maxLevel or 0)
-			standingID = min(max((rankInfo.currentLevel or 0) + diff, 1), 8)
+	-- unknown factions are forced to Hated rather than reaction 0
+	if reaction == 0 then
+		reaction = 1
+	end
 
-			if E.db.EPDBC.reputationBar.fillExalted and friendshipInfo and friendshipInfo.friendshipFactionID > 0 and rankInfo and rankInfo.currentLevel == rankInfo.maxLevel then
-				currentValue, maximumValue, a = 0, 1, 1
-				capped, percent = true, 100
-			end
+	if IsFactionParagonForCurrentPlayer(factionID) then
+		local current, threshold = GetFactionParagonInfo(factionID)
+
+		if current and threshold then
+			reaction, currentReactionThreshold, nextReactionThreshold, currentStanding = 9, 0, threshold, current % threshold
 		end
 	end
 
-	if E.db.EPDBC.reputationBar.fillHated and standingID <= 1 and currentValue == 0 then
-		currentValue, maximumValue, a = 0, 1, 1
-	elseif E.db.EPDBC.reputationBar.fillExalted and standingID == MAX_REPUTATION_REACTION then
-		currentValue, maximumValue, a = 0, 1, 1
-		capped, percent = true, 100
+	if IsMajorFaction(factionID) then
+		majorFactionData = GetMajorFactionData(factionID)
+		if not majorFactionData or majorFactionData.factionID <= 0 then return end
+		reaction, currentReactionThreshold, nextReactionThreshold = 10, 0, majorFactionData.renownLevelThreshold
+		isRenownCapped = HasMaximumRenown(factionID)
+		currentStanding = isRenownCapped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
 	end
 
-	if E.Retail then
-		if C_Reputation.IsFactionParagon(factionID) then
-			standingID = 9
-			label = L["Paragon"]
-			currentValue, maximumValue, _, rewardPending = C_Reputation.GetFactionParagonInfo(factionID)
-			currentValue = currentValue % maximumValue
-			if rewardPending then currentValue = currentValue + maximumValue end
-			capped, percent = nil, nil
-		elseif C_Reputation.IsMajorFaction(factionID) then
-			majorFactionData = C_MajorFactions.GetMajorFactionData(factionID)
-			if not majorFactionData or majorFactionData.factionID <= 0 then return end
-			standingID = 10
-			local c = EDB.db.colors and EDB.db.db.colors.factionColors[10]
-			label = format("%s%s|r %s", E:RGBToHex(c.r, c.g, c.b), RENOWN_LEVEL_LABEL, majorFactionData.renownLevel)
-			capped = C_MajorFactions.HasMaximumRenown(factionID)
-			percent = capped and 100 or nil
-			currentValue = capped and majorFactionData.renownLevelThreshold or majorFactionData.renownReputationEarned or 0
-			maximumValue = majorFactionData.renownLevelThreshold
-			if capped then currentValue, maximumValue, a = 0, 1, 1 end
-		end
+	-- Blizzard's API starts counting at 0/Neutral, with full Exalted being 42000, while we need the *real* values for the reputation tier, so we need to do some math to convert them
+	isCappedExalted = reaction == MAX_REPUTATION_REACTION and not IsFactionParagonForCurrentPlayer(factionID)
+
+	if isFriendshipCapped or isCappedExalted or isRenownCapped then
+		currentValue, maximumValue = 1, 1
+	else
+		currentValue, maximumValue = GetCurrentAndMaximumValues(currentStanding, currentReactionThreshold, nextReactionThreshold)
 	end
 
-	local color = EDB.db.colors.factionColors[standingID] or _G.FACTION_BAR_COLORS[standingID] or {}
+	-- we shouldn't upvalue either of these since they can be modified by the user; we need to access them directly each update
+	local customColors = EDB.db.colors.useCustomFactionColors
+	local customReaction = reaction == 9 or reaction == 10 -- 9 is Paragon, 10 is Renown
+	local color = (customColors or customReaction and EDB.db.colors.factionColors[reaction]) or ElvUF.colors.reaction[reaction]
 	local r, g, b = color.r or 1, color.g or 1, color.b or 1
-	local baseA = color.a or 1.0
+	local baseA = (customColors and color.a) or EDB.db.colors.reputationAlpha
 
-	avg = currentValue / maximumValue
+	rational = currentValue / maximumValue
+	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3)
 
-	bar:SetMinMaxValues(0, maximumValue)
-	bar:SetValue(currentValue)
+	-- alpha: use progress smoothing when enabled, otherwise use base alpha
+	alpha = (E.db.EPDBC.reputationBar.progress and rational) or baseA
 
-	avg = abs(currentValue / maximumValue)
-	while avg > 1 do avg = avg / 10 end
-	percent = percent or avg * 100
-	percent = percent < 100 and EPDBC:Round(percent, 2) or EPDBC:Round(percent, 0)
-	avg = EPDBC:Round(avg, (E.db and E.db.EPDBC and E.db.EPDBC.progressSmoothing and E.db.EPDBC.progressSmoothing.decimalLength) or 3)
-
-	if not label then
-		label = _G["FACTION_STANDING_LABEL" .. standingID] or UNKNOWN
+	if (E.db.EPDBC.reputationBar.fillHated and reaction == 1 and currentValue == 0)
+	or (E.db.EPDBC.reputationBar.fillExalted and reaction == 9 and currentValue == maximumValue)
+	or (E.db.EPDBC.reputationBar.fillExalted and (isCappedExalted or isFriendshipCapped or isRenownCapped)) then
+		currentValue, maximumValue, alpha = 1, 1, 1
+		bar:SetMinMaxValues(0, maximumValue)
+		bar:SetValue(currentValue)
 	end
 
-	local displayString = ""
-	if capped and textFormat ~= "NONE" then
-		displayString = format("%s: [%s]", name, label)
-	elseif formatStrings[textFormat] then
-		displayString = format(formatStrings[textFormat], name, E:ShortValue(currentValue), E:ShortValue(maximumValue), label, E:ShortValue(maximumValue - currentValue))
-	end
-	bar.text:SetText(displayString)
-
-	-- alpha: use progress smoothing alpha when enabled, otherwise base alpha 1.0
-	local useProgress = E.db and E.db.EPDBC and E.db.EPDBC.reputationBar and E.db.EPDBC.reputationBar.progress
-	a = useProgress and avg or baseA
-
-	bar:SetStatusBarColor(r, g, b, a)
+	bar:SetStatusBarColor(r, g, b, alpha or 1)
 end
 
 function EPDBC:HookRepBar()
 	local bar = EDB.StatusBars.Reputation
-	if bar and not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
+	if not bar then return end
+	if not EPDBC:IsHooked(EDB, "ReputationBar_Update") then
 		EPDBC:SecureHook(EDB, "ReputationBar_Update", UpdateReputation)
 	end
 	EDB:ReputationBar_Update()
 end
 
 function EPDBC:RestoreRepBar()
-	local bar = EDB.StatusBars and EDB.StatusBars.Reputation
+	local bar = EDB.StatusBars.Reputation
 	if not bar then return end
 	if EPDBC:IsHooked(EDB, "ReputationBar_Update") then
 		EPDBC:Unhook(EDB, "ReputationBar_Update")

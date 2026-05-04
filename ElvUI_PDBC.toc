@@ -1,4 +1,4 @@
-## Interface: 120001, 50503, 38000, 20505, 11508
+## Interface: 120005, 50503, 38001, 20505, 11508
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-deDE: @localization(locale="deDE", key="Notes", namespace="ToC")@
@@ -32,9 +32,9 @@
 ## X-License: Copyright (c) 2017-2026 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 ## Group: ElvUI
-## IconTexture: Interface\Icons\INV_Misc_ProgressBar_01
+## IconTexture: Interface\AddOns\ElvUI_PDBC\Media\Icon.tga
 
-## X-ElvUI-Version: 15.11
+## X-ElvUI-Version: 15.13
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
@@ -61,10 +61,9 @@ Core-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
 Core-Mainline.lua [AllowLoadGameType mainline]
 Experience.lua
 Reputation-Classic.lua [AllowLoadGameType vanilla, tbc, wrath]
-Reputation-Mist.lua [AllowLoadGameType mists]
+Reputation-Mists.lua [AllowLoadGameType mists]
 Reputation-Mainline.lua [AllowLoadGameType mainline]
-Honor.lua [AllowLoadGameType mainline]
 Azerite.lua [AllowLoadGameType mainline]
-Options-Classic.lua [AllowLoadGameType vanilla, tbc, wrath]
-Options-Mists.lua [AllowLoadGameType mists]
+Honor.lua [AllowLoadGameType mainline]
+Options-Classic.lua [AllowLoadGameType vanilla, tbc, wrath, mists]
 Options-Mainline.lua [AllowLoadGameType mainline]

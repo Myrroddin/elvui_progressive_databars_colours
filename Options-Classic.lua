@@ -9,8 +9,10 @@ local InstallerData = private_table.InstallerData
 -- translate the module's name. normally I wouldn't do this, but it does have an awkward name
 local uiName = L["Coloured DataBars"]
 
+local options
 function EPDBC:GetOptions()
-	local options = {
+	if options then return options end
+	options = {
 		order = 10,
 		type = "group",
 		name = uiName,
@@ -21,9 +23,7 @@ function EPDBC:GetOptions()
 				name = ENABLE,
 				desc = L["Toggle module on/off. If off, it restores DataBars to ElvUI defaults."],
 				type = "toggle",
-				get = function()
-					return E.db.EPDBC.enabled
-				end,
+				get = function() return E.db.EPDBC.enabled end,
 				set = function(_, value)
 					E.db.EPDBC.enabled = value
 					if value then
@@ -43,9 +43,7 @@ function EPDBC:GetOptions()
 				name = XPBAR_LABEL,
 				desc = L["Progressively blend the bar as you gain XP."],
 				type = "toggle",
-				get = function()
-					return E.db.EPDBC.experienceBar.progress
-				end,
+				get = function() return E.db.EPDBC.experienceBar.progress end,
 				set = function(_, value)
 					E.db.EPDBC.experienceBar.progress = value
 					EDB:ExperienceBar_Update()
@@ -56,103 +54,61 @@ function EPDBC:GetOptions()
 				name = L["Reputation Bar"],
 				type = "toggle",
 				desc = L["Progressively blend the bar as you gain reputation."],
-				get = function()
-					return E.db.EPDBC.reputationBar.progress
-				end,
+				get = function() return E.db.EPDBC.reputationBar.progress end,
 				set = function(_, value)
 					E.db.EPDBC.reputationBar.progress = value
 					EDB:ReputationBar_Update()
 				end
 			},
-			honorBar = {
-				order = 50,
-				name = L["Honor Bar"],
-				desc = L["Progressively blend the bar as you gain honor."],
-				type = "toggle",
-				get = function()
-					return E.db.EPDBC.honorBar.progress
-				end,
-				set = function(_, value)
-					E.db.EPDBC.honorBar.progress = value
-					EDB:HonorBar_Update()
-				end,
-				disabled = function() return not E.Retail end,
-				hidden = function() return not E.Retail end
-			},
-			azeriteBar = {
-				order = 60,
-				name = L["Azerite Bar"],
-				desc = L["Progressively blend the bar as you gain Azerite Power"],
-				type = "toggle",
-				get = function()
-					return E.db.EPDBC.azeriteBar.progress
-				end,
-				set = function(_, value)
-					E.db.EPDBC.azeriteBar.progress = value
-					EDB:AzeriteBar_Update()
-				end,
-				disabled = function() return not E.Retail end,
-				hidden = function() return not E.Retail end
-			},
 			miscellaneous = {
-				order = 70,
+				order = 50,
 				name = MISCELLANEOUS,
 				type = "header"
 			},
 			fillExalted = {
-				order = 80,
+				order = 60,
 				name = L["Fill Exalted"],
 				desc = L["The Reputation bar looks full at exalted"],
 				type = "toggle",
-				get = function()
-					return E.db.EPDBC.reputationBar.fillExalted
-				end,
+				get = function() return E.db.EPDBC.reputationBar.fillExalted end,
 				set = function(_, value)
 					E.db.EPDBC.reputationBar.fillExalted = value
 					EDB:ReputationBar_Update()
 				end
 			},
 			fillHated = {
-				order = 90,
+				order = 70,
 				name = L["Fill Hated"],
 				desc = L["The Reputation bar looks full at 0 hated, when you cannot lose any more reputation"],
 				type = "toggle",
-				get = function()
-					return E.db.EPDBC.reputationBar.fillHated
-				end,
+				get = function() return E.db.EPDBC.reputationBar.fillHated end,
 				set = function(_, value)
 					E.db.EPDBC.reputationBar.fillHated = value
 					EDB:ReputationBar_Update()
 				end
 			},
 			progressSmoothing = {
-				order = 100,
+				order = 80,
 				name = L["Progress Smoothing"],
 				desc = L["Number of decimals to use when blending the bars' alpha as you gain xp, honour, rep, etc"],
 				type = "range",
-				get = function()
-					return E.db.EPDBC.progressSmoothing.decimalLength
-				end,
+				get = function() return E.db.EPDBC.progressSmoothing.decimalLength end,
 				set = function(_, value)
 					E.db.EPDBC.progressSmoothing.decimalLength = value
 					EDB:ReputationBar_Update()
 					EDB:ExperienceBar_Update()
-					if E.Retail then
-						EDB:HonorBar_Update()
-						EDB:AzeriteBar_Update()
-					end
 				end,
 				min = 1,
 				max = 10,
 				step = 1
 			},
 			header3 = {
-				order = 110,
+				order = 90,
 				name = "",
 				type = "header",
 			},
 			install = {
-				order = 120,
+				order = 100,
 				type = "execute",
 				name = L["Install"],
 				desc = L["Run the installation process"],
