@@ -291,7 +291,8 @@ function EPDBC:ShutDown()
 end
 
 -- utility functions
-function EPDBC:Round(num, idp)
+function EPDBC:Round(num, idp, returnZero)
+	if returnZero and num <= 0 then return 0 end
 	if num <= 0.1 then return 0.1 end
 
 	local mult = 10^(idp or 0)

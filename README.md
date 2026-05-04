@@ -13,6 +13,7 @@ The default DataBars (XP, Honor, Artifact, Reputation) in [ElvUI](https://www.tu
 ## The XP DataBar
 
 - Blend the alpha/opacity of the bar as you gain XP
+- Blend the alpha/opacity of quest XP as you gain or lose XP from quests
 - Supported by all WoW versions
 
 ## The Reputation DataBar and Tooltip

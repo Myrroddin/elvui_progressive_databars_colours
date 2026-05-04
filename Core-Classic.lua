@@ -75,6 +75,12 @@ local function SetupLayout(layout)
 		E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
 		E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.00000000000000
 		E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
+		E.db["databars"]["colors"]["factionColors"][9]["b"] = 0.70588235294118
+		E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
+		E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
+		E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.00000000000000
+		E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.00000000000000
+		E.db["databars"]["colors"]["factionColors"][10]["r"] = 1.00000000000000
 	elseif layout == "tooltip" then
 		-- replace tooltip faction colours
 		E.db["tooltip"]["factionColors"][1]["b"] = 0.00000000000000
@@ -271,16 +277,10 @@ function EPDBC:ShutDown()
 end
 
 -- utility functions
-function EPDBC:Round(num, idp)
+function EPDBC:Round(num, idp, returnZero)
+	if returnZero and num <= 0 then return 0 end
 	if num <= 0.1 then return 0.1 end
 
 	local mult = 10^(idp or 0)
 	return floor(num * mult + 0.5) / mult
-end
-
-function EPDBC:GetCurrentMaxValues(statusBar)
-	local minimumValue, maximumValue = statusBar:GetMinMaxValues()
-	local currentValue = statusBar:GetValue()
-
-	return minimumValue, currentValue, maximumValue
 end

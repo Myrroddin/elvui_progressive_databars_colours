@@ -1,38 +1,79 @@
-local E, L, V, P, G = unpack(ElvUI) -- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+-- local references to global functions
+local UnitXP, UnitXPMax = UnitXP, UnitXPMax
+
+local E = ElvUI[1]
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
+local function GetCurrentAndMaximumValues()
+	local current, maximum = UnitXP("player"), UnitXPMax("player")
+	if maximum <= 0 then maximum = 1 end
+
+	local isMaxLevel = E:XPIsLevelMax()
+	if isMaxLevel then
+		current, maximum = 1, 1
+	end
+
+	return current, maximum, isMaxLevel
+end
+
 local function UpdateExperience()
-	local bar = EDB.StatusBars and EDB.StatusBars.Experience
-	if not bar then return end
+	local bar = EDB.StatusBars.Experience
+	EDB:SetVisibility(bar)
 
-	-- bail if experience disabled
-	if not bar.db and bar.db.enable or bar:ShouldHide() then return end
+	if not bar.db.enable or bar:ShouldHide() then return end
 
-	local color = EDB.db.colors and EDB.db.colors.experience or {}
-	local r, g, b = color.r or 1, color.g or 1, color.b or 1
-	local baseA = (E:XPIsLevelMax() and 1.0) or color.a or 0.8
+	local currentValue, maximumValue, isMaxLevel = GetCurrentAndMaximumValues()
 
-	local _, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
-	maximumValue = (maximumValue and maximumValue > 0) and maximumValue or 1
+	local rational, alpha
 
-	local avg = currentValue / maximumValue
-	avg = EPDBC:Round(avg, (E.db and E.db.EPDBC and E.db.EPDBC.progressSmoothing and E.db.EPDBC.progressSmoothing.decimalLength) or 3)
+	local color = EDB.db.colors and EDB.db.colors.experience
+	local r, g, b, a = color.r or 0, color.g or 0.4, color.b or 1, color.a or 0.8
+	local baseA = (isMaxLevel and 1) or a
 
-	-- alpha: use progress smoothing alpha when enabled, otherwise base alpha 0.8
-	local useProgress = E.db and E.db.EPDBC and E.db.EPDBC.experienceBar and E.db.EPDBC.experienceBar.progress
-	local a = useProgress and avg or baseA
+	rational = currentValue / maximumValue
+	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3)
 
-	bar:SetStatusBarColor(r, g, b, a)
+	-- alpha: use progress smoothing alpha when enabled, otherwise use base alpha
+	alpha = (E.db.EPDBC.experienceBar.progress and rational) or baseA
+
+	bar:SetStatusBarColor(r, g, b, alpha)
+end
+
+function EPDBC:UpdateQuestAlpha()
+	local bar = EDB.StatusBars.Experience
+	if not bar or not bar.Quest or not bar.Quest:IsShown() then return end
+
+	local _, maximumValue, isMaxLevel = GetCurrentAndMaximumValues()
+	if isMaxLevel then return end
+
+	-- derive quest XP safely
+	local questBarValue = bar.Quest:GetValue() or 0
+
+	-- IMPORTANT: ElvUI clamps this already using min()
+	local rational = questBarValue / maximumValue
+	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3, true)
+
+	local baseColor = EDB.db.colors.quest
+	local r, g, b = baseColor.r or 0, baseColor.g or 1, baseColor.b or 0
+	local baseA = baseColor.a or 0.4
+
+	local alpha = (E.db.EPDBC.experienceBar.progress and rational) or baseA
+
+	bar.Quest:SetStatusBarColor(r, g, b, alpha)
 end
 
 -- hook the XP bar
 function EPDBC:HookXPBar()
-	local bar = EDB.StatusBars and EDB.StatusBars.Experience
+	local bar = EDB.StatusBars.Experience
 	if not bar then return end
 
 	if not EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
 		EPDBC:SecureHook(EDB, "ExperienceBar_Update", UpdateExperience)
+	end
+
+	if not EPDBC:IsHooked(EDB, "ExperienceBar_QuestXP") then
+		EPDBC:SecureHook(EDB, "ExperienceBar_QuestXP", "UpdateQuestAlpha")
 	end
 
 	-- force an immediate update after hooking
@@ -40,11 +81,15 @@ function EPDBC:HookXPBar()
 end
 
 function EPDBC:RestoreExperienceBar()
-	local bar = EDB.StatusBars and EDB.StatusBars.Experience
+	local bar = EDB.StatusBars.Experience
 	if not bar then return end
 
 	if EPDBC:IsHooked(EDB, "ExperienceBar_Update") then
 		EPDBC:Unhook(EDB, "ExperienceBar_Update")
+	end
+
+	if EPDBC:IsHooked(EDB, "ExperienceBar_QuestXP") then
+		EPDBC:Unhook(EDB, "ExperienceBar_QuestXP")
 	end
 
 	EDB:ExperienceBar_Update()
