@@ -1,38 +1,54 @@
 -- local references to global functions
-local UnitHonor, UnitHonorMax = UnitHonor, UnitHonorMax
+local FindActiveAzeriteItem = C_AzeriteItem.FindActiveAzeriteItem
+local GetAzeriteItemXPInfo = C_AzeriteItem.GetAzeriteItemXPInfo
+local IsAzeriteItemAtMaxLevel = C_AzeriteItem.IsAzeriteItemAtMaxLevel
 
 local E = ElvUI[1]
 local EDB = E:GetModule("DataBars")
 local EPDBC = E:GetModule("EPDBC")
 
 local function GetCurrentAndMaximumValues()
-	local current, maximum = UnitHonor("player"), UnitHonorMax("player")
-	if maximum <= 0 then maximum = 1 end
+	local current, maximum, hasActiveAzeriteItem, item
+	item = FindActiveAzeriteItem()
+	if item then
+		current, maximum = GetAzeriteItemXPInfo(item)
+		hasActiveAzeriteItem = true
 
-	return current, maximum
+		if IsAzeriteItemAtMaxLevel() then
+			current, maximum = 1, 1
+		end
+	else
+		hasActiveAzeriteItem = false
+	end
+
+	if not maximum or maximum <= 0 then
+		maximum = 1
+	end
+
+	return current, maximum, hasActiveAzeriteItem
 end
 
 local function UpdateAzerite()
 	local bar = EDB.StatusBars.Azerite
 	if not bar then return end
 
-	-- bail if azerite disabled
+	EDB:SetVisibility(bar)
+
 	if not bar.db.enable or bar:ShouldHide() then return end
 
-	local color = EDB.db.colors.azerite
-	local r, g, b = color.r or  0.901, color.g or 0.8, color.b or 0.601
-	local baseA = color.a or 1
-
 	-- get current & max values
-	local _, currentValue, maximumValue = EPDBC:GetCurrentMaxValues(bar)
-	maximumValue = (maximumValue and maximumValue > 0) and maximumValue or 1
+	local currentValue, maximumValue, hasActiveAzeriteItem = GetCurrentAndMaximumValues()
+	if not hasActiveAzeriteItem then return end
 
 	local rational = currentValue / maximumValue
 	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3)
 
+	local color = EDB.db.colors.azerite
+	local r, g, b = color.r or 0.901, color.g or 0.8, color.b or 0.601
+	local baseA = color.a or 1
+
 	-- alpha: use progress smoothing alpha when enabled, otherwise base alpha
-	local useProgress = E.db and E.db.EPDBC and E.db.EPDBC.azeriteBar and E.db.EPDBC.azeriteBar.progress
-	local alpha = useProgress and rational or baseA
+	local alpha = (E.db.EPDBC.azeriteBar.progress and rational) or baseA
 
 	bar:SetStatusBarColor(r, g, b, alpha)
 end

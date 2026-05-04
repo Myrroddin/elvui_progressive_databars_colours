@@ -298,10 +298,3 @@ function EPDBC:Round(num, idp, returnZero)
 	local mult = 10^(idp or 0)
 	return floor(num * mult + 0.5) / mult
 end
-
-function EPDBC:GetCurrentMaxValues(statusBar)
-	local minimumValue, maximumValue = statusBar:GetMinMaxValues()
-	local currentValue = statusBar:GetValue()
-
-	return minimumValue, currentValue, maximumValue
-end
