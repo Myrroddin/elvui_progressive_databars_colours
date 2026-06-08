@@ -1,21 +1,29 @@
 -- local references to global functions
-local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
-local huge = math.huge
-local min = math.min
-local max = math.max
+local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
 local GetFriendshipReputation = C_GossipInfo.GetFriendshipReputation
 local GetFriendshipReputationRanks = C_GossipInfo.GetFriendshipReputationRanks
-local IsFactionParagonForCurrentPlayer = C_Reputation.IsFactionParagonForCurrentPlayer
-local GetFactionParagonInfo = C_Reputation.GetFactionParagonInfo
-local IsMajorFaction = C_Reputation.IsMajorFaction
 local GetMajorFactionData = C_MajorFactions.GetMajorFactionData
 local HasMaximumRenown = C_MajorFactions.HasMaximumRenown
+local huge = math.huge
+local IsFactionParagonForCurrentPlayer = C_Reputation.IsFactionParagonForCurrentPlayer
+local IsMajorFaction = C_Reputation.IsMajorFaction
+local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
+local max = math.max
+local min = math.min
 
 local E = ElvUI[1]
+---@cast E ElvUI
+
 local ElvUF = E.oUF
 local EDB = E:GetModule("DataBars")
+---@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
+---@param currentStanding number
+---@param currentReactionThreshold number
+---@param nextReactionThreshold number
+---@return number current
+---@return number maximum
 local function GetCurrentAndMaximumValues(currentStanding, currentReactionThreshold, nextReactionThreshold)
 	local current = currentStanding - currentReactionThreshold
 	local maximum = nextReactionThreshold - currentReactionThreshold
@@ -34,13 +42,15 @@ end
 
 local function UpdateReputation()
 	local bar = EDB.StatusBars.Reputation
+	if not bar then return end
+
 	EDB:SetVisibility(bar)
 
 	if not bar.db.enable or bar:ShouldHide() then return end
 
 	local data = E:GetWatchedFactionInfo() -- ElvUI function that converts returned values into a table https://warcraft.wiki.gg/wiki/API_C_Reputation.GetWatchedFactionData
 	local name, reaction, currentReactionThreshold, nextReactionThreshold, currentStanding, factionID = data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding, data.factionID
-	if not name then return end -- exit if we don't have a faction
+	if not name or not reaction or not currentReactionThreshold or not nextReactionThreshold or not currentStanding or not factionID then return end -- exit if we don't have a faction
 
 	local rational, alpha, friendshipInfo, rankInfo, majorFactionData, currentValue, maximumValue
 	local isFriendshipCapped, isCappedExalted, isRenownCapped
@@ -89,7 +99,7 @@ local function UpdateReputation()
 	-- we shouldn't upvalue either of these since they can be modified by the user; we need to access them directly each update
 	local customColors = EDB.db.colors.useCustomFactionColors
 	local customReaction = reaction == 9 or reaction == 10 -- 9 is Paragon, 10 is Renown
-	local color = (customColors or customReaction and EDB.db.colors.factionColors[reaction]) or ElvUF.colors.reaction[reaction]
+	local color = ((customColors or customReaction) and EDB.db.colors.factionColors[reaction]) or ElvUF.colors.reaction[reaction] or {}
 	local r, g, b = color.r or 1, color.g or 1, color.b or 1
 	local baseA = (customColors and color.a) or EDB.db.colors.reputationAlpha
 

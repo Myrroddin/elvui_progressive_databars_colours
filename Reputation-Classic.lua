@@ -2,10 +2,18 @@
 local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 
 local E = ElvUI[1]
+---@cast E ElvUI
+
 local ElvUF = E.oUF
 local EDB = E:GetModule("DataBars")
+---@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
+---@param currentStanding number
+---@param currentReactionThreshold number
+---@param nextReactionThreshold number
+---@return number current
+---@return number maximum
 local function GetCurrentAndMaximumValues(currentStanding, currentReactionThreshold, nextReactionThreshold)
 	local current = currentStanding - currentReactionThreshold
 	local maximum = nextReactionThreshold - currentReactionThreshold
@@ -24,13 +32,15 @@ end
 
 local function UpdateReputation()
 	local bar = EDB.StatusBars.Reputation
+	if not bar then return end
+
 	EDB:SetVisibility(bar)
 
 	if not bar.db.enable or bar:ShouldHide() then return end
 
 	local data = E:GetWatchedFactionInfo() -- ElvUI function that converts returned values into a table https://warcraft.wiki.gg/wiki/API_C_Reputation.GetWatchedFactionData
 	local name, reaction, currentReactionThreshold, nextReactionThreshold, currentStanding = data.name, data.reaction, data.currentReactionThreshold, data.nextReactionThreshold, data.currentStanding
-	if not name then return end -- exit if we don't have a faction
+	if not name or not reaction or not currentReactionThreshold or not nextReactionThreshold or not currentStanding then return end -- exit if we don't have a faction
 
 	local rational, alpha, currentValue, maximumValue, isCappedExalted
 
@@ -50,7 +60,7 @@ local function UpdateReputation()
 
 	-- we shouldn't upvalue either of these since they can be modified by the user; we need to access them directly each update
 	local customColors = EDB.db.colors.useCustomFactionColors
-	local color = (customColors and EDB.db.colors.factionColors[reaction]) or ElvUF.colors.reaction[reaction]
+	local color = (customColors and EDB.db.colors.factionColors[reaction]) or ElvUF.colors.reaction[reaction] or {}
 	local r, g, b = color.r or 1, color.g or 1, color.b or 1
 	local baseA = (customColors and color.a) or EDB.db.colors.reputationAlpha
 

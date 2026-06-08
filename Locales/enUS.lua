@@ -2,7 +2,11 @@ local missingTranslationWarning = true
 --@debug@
 missingTranslationWarning = false
 --@end-debug@
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, missingTranslationWarning)
+
+local E = ElvUI[1]
+---@cast E ElvUI
+
+local L = E.Libs.ACL:NewLocale("ElvUI", "enUS", true, missingTranslationWarning)
 
 L[ [=[%s
 

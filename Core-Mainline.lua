@@ -1,17 +1,23 @@
 -- local references to global functions so we don't conflict
 local CLOSE = CLOSE
-local ReloadUI = C_UI.Reload
 local floor = math.floor
-local LibStub = LibStub
-local GetCVarBool = C_CVar.GetCVarBool
+local format = format
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
+local GetCVarBool = C_CVar.GetCVarBool
+local LibStub = LibStub
+local ReloadUI = C_UI.Reload
 local StopMusic = StopMusic
-local unpack = unpack
 local tonumber = tonumber
 local tostring = tostring
+local unpack = unpack
 
--- the vaarg statement
+-- ElvUI installer globals
+local PluginInstallFrame = PluginInstallFrame
+local PluginInstallStepComplete = PluginInstallStepComplete
+
+-- the vararg statement
 local addonName, addon = ...
+
 ---@type number?
 local Version = tonumber(GetAddOnMetadata(addonName, "Version"))
 --@debug@
@@ -20,20 +26,64 @@ if Version == nil or tostring(Version):match("@") then
 end
 --@end-debug@
 
--- import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+-- import: Engine, Locales, CharacterDB, ProfileDB, GlobalDB
 local E, L, V, P, G = unpack(ElvUI)
+---@cast E ElvUI
+---@cast L ElvUI_Locales
+---@cast V ElvUI_CharDB
+---@cast P ElvUI_ProfileDB
+---@cast G ElvUI_GlobalDB
+
+---@class EPDBC_ProgressBarDB
+---@field progress boolean
+
+---@class EPDBC_ReputationBarDB: EPDBC_ProgressBarDB
+---@field fillExalted boolean
+---@field fillHated boolean
+
+---@class EPDBC_ProgressSmoothingDB
+---@field decimalLength number
+
+---@class EPDBC_DB
+---@field enabled boolean
+---@field azeriteBar EPDBC_ProgressBarDB
+---@field experienceBar EPDBC_ProgressBarDB
+---@field honorBar EPDBC_ProgressBarDB
+---@field reputationBar EPDBC_ReputationBarDB
+---@field progressSmoothing EPDBC_ProgressSmoothingDB
+
+---@class EPDBC: AceAddon-3.0, AceEvent-3.0, AceHook-3.0, LibAboutPanel-2.0
+---@field Eversion number
+---@field Initialize fun(self: EPDBC)
+---@field InsertOptions fun(self: EPDBC)
+---@field GetOptions fun(self: EPDBC): table
+---@field StartUp fun(self: EPDBC)
+---@field ShutDown fun(self: EPDBC)
+---@field HookXPBar fun(self: EPDBC)
+---@field RestoreExperienceBar fun(self: EPDBC)
+---@field HookHonorBar fun(self: EPDBC)
+---@field RestoreHonorBar fun(self: EPDBC)
+---@field HookAzeriteBar fun(self: EPDBC)
+---@field RestoreAzeriteBar fun(self: EPDBC)
+---@field HookRepBar fun(self: EPDBC)
+---@field RestoreRepBar fun(self: EPDBC)
+---@field UpdateQuestAlpha fun(self: EPDBC)
+---@field Round fun(self: EPDBC, num: number, idp?: number, returnZero?: boolean): number
 
 -- create the plugin for ElvUI
 local MyPluginName = L["Coloured DataBars"]
+---@type EPDBC
 local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0", "LibAboutPanel-2.0")
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
-EPDBC.Eversion = tonumber(GetAddOnMetadata(addonName, "X-ElvUI-Version")) -- minimum compatible ElvUI version
-local Eversion = tonumber(E.version) -- installed ElvUI version
+EPDBC.Eversion = tonumber(GetAddOnMetadata(addonName, "X-ElvUI-Version")) or 0 -- minimum compatible ElvUI version
+local Eversion = tonumber(E.version) or 0 -- installed ElvUI version
 
 -- we can use this to automatically insert our GUI tables when ElvUI_Config is loaded
+---@type LibElvUIPlugin-1.0
 local LEP = LibStub("LibElvUIPlugin-1.0")
 
 -- default options
+---@type EPDBC_DB
 P["EPDBC"] = {
 	enabled = true,
 	azeriteBar = {
@@ -56,6 +106,7 @@ P["EPDBC"] = {
 }
 
 -- This function will hold our layout settings
+---@param layout "databars"|"tooltip"
 local function SetupLayout(layout)
 	if layout == "databars" then
 		-- replace reputation databar colours
@@ -134,7 +185,7 @@ local function InstallComplete()
 end
 
 -- This is the data we pass on to the ElvUI Plugin Installer.
--- The Plugin Installer is reponsible for displaying the install guide for this layout.
+-- The Plugin Installer is responsible for displaying the install guide for this layout.
 local InstallerData = {
 	Title = format("|cff4beb2c%s %s|r", MyPluginName, L["Installation"]),
 	Name = MyPluginName,
@@ -184,6 +235,7 @@ local InstallerData = {
 	StepTitleButtonWidth = 180,
 	StepTitleTextJustification = "RIGHT",
 }
+
 addon.InstallerData = InstallerData
 
 -- register plugin so options are properly inserted when config is loaded
@@ -247,7 +299,7 @@ E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {
 		self:GetParent():Hide()
 	end,
 	EditBoxOnTextChanged = function(self)
-		if(self:GetText() ~= self.temptxt) then
+		if self:GetText() ~= self.temptxt then
 			self:SetText(self.temptxt)
 		end
 		self:HighlightText()
@@ -291,6 +343,10 @@ function EPDBC:ShutDown()
 end
 
 -- utility functions
+---@param num number
+---@param idp? number
+---@param returnZero? boolean
+---@return number
 function EPDBC:Round(num, idp, returnZero)
 	if returnZero and num <= 0 then return 0 end
 	if num <= 0.1 then return 0.1 end

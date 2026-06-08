@@ -4,9 +4,15 @@ local GetAzeriteItemXPInfo = C_AzeriteItem.GetAzeriteItemXPInfo
 local IsAzeriteItemAtMaxLevel = C_AzeriteItem.IsAzeriteItemAtMaxLevel
 
 local E = ElvUI[1]
+---@cast E ElvUI
+
 local EDB = E:GetModule("DataBars")
+---@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
+---@return number? current
+---@return number maximum
+---@return boolean hasActiveAzeriteItem
 local function GetCurrentAndMaximumValues()
 	local current, maximum, hasActiveAzeriteItem, item
 	item = FindActiveAzeriteItem()
@@ -38,12 +44,12 @@ local function UpdateAzerite()
 
 	-- get current & max values
 	local currentValue, maximumValue, hasActiveAzeriteItem = GetCurrentAndMaximumValues()
-	if not hasActiveAzeriteItem then return end
+	if not hasActiveAzeriteItem or not currentValue then return end
 
 	local rational = currentValue / maximumValue
 	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3)
 
-	local color = EDB.db.colors.azerite
+	local color = EDB.db.colors and EDB.db.colors.azerite or {}
 	local r, g, b = color.r or 0.901, color.g or 0.8, color.b or 0.601
 	local baseA = color.a or 1
 

@@ -1,0 +1,18 @@
+{
+  "library": [
+    "Libs/",
+    ".annotations/"
+  ],
+
+  "flavors": [
+    "classic_era",
+    "classic",
+    "retail"
+  ],
+
+  "diagnostics": {
+    "enable": [
+      "need-check-nil"
+    ]
+  }
+}

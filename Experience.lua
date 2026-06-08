@@ -2,9 +2,15 @@
 local UnitXP, UnitXPMax = UnitXP, UnitXPMax
 
 local E = ElvUI[1]
+---@cast E ElvUI
+
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
+---@type EPDBC
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
+---@return number current
+---@return number maximum
+---@return boolean isMaxLevel
 local function GetCurrentAndMaximumValues()
 	local current, maximum = UnitXP("player"), UnitXPMax("player")
 	if maximum <= 0 then maximum = 1 end
@@ -19,6 +25,8 @@ end
 
 local function UpdateExperience()
 	local bar = EDB.StatusBars.Experience
+	if not bar then return end
+
 	EDB:SetVisibility(bar)
 
 	if not bar.db.enable or bar:ShouldHide() then return end
@@ -27,7 +35,7 @@ local function UpdateExperience()
 
 	local rational, alpha
 
-	local color = EDB.db.colors and EDB.db.colors.experience
+	local color = EDB.db.colors and EDB.db.colors.experience or {}
 	local r, g, b, a = color.r or 0, color.g or 0.4, color.b or 1, color.a or 0.8
 	local baseA = (isMaxLevel and 1) or a
 
@@ -54,7 +62,7 @@ function EPDBC:UpdateQuestAlpha()
 	local rational = questBarValue / maximumValue
 	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3, true)
 
-	local baseColor = EDB.db.colors.quest
+	local baseColor = EDB.db.colors and EDB.db.colors.quest or {}
 	local r, g, b = baseColor.r or 0, baseColor.g or 1, baseColor.b or 0
 	local baseA = baseColor.a or 0.4
 
