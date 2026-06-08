@@ -1,4 +1,6 @@
 -- local references to global functions
+local GetXPExhaustion = GetXPExhaustion
+local min = math.min
 local UnitXP, UnitXPMax = UnitXP, UnitXPMax
 
 local E = ElvUI[1]
@@ -21,6 +23,33 @@ local function GetCurrentAndMaximumValues()
 	end
 
 	return current, maximum, isMaxLevel
+end
+
+---@param bar ElvUI_DataBarStatusBar
+---@param currentValue number
+---@param maximumValue number
+---@param isMaxLevel boolean
+local function UpdateRestedAlpha(bar, currentValue, maximumValue, isMaxLevel)
+	if isMaxLevel or not bar.Rested or not bar.Rested:IsShown() then return end
+
+	local restedXP = GetXPExhaustion() or 0
+	if restedXP <= 0 then return end
+
+	-- ElvUI bounds the rested bar to the current level, so alpha should use the visible rested segment.
+	local restedValue = min(currentValue + restedXP, maximumValue)
+	local visibleRestedXP = restedValue - currentValue
+	if visibleRestedXP <= 0 then return end
+
+	local rational = visibleRestedXP / maximumValue
+	rational = EPDBC:Round(rational, E.db.EPDBC.progressSmoothing.decimalLength or 3, true)
+
+	local restedColor = EDB.db.colors and EDB.db.colors.rested or {}
+	local r, g, b = restedColor.r or 1, restedColor.g or 0, restedColor.b or 1
+	local baseA = restedColor.a or 0.4
+
+	local alpha = (E.db.EPDBC.experienceBar.progress and rational) or baseA
+
+	bar.Rested:SetStatusBarColor(r, g, b, alpha)
 end
 
 local function UpdateExperience()
@@ -46,6 +75,7 @@ local function UpdateExperience()
 	alpha = (E.db.EPDBC.experienceBar.progress and rational) or baseA
 
 	bar:SetStatusBarColor(r, g, b, alpha)
+	UpdateRestedAlpha(bar, currentValue, maximumValue, isMaxLevel)
 end
 
 function EPDBC:UpdateQuestAlpha()

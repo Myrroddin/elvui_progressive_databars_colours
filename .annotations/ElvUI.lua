@@ -26,6 +26,7 @@
 ---@class ElvUI_DataBarStatusBar: StatusBar
 ---@field db table
 ---@field Quest StatusBar?
+---@field Rested StatusBar?
 ---@field ShouldHide fun(self: ElvUI_DataBarStatusBar): boolean
 
 ---@class ElvUI_DataBars
