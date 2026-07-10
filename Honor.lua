@@ -1,15 +1,12 @@
 -- local references to global functions
 local UnitHonor, UnitHonorMax = UnitHonor, UnitHonorMax
 
+local ElvUI = _G.ElvUI
 local E = ElvUI[1]
----@cast E ElvUI
 
 local EDB = E:GetModule("DataBars")
----@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
----@return number current
----@return number maximum
 local function GetCurrentAndMaximumValues()
 	local current, maximum = UnitHonor("player"), UnitHonorMax("player")
 	if maximum <= 0 then maximum = 1 end

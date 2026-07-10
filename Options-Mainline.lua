@@ -1,33 +1,25 @@
 -- local references to global values
 local ENABLE = ENABLE
 local MISCELLANEOUS = MISCELLANEOUS
-local XPBAR_LABEL = XPBAR_LABEL
 local unpack = unpack
+local XPBAR_LABEL = XPBAR_LABEL
 
 -- import: Engine, Locales, CharacterDB, ProfileDB, GlobalDB
+local ElvUI = _G.ElvUI
 local E, L, V, P, G = unpack(ElvUI)
----@cast E ElvUI
----@cast L ElvUI_Locales
----@cast V ElvUI_CharDB
----@cast P ElvUI_ProfileDB
----@cast G ElvUI_GlobalDB
 
 -- get the DataBars module
 local EDB = E:GetModule("DataBars")
----@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
----@type string, table
 local module_name, private_table = ...
 local InstallerData = private_table.InstallerData
 
 -- translate the module's name. normally I wouldn't do this, but it does have an awkward name
 local uiName = L["Coloured DataBars"]
 
----@type table?
 local options
 
----@return table
 function EPDBC:GetOptions()
 	if options then return options end
 	options = {

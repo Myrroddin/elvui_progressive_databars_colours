@@ -11,14 +11,9 @@ local tonumber = tonumber
 local tostring = tostring
 local unpack = unpack
 
--- ElvUI installer globals
-local PluginInstallFrame = PluginInstallFrame
-local PluginInstallStepComplete = PluginInstallStepComplete
-
 -- the vararg statement
 local addonName, addon = ...
 
----@type number?
 local Version = tonumber(GetAddOnMetadata(addonName, "Version"))
 --@debug@
 if Version == nil or tostring(Version):match("@") then
@@ -27,57 +22,20 @@ end
 --@end-debug@
 
 -- import: Engine, Locales, CharacterDB, ProfileDB, GlobalDB
+local ElvUI = _G.ElvUI
 local E, L, V, P, G = unpack(ElvUI)
----@cast E ElvUI
----@cast L ElvUI_Locales
----@cast V ElvUI_CharDB
----@cast P ElvUI_ProfileDB
----@cast G ElvUI_GlobalDB
-
----@class EPDBC_ProgressBarDB
----@field progress boolean
-
----@class EPDBC_ReputationBarDB: EPDBC_ProgressBarDB
----@field fillExalted boolean
----@field fillHated boolean
-
----@class EPDBC_ProgressSmoothingDB
----@field decimalLength number
-
----@class EPDBC_DB
----@field enabled boolean
----@field experienceBar EPDBC_ProgressBarDB
----@field reputationBar EPDBC_ReputationBarDB
----@field progressSmoothing EPDBC_ProgressSmoothingDB
-
----@class EPDBC: AceAddon-3.0, AceEvent-3.0, AceHook-3.0, LibAboutPanel-2.0
----@field Eversion number
----@field Initialize fun(self: EPDBC)
----@field InsertOptions fun(self: EPDBC)
----@field GetOptions fun(self: EPDBC): table
----@field StartUp fun(self: EPDBC)
----@field ShutDown fun(self: EPDBC)
----@field HookXPBar fun(self: EPDBC)
----@field RestoreExperienceBar fun(self: EPDBC)
----@field HookRepBar fun(self: EPDBC)
----@field RestoreRepBar fun(self: EPDBC)
----@field UpdateQuestAlpha fun(self: EPDBC)
----@field Round fun(self: EPDBC, num: number, idp?: number, returnZero?: boolean): number
 
 -- create the plugin for ElvUI
 local MyPluginName = L["Coloured DataBars"]
----@type EPDBC
 local EPDBC = E:NewModule("EPDBC", "AceEvent-3.0", "AceHook-3.0", "LibAboutPanel-2.0")
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
 EPDBC.Eversion = tonumber(GetAddOnMetadata(addonName, "X-ElvUI-Version")) or 0 -- minimum compatible ElvUI version
 local Eversion = tonumber(E.version) or 0 -- installed ElvUI version
 
 -- we can use this to automatically insert our GUI tables when ElvUI_Config is loaded
----@type LibElvUIPlugin-1.0
 local LEP = LibStub("LibElvUIPlugin-1.0")
 
 -- default options
----@type EPDBC_DB
 P["EPDBC"] = {
 	enabled = true,
 	experienceBar = {
@@ -94,7 +52,6 @@ P["EPDBC"] = {
 }
 
 -- This function will hold our layout settings
----@param layout "databars"|"tooltip"
 local function SetupLayout(layout)
 	if layout == "databars" then
 		-- replace reputation databar colours
@@ -156,6 +113,7 @@ local function SetupLayout(layout)
 	E:UpdateAll(true)
 
 	-- Show message about layout being set
+	local PluginInstallStepComplete = _G["PluginInstallStepComplete"]
 	PluginInstallStepComplete.message = L["Layout Set"]
 	PluginInstallStepComplete:Show()
 end
@@ -179,6 +137,7 @@ local InstallerData = {
 	Name = MyPluginName,
 	Pages = {
 		[1] = function()
+    		local PluginInstallFrame = _G["PluginInstallFrame"]
 			PluginInstallFrame.SubTitle:SetFormattedText(L["Welcome to the installation for %s."], MyPluginName)
 			PluginInstallFrame.Desc1:SetText(L["This installation process will guide you through a few steps and apply settings to your current ElvUI profile. If you want to be able to go back to your original settings then create a new profile before going through this installation process."])
 			PluginInstallFrame.Desc2:SetText(L["Please press the continue button if you wish to go through the installation process, otherwise click the 'Skip Process' button."])
@@ -187,6 +146,7 @@ local InstallerData = {
 			PluginInstallFrame.Option1:SetText(L["Skip Process"])
 		end,
 		[2] = function()
+    		local PluginInstallFrame = _G["PluginInstallFrame"]
 			PluginInstallFrame.SubTitle:SetText(L["DataBars"])
 			PluginInstallFrame.Desc1:SetText(L["Colourize your DataBars"])
 			PluginInstallFrame.Desc2:SetText(L["Importance: |cffFF3333High|r"])
@@ -195,6 +155,7 @@ local InstallerData = {
 			PluginInstallFrame.Option1:SetText(L["Colourize"])
 		end,
 		[3] = function()
+    		local PluginInstallFrame = _G["PluginInstallFrame"]
 			PluginInstallFrame.SubTitle:SetText(L["Tooltip"])
 			PluginInstallFrame.Desc1:SetText(L["Colourize your Tooltip"])
 			PluginInstallFrame.Desc2:SetText(L["Importance: |cffFF3333High|r"])
@@ -203,6 +164,7 @@ local InstallerData = {
 			PluginInstallFrame.Option1:SetText(L["Colourize"])
 		end,
 		[4] = function()
+    		local PluginInstallFrame = _G["PluginInstallFrame"]
 			PluginInstallFrame.SubTitle:SetText(L["Installation Complete"])
 			PluginInstallFrame.Desc1:SetText(L["You have completed the installation process."])
 			PluginInstallFrame.Desc2:SetText(L["Please click the button below in order to finalize the process and automatically reload your UI."])
@@ -237,7 +199,7 @@ function EPDBC:Initialize()
 	E.private["EPDBC"] = E.private["EPDBC"] or {}
 
 	-- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
-	if E.private["EPDBC"].install_complete == nil then
+	if E.private.install_complete and E.private["EPDBC"].install_complete == nil then
 		E:GetModule("PluginInstaller"):Queue(InstallerData)
 	end
 
@@ -323,10 +285,6 @@ function EPDBC:ShutDown()
 end
 
 -- utility functions
----@param num number
----@param idp? number
----@param returnZero? boolean
----@return number
 function EPDBC:Round(num, idp, returnZero)
 	if returnZero and num <= 0 then return 0 end
 	if num <= 0.1 then return 0.1 end

@@ -1,7 +1,6 @@
 {
   "library": [
-    "Libs/",
-    ".annotations/"
+    "Libs/"
   ],
 
   "flavors": [

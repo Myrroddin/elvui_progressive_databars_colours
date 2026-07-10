@@ -1,10 +1,10 @@
-local missingTranslationWarning = true
+local missingTranslationWarning = false
 --@debug@
-missingTranslationWarning = false
+missingTranslationWarning = true
 --@end-debug@
 
+local ElvUI = _G.ElvUI
 local E = ElvUI[1]
----@cast E ElvUI
 
 local L = E.Libs.ACL:NewLocale("ElvUI", "enUS", true, missingTranslationWarning)
 

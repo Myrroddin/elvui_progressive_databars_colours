@@ -18,9 +18,6 @@
 /dist/
 *.zip
 
-# External library checkout pulled locally by the packager
-/Libs/LibAboutPanel-2.0/
-
 # Local editor settings
 /.vscode/
 

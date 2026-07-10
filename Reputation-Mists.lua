@@ -6,19 +6,13 @@ local MAX_REPUTATION_REACTION = MAX_REPUTATION_REACTION
 local max = math.max
 local min = math.min
 
+local ElvUI = _G.ElvUI
 local E = ElvUI[1]
----@cast E ElvUI
 
 local ElvUF = E.oUF
 local EDB = E:GetModule("DataBars")
----@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
----@param currentStanding number
----@param currentReactionThreshold number
----@param nextReactionThreshold number
----@return number current
----@return number maximum
 local function GetCurrentAndMaximumValues(currentStanding, currentReactionThreshold, nextReactionThreshold)
 	local current = currentStanding - currentReactionThreshold
 	local maximum = nextReactionThreshold - currentReactionThreshold

@@ -3,16 +3,12 @@ local GetXPExhaustion = GetXPExhaustion
 local min = math.min
 local UnitXP, UnitXPMax = UnitXP, UnitXPMax
 
+local ElvUI = _G.ElvUI
 local E = ElvUI[1]
----@cast E ElvUI
 
 local EDB = E:GetModule("DataBars") -- ElvUI's DataBars
----@type EPDBC
 local EPDBC = E:GetModule("EPDBC") -- this AddOn
 
----@return number current
----@return number maximum
----@return boolean isMaxLevel
 local function GetCurrentAndMaximumValues()
 	local current, maximum = UnitXP("player"), UnitXPMax("player")
 	if maximum <= 0 then maximum = 1 end
@@ -25,10 +21,6 @@ local function GetCurrentAndMaximumValues()
 	return current, maximum, isMaxLevel
 end
 
----@param bar ElvUI_DataBarStatusBar
----@param currentValue number
----@param maximumValue number
----@param isMaxLevel boolean
 local function UpdateRestedAlpha(bar, currentValue, maximumValue, isMaxLevel)
 	if isMaxLevel or not bar.Rested or not bar.Rested:IsShown() then return end
 

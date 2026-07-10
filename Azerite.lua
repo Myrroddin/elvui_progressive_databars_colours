@@ -3,16 +3,12 @@ local FindActiveAzeriteItem = C_AzeriteItem.FindActiveAzeriteItem
 local GetAzeriteItemXPInfo = C_AzeriteItem.GetAzeriteItemXPInfo
 local IsAzeriteItemAtMaxLevel = C_AzeriteItem.IsAzeriteItemAtMaxLevel
 
+local ElvUI = _G.ElvUI
 local E = ElvUI[1]
----@cast E ElvUI
 
 local EDB = E:GetModule("DataBars")
----@type EPDBC
 local EPDBC = E:GetModule("EPDBC")
 
----@return number? current
----@return number maximum
----@return boolean hasActiveAzeriteItem
 local function GetCurrentAndMaximumValues()
 	local current, maximum, hasActiveAzeriteItem, item
 	item = FindActiveAzeriteItem()
