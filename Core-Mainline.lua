@@ -202,6 +202,10 @@ function EPDBC:Initialize()
 		return
 	end
 
+	-- The module may initialize after ElvUI has already created the active profile.
+	E.db["EPDBC"] = E.db["EPDBC"] or {}
+	E:CopyDefaults(E.db["EPDBC"], P["EPDBC"])
+
 	E.private["EPDBC"] = E.private["EPDBC"] or {}
 
 	-- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
@@ -221,9 +225,6 @@ end
 function EPDBC:InsertOptions()
 	E.Options.args.EPDBC = EPDBC:GetOptions()
 end
-
--- register the module with ElvUI. ElvUI will now call EPDBC:Initialize() when ElvUI is ready to load our plugin
-E:RegisterModule(EPDBC:GetName())
 
 -- ElvUI version check popup if mismatch
 E.PopupDialogs["EPDBC_VERSION_MISMATCH"] = {

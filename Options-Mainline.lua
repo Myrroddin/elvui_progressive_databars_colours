@@ -158,3 +158,5 @@ function EPDBC:GetOptions()
 	options.args.aboutTab.order = -1 -- -1 means "put it last"
 	return options
 end
+-- register the module with ElvUI after all Mainline plugin files have loaded
+E:RegisterModule(EPDBC:GetName())

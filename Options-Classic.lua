@@ -134,3 +134,6 @@ function EPDBC:GetOptions()
 	options.args.aboutTab.order = -1 -- -1 means "put it last"
 	return options
 end
+
+-- register the module after all Classic plugin files and methods have loaded
+E:RegisterModule(EPDBC:GetName())
