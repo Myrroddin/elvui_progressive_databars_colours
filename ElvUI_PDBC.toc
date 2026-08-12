@@ -1,4 +1,4 @@
-## Interface: 120007, 50504, 38001, 20506, 11509
+## Interface: 120100, 50504, 38002, 20506, 11509
 ## Title: |cff1784d1ElvUI|r Progressive Colored DataBars
 ## Notes: Text and color options for ElvUI DataBars
 ## Notes-deDE: @localization(locale="deDE", key="Notes", namespace="ToC")@
@@ -32,9 +32,9 @@
 ## X-License: Copyright (c) 2017-2026 Paul Vandersypen. All Rights Reserved
 ## X-Localizations: enUS, deDE, esES, esMX, frFR, itIT, koKR, ptBR, ruRU, zhCN, zhTW
 ## Group: ElvUI
-## IconTexture: Interface\AddOns\ElvUI_PDBC\Media\Icon.tga
+## IconTexture: Interface\AddOns\ElvUI_PDBC\Media\Icon.png
 
-## X-ElvUI-Version: 15.18
+## X-ElvUI-Version: 15.21
 
 ## X-Curse-Project-ID: 280393
 ## X-WoWI-ID: 24498
