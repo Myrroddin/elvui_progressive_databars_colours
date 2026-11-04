@@ -1,6 +1,7 @@
 -- local references to global values
 local ENABLE = ENABLE
 local MISCELLANEOUS = MISCELLANEOUS
+local REPUTATION = REPUTATION
 local unpack = unpack
 local XPBAR_LABEL = XPBAR_LABEL
 
@@ -70,13 +71,39 @@ function EPDBC:GetOptions()
 					EDB:ReputationBar_Update()
 				end
 			},
-			miscellaneous = {
+			honorBar = {
+				hidden = not E.Retail,
+				disabled = not E.Retail,
 				order = 50,
+				name = L["Honor Bar"],
+				desc = L["Progressively blend the bar as you gain honor."],
+				type = "toggle",
+				get = function() return E.db.EPDBC.honorBar.progress end,
+				set = function(_, value)
+					E.db.EPDBC.honorBar.progress = value
+					EDB:HonorBar_Update()
+				end
+			},
+			azeriteBar = {
+				hidden = not E.Retail,
+				disabled = not E.Retail,
+				order = 60,
+				name = L["Azerite Bar"],
+				desc = L["Progressively blend the bar as you gain Azerite Power"],
+				type = "toggle",
+				get = function() return E.db.EPDBC.azeriteBar.progress end,
+				set = function(_, value)
+					E.db.EPDBC.azeriteBar.progress = value
+					EDB:AzeriteBar_Update()
+				end
+			},
+			miscellaneous = {
+				order = 70,
 				name = MISCELLANEOUS,
 				type = "header"
 			},
 			fillExalted = {
-				order = 60,
+				order = 80,
 				name = L["Fill Exalted"],
 				desc = L["The Reputation bar looks full at exalted"],
 				type = "toggle",
@@ -87,7 +114,7 @@ function EPDBC:GetOptions()
 				end
 			},
 			fillHated = {
-				order = 70,
+				order = 90,
 				name = L["Fill Hated"],
 				desc = L["The Reputation bar looks full at 0 hated, when you cannot lose any more reputation"],
 				type = "toggle",
@@ -97,31 +124,47 @@ function EPDBC:GetOptions()
 					EDB:ReputationBar_Update()
 				end
 			},
+			reputationPane = {
+				order = 100,
+				name = REPUTATION,
+				desc = L["Apply the reputation bar's colours, fill settings, and progress blending to the game's reputation pane. Disable to restore its original appearance."],
+				type = "toggle",
+				disabled = function() return not E.db.EPDBC.enabled end,
+				get = function() return E.db.EPDBC.reputationPane end,
+				set = function(_, value)
+					E.db.EPDBC.reputationPane = value
+					EPDBC:UpdateReputationPane()
+				end
+			},
 			progressSmoothing = {
-				order = 80,
+				order = 110,
 				name = L["Progress Smoothing"],
-				desc = L["Number of decimals to use when blending the bars' alpha as you gain xp, honour, rep, etc"],
+				desc = L["Number of decimals to use when blending the bars' alpha as you gain XP, Honor, Reputation, etc."],
 				type = "range",
 				get = function() return E.db.EPDBC.progressSmoothing.decimalLength end,
 				set = function(_, value)
 					E.db.EPDBC.progressSmoothing.decimalLength = value
 					EDB:ReputationBar_Update()
 					EDB:ExperienceBar_Update()
+					if E.Retail then
+						EDB:HonorBar_Update()
+						EDB:AzeriteBar_Update()
+					end
 				end,
 				min = 1,
 				max = 10,
 				step = 1
 			},
 			header3 = {
-				order = 90,
+				order = 120,
 				name = "",
 				type = "header",
 			},
 			install = {
-				order = 100,
+				order = 130,
 				type = "execute",
 				name = L["Install"],
-				desc = L["Run the installation process"],
+				desc = L["Run the installation process."],
 				func = function()
 					E:GetModule("PluginInstaller"):Queue(InstallerData)
 					E:ToggleOptions()
@@ -134,6 +177,5 @@ function EPDBC:GetOptions()
 	options.args.aboutTab.order = -1 -- -1 means "put it last"
 	return options
 end
-
--- register the module after all Classic plugin files and methods have loaded
+-- register the module with ElvUI after all plugin files have loaded
 E:RegisterModule(EPDBC:GetName())

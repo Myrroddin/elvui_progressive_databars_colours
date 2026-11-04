@@ -5,6 +5,7 @@ local format = format
 local GetAddOnMetadata = C_AddOns.GetAddOnMetadata
 local GetCVarBool = C_CVar.GetCVarBool
 local LibStub = LibStub
+local REPUTATION = REPUTATION
 local ReloadUI = C_UI.Reload
 local StopMusic = StopMusic
 local tonumber = tonumber
@@ -13,6 +14,9 @@ local unpack = unpack
 
 -- the vararg statement
 local addonName, addon = ...
+
+-- Increment when an updated palette should offer the installer again.
+local paletteVersion = 1
 
 local Version = tonumber(GetAddOnMetadata(addonName, "Version"))
 --@debug@
@@ -38,13 +42,8 @@ local LEP = LibStub("LibElvUIPlugin-1.0")
 -- default options
 P["EPDBC"] = {
 	enabled = true,
-	azeriteBar = {
-		progress = true
-	},
+	reputationPane = false,
 	experienceBar = {
-		progress = true
-	},
-	honorBar = {
 		progress = true
 	},
 	reputationBar = {
@@ -56,6 +55,11 @@ P["EPDBC"] = {
 		decimalLength = 3
 	}
 }
+
+if E.Retail then
+	P["EPDBC"].azeriteBar = { progress = true }
+	P["EPDBC"].honorBar = { progress = true }
+end
 
 -- This function will hold our layout settings
 local function SetupLayout(layout)
@@ -70,16 +74,18 @@ local function SetupLayout(layout)
 		E.db["databars"]["colors"]["factionColors"][3]["b"] = 0.00000000000000
 		E.db["databars"]["colors"]["factionColors"][3]["g"] = 0.64705882352941
 		E.db["databars"]["colors"]["factionColors"][3]["r"] = 1.00000000000000
-		E.db["databars"]["colors"]["factionColors"][4]["g"] = 1.00000000000000
-		E.db["databars"]["colors"]["factionColors"][4]["r"] = 1.00000000000000
-		E.db["databars"]["colors"]["factionColors"][5]["b"] = 0.00000000000000
-		E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.50196078431373
-		E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.92941176470588
-		E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.58431372549020
-		E.db["databars"]["colors"]["factionColors"][6]["r"] = 0.39215686274510
-		E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.88627450980392
-		E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.16862745098039
-		E.db["databars"]["colors"]["factionColors"][7]["r"] = 0.54117647058824
+		E.db["databars"]["colors"]["factionColors"][4]["b"] = 0.85098039215686
+		E.db["databars"]["colors"]["factionColors"][4]["g"] = 0.85098039215686
+		E.db["databars"]["colors"]["factionColors"][4]["r"] = 0.85098039215686
+		E.db["databars"]["colors"]["factionColors"][5]["b"] = 0.13333333333333
+		E.db["databars"]["colors"]["factionColors"][5]["g"] = 0.54509803921569
+		E.db["databars"]["colors"]["factionColors"][5]["r"] = 0.13333333333333
+		E.db["databars"]["colors"]["factionColors"][6]["b"] = 0.67843137254902
+		E.db["databars"]["colors"]["factionColors"][6]["g"] = 0.70980392156863
+		E.db["databars"]["colors"]["factionColors"][6]["r"] = 0.25098039215686
+		E.db["databars"]["colors"]["factionColors"][7]["b"] = 0.70588235294118
+		E.db["databars"]["colors"]["factionColors"][7]["g"] = 0.41176470588235
+		E.db["databars"]["colors"]["factionColors"][7]["r"] = 0.25490196078431
 		E.db["databars"]["colors"]["factionColors"][8]["b"] = 0.50196078431373
 		E.db["databars"]["colors"]["factionColors"][8]["g"] = 0.00000000000000
 		E.db["databars"]["colors"]["factionColors"][8]["r"] = 0.50196078431373
@@ -87,7 +93,7 @@ local function SetupLayout(layout)
 		E.db["databars"]["colors"]["factionColors"][9]["g"] = 0.41176470588235
 		E.db["databars"]["colors"]["factionColors"][9]["r"] = 1.00000000000000
 		E.db["databars"]["colors"]["factionColors"][10]["b"] = 0.00000000000000
-		E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.00000000000000
+		E.db["databars"]["colors"]["factionColors"][10]["g"] = 0.84313725490196
 		E.db["databars"]["colors"]["factionColors"][10]["r"] = 1.00000000000000
 	elseif layout == "tooltip" then
 		-- replace tooltip faction colours
@@ -100,23 +106,28 @@ local function SetupLayout(layout)
 		E.db["tooltip"]["factionColors"][3]["b"] = 0.00000000000000
 		E.db["tooltip"]["factionColors"][3]["g"] = 0.64705882352941
 		E.db["tooltip"]["factionColors"][3]["r"] = 1.00000000000000
-		E.db["tooltip"]["factionColors"][4]["g"] = 1.00000000000000
-		E.db["tooltip"]["factionColors"][4]["r"] = 1.00000000000000
-		E.db["tooltip"]["factionColors"][5]["b"] = 0.00000000000000
-		E.db["tooltip"]["factionColors"][5]["g"] = 0.50196078431373
-		E.db["tooltip"]["factionColors"][6]["b"] = 0.92941176470588
-		E.db["tooltip"]["factionColors"][6]["g"] = 0.58431372549020
-		E.db["tooltip"]["factionColors"][6]["r"] = 0.39215686274510
-		E.db["tooltip"]["factionColors"][7]["b"] = 0.88627450980392
-		E.db["tooltip"]["factionColors"][7]["g"] = 0.16862745098039
-		E.db["tooltip"]["factionColors"][7]["r"] = 0.54117647058824
+		E.db["tooltip"]["factionColors"][4]["b"] = 0.85098039215686
+		E.db["tooltip"]["factionColors"][4]["g"] = 0.85098039215686
+		E.db["tooltip"]["factionColors"][4]["r"] = 0.85098039215686
+		E.db["tooltip"]["factionColors"][5]["b"] = 0.13333333333333
+		E.db["tooltip"]["factionColors"][5]["g"] = 0.54509803921569
+		E.db["tooltip"]["factionColors"][5]["r"] = 0.13333333333333
+		E.db["tooltip"]["factionColors"][6]["b"] = 0.67843137254902
+		E.db["tooltip"]["factionColors"][6]["g"] = 0.70980392156863
+		E.db["tooltip"]["factionColors"][6]["r"] = 0.25098039215686
+		E.db["tooltip"]["factionColors"][7]["b"] = 0.70588235294118
+		E.db["tooltip"]["factionColors"][7]["g"] = 0.41176470588235
+		E.db["tooltip"]["factionColors"][7]["r"] = 0.25490196078431
 		E.db["tooltip"]["factionColors"][8]["b"] = 0.50196078431373
 		E.db["tooltip"]["factionColors"][8]["g"] = 0.00000000000000
 		E.db["tooltip"]["factionColors"][8]["r"] = 0.50196078431373
+	elseif layout == "reputationPane" then
+		E.db.EPDBC.reputationPane = true
 	end
 
 	-- Update ElvUI
 	E:UpdateAll(true)
+	EPDBC:UpdateReputationPane()
 
 	-- Show message about layout being set
 	local PluginInstallStepComplete = _G["PluginInstallStepComplete"]
@@ -132,6 +143,8 @@ local function InstallComplete()
 
 	-- Set a variable tracking the version of the addon when layout was installed
 	E.private["EPDBC"].install_complete = Version
+	-- Both Finished and Skip acknowledge this palette, preventing another prompt.
+	E.private["EPDBC"].paletteVersion = paletteVersion
 
 	ReloadUI()
 end
@@ -170,10 +183,19 @@ local InstallerData = {
 			PluginInstallFrame.Option1:SetText(L["Colourize"])
 		end,
 		[4] = function()
+			local PluginInstallFrame = _G["PluginInstallFrame"]
+			PluginInstallFrame.SubTitle:SetText(REPUTATION)
+			PluginInstallFrame.Desc1:SetText(L["Colourize your Reputation Pane"])
+			PluginInstallFrame.Desc2:SetText(L["Importance: |cffFF3333High|r"])
+			PluginInstallFrame.Option1:Show()
+			PluginInstallFrame.Option1:SetScript("OnClick", function() SetupLayout("reputationPane") end)
+			PluginInstallFrame.Option1:SetText(L["Colourize"])
+		end,
+		[5] = function()
     		local PluginInstallFrame = _G["PluginInstallFrame"]
 			PluginInstallFrame.SubTitle:SetText(L["Installation Complete"])
 			PluginInstallFrame.Desc1:SetText(L["You have completed the installation process."])
-			PluginInstallFrame.Desc2:SetText(L["Please click the button below in order to finalize the process and automatically reload your UI."])
+			PluginInstallFrame.Desc2:SetText(L["Please click the button below to finalize the process and automatically reload your UI."])
 			PluginInstallFrame.Option1:Show()
 			PluginInstallFrame.Option1:SetScript("OnClick", InstallComplete)
 			PluginInstallFrame.Option1:SetText(L["Finished"])
@@ -183,7 +205,8 @@ local InstallerData = {
 		[1] = L["Welcome"],
 		[2] = L["DataBars"],
 		[3] = L["Tooltip"],
-		[4] = L["Installation Complete"],
+		[4] = REPUTATION,
+		[5] = L["Installation Complete"],
 	},
 	StepTitlesColor = {1, 1, 1},
 	StepTitlesColorSelected = {0, 0.702, 1},
@@ -208,8 +231,9 @@ function EPDBC:Initialize()
 
 	E.private["EPDBC"] = E.private["EPDBC"] or {}
 
-	-- Initiate installation process if ElvUI install is complete and our plugin install has not yet been run
-	if E.private.install_complete and E.private["EPDBC"].install_complete == nil then
+	-- Offer one installation for a fresh setup or an unacknowledged palette update.
+	local installedPaletteVersion = E.private["EPDBC"].paletteVersion or 0
+	if E.private.install_complete and (E.private["EPDBC"].install_complete == nil or installedPaletteVersion < paletteVersion) then
 		E:GetModule("PluginInstaller"):Queue(InstallerData)
 	end
 
@@ -271,14 +295,19 @@ function EPDBC:StartUp()
 
 	EPDBC:HookXPBar()
 	EPDBC:HookRepBar()
-	EPDBC:HookHonorBar()
-	EPDBC:HookAzeriteBar()
+	EPDBC:UpdateReputationPane()
+	if E.Retail then
+		EPDBC:HookHonorBar()
+		EPDBC:HookAzeriteBar()
+	end
 
 	-- call ElvUI's functions to update the bars
 	EDB:ExperienceBar_Update()
 	EDB:ReputationBar_Update()
-	EDB:HonorBar_Update()
-	EDB:AzeriteBar_Update()
+	if E.Retail then
+		EDB:HonorBar_Update()
+		EDB:AzeriteBar_Update()
+	end
 end
 
 -- called when EPDBC is disabled in the options
@@ -286,17 +315,22 @@ function EPDBC:ShutDown()
 	E.db["databars"]["colors"]["useCustomFactionColors"] = false
 	E.db["tooltip"]["useCustomFactionColors"] = false
 
+	EPDBC:RestoreReputationPane()
 	EPDBC:RestoreRepBar()
 	EPDBC:RestoreExperienceBar()
-	EPDBC:RestoreHonorBar()
-	EPDBC:RestoreAzeriteBar()
+	if E.Retail then
+		EPDBC:RestoreHonorBar()
+		EPDBC:RestoreAzeriteBar()
+	end
 	EPDBC:UnhookAll()
 
 	-- call ElvUI's functions to update the bars
 	EDB:ExperienceBar_Update()
 	EDB:ReputationBar_Update()
-	EDB:HonorBar_Update()
-	EDB:AzeriteBar_Update()
+	if E.Retail then
+		EDB:HonorBar_Update()
+		EDB:AzeriteBar_Update()
+	end
 end
 
 -- utility functions

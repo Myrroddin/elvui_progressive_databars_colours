@@ -13,15 +13,15 @@ L[ [=[%s
 Your ElvUI version %.2f is not compatible with EPDBC.
 Minimum ElvUI version needed is %.2f. Please download it from here:
 ]=] ] = true
+L["Apply the reputation bar's colours, fill settings, and progress blending to the game's reputation pane. Disable to restore its original appearance."] = true
 L["Blend Progress"] = true
 L["Coloured DataBars"] = true
 L["Colourize"] = true
 L["Colourize your DataBars"] = true
+L["Colourize your Reputation Pane"] = true
 L["Colourize your Tooltip"] = true
-L["DataBars"] = true
 L["Fill Exalted"] = true
 L["Fill Hated"] = true
-L["Install"] = true
 L["Installation"] = true
 L["Number of decimals to use when blending the bars' alpha as you gain XP, Honor, Reputation, etc."] = true
 L["Please click the button below to finalize the process and automatically reload your UI."] = true
@@ -31,7 +31,6 @@ L["Progressively blend the bar as you gain Azerite Power"] = true
 L["Progressively blend the bar as you gain honor."] = true
 L["Progressively blend the bar as you gain reputation."] = true
 L["Progressively blend the bar as you gain XP."] = true
-L["Run the installation process"] = true
 L["Skip Process"] = true
 L["The Reputation bar looks full at 0 hated, when you cannot lose any more reputation"] = true
 L["The Reputation bar looks full at exalted"] = true

@@ -4,11 +4,12 @@ The default DataBars (XP, Honor, Azerite, Reputation) in [ElvUI](https://tukui.o
 
 ## Supported WoW Versions
 
-- Classic, which includes Classic Era, hardcore, and seasons
+- Classic, which includes Classic Era, hardcore, fresh, and seasons
 - The Burning Crusade Classic
 - Titan Reforged, a Wrath of the Lich King Classic version exclusive to China
 - Mists of Pandaria Classic
 - Retail (currently Midnight)
+- Forever
 
 ## The XP DataBar
 
@@ -20,9 +21,17 @@ The default DataBars (XP, Honor, Azerite, Reputation) in [ElvUI](https://tukui.o
 
 - Blend the alpha/opacity of the bar as you gain reputation
 - Pre-defined colours which you can change in ElvUI's main settings > DataBars and main settings > Tooltip
-- Fills the reputation bar at Exalted (not applicable in Retail for Paragon or "Major" factions)
+- Optionally fills capped Exalted, friendship, and Renown bars; Paragon continues to show progress toward its next reward
 - Fills the reputation bar at Hated until you start gaining reputation
 - Friendship factions (Mists & Retail) are adjusted based on the number of ranks the faction has, meaning some may display higher than Hated colour to start and cap at Exalted colour
+
+## The Game's Reputation Pane
+
+- Apply the reputation DataBar's colours, fill settings, progress blending, and smoothing to each faction's bar in the game's reputation pane
+- Uses the same friendship rank mapping and supports Paragon and Renown where available
+- Enable it during installation after the Tooltip step, or under Coloured DataBars > Miscellaneous > Reputation
+- Text and icons stay fully opaque for readability
+- Disabling the feature restores the pane's normal appearance
 
 ## The Honor DataBar
 
